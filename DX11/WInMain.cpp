@@ -8,8 +8,8 @@ int CALLBACK WinMain(
 	LPSTR     lpCmdLine,
 	int       nCmdShow)
 {
-	
-	Window wnd(800, 300, L"DX11");
+
+	Window wnd(800, 300, "DX11");
 
 	// message
 	MSG msg;

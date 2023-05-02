@@ -24,10 +24,10 @@ Window::WindowClass::WindowClass() noexcept : hInst(GetModuleHandle(nullptr))
 
 Window::WindowClass::~WindowClass()
 {
-	UnregisterClass(L"wndClassName", GetInstance());
+	UnregisterClass(wndClassName, GetInstance());
 }
 
-const LPCWSTR Window::WindowClass::GetName() noexcept
+const char* Window::WindowClass::GetName() noexcept
 {
 	return wndClassName;
 }
@@ -39,7 +39,7 @@ HINSTANCE Window::WindowClass::GetInstance() noexcept
 
 
 
-Window::Window(int width, int height, const LPCWSTR name) noexcept
+Window::Window(int width, int height, const char* name) noexcept
 {
 	// calculate window size based on desired client region size
 	RECT wr;
