@@ -17,6 +17,7 @@ public:
 	private:
 		HRESULT hr;
 	};
+
 private:
 	class WindowClass
 	{
@@ -31,7 +32,9 @@ private:
 		static constexpr const char* wndClassName = "Engine Window";
 		static WindowClass wndClass;
 		HINSTANCE hInst;
+		HBRUSH hBrush = CreateSolidBrush(RGB(255, 0, 0));
 	};
+
 public:
 	Window(int width, int height, const char* name) noexcept;
 	~Window();

@@ -71,16 +71,18 @@ Window::WindowClass::WindowClass() noexcept : hInst(GetModuleHandle(nullptr))
 	wc.hInstance = GetInstance();
 	wc.hIcon = nullptr;
 	wc.hCursor = nullptr;
-	wc.hbrBackground = nullptr;
+	wc.hbrBackground = hBrush;
 	wc.lpszMenuName = nullptr;
 	wc.lpszClassName = GetName();
 	wc.hIconSm = nullptr;
 	RegisterClassEx(&wc);
+
 }
 
 Window::WindowClass::~WindowClass()
 {
 	UnregisterClass(wndClassName, GetInstance());
+	DeleteObject(hBrush);
 }
 
 const char* Window::WindowClass::GetName() noexcept
