@@ -4,9 +4,10 @@
 
 
 NastihanException::NastihanException(int line, const char* file) noexcept
-	: line(line),file(file)
-{
-}
+	:
+	line(line),
+	file(file)
+{}
 
 const char* NastihanException::what() const noexcept
 {
@@ -37,5 +38,5 @@ std::string NastihanException::GetOriginString() const noexcept
 	std::ostringstream oss;
 	oss << "[File] " << file << std::endl
 		<< "[Line] " << line;
-	return oss.str(); 
+	return oss.str();
 }

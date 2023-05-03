@@ -1,10 +1,23 @@
 #pragma once
 #include "NastihanWin.h"
+#include "NastihanException.h"
 
 class Window
 {
+public:
+	class WindowException : NastihanException
+	{
+	public:
+		WindowException(int line, const char* file, HRESULT hr) noexcept;
+		const char* what() const noexcept override;
+		virtual const char* GetType() const noexcept;
+		static std::string TranslateErrorCode(HRESULT hr) noexcept;
+		HRESULT GetErrorCode() const noexcept;
+		std::string GetErrorString() const noexcept;
+	private:
+		HRESULT hr;
+	};
 private:
-
 	class WindowClass
 	{
 	public:
