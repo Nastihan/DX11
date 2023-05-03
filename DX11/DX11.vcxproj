@@ -147,10 +147,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="NastihanException.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WInMain.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="NastihanException.h" />
     <ClInclude Include="NastihanWin.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
