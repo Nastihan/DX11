@@ -1,6 +1,7 @@
 #pragma once
 #include "NastihanWin.h"
 #include "NastihanException.h"
+#include "Keyboard.h"
 
 class Window
 {
@@ -36,7 +37,7 @@ private:
 	};
 
 public:
-	Window(int width, int height, const char* name) noexcept;
+	Window(int width, int height, const char* name) ;
 	~Window();
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
@@ -44,10 +45,15 @@ private:
 	static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 	static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 	LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
+
+public:
+	Keyboard kbd;
+	
 private:
 	int width;
 	int height;
 	HWND hWnd;
+
 };
 
 // error exception helper macro
