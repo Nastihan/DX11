@@ -151,6 +151,7 @@
     <ClCompile Include="Keyboard.cpp" />
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="NastihanException.cpp" />
+    <ClCompile Include="NastihanTimer.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WInMain.cpp" />
   </ItemGroup>
@@ -159,6 +160,7 @@
     <ClInclude Include="Keyboard.h" />
     <ClInclude Include="Mouse.h" />
     <ClInclude Include="NastihanException.h" />
+    <ClInclude Include="NastihanTimer.h" />
     <ClInclude Include="NastihanWin.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
