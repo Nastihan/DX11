@@ -3,6 +3,7 @@
 #include "NastihanException.h"
 #include "Keyboard.h"
 #include "Mouse.h"
+#include <sstream>
 
 class Window
 {
