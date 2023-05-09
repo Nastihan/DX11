@@ -1,5 +1,6 @@
 #pragma once
 #include "Window.h"
+#include "NastihanTimer.h"
 
 
 class App
@@ -11,5 +12,5 @@ public:
 
 private:
 	Window wnd;
-
+	NastihanTimer timer;
 };

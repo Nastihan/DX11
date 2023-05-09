@@ -9,41 +9,23 @@ App::App()
 int App::Go()
 {
 	
-
-
-	// message
-	MSG msg;
-	BOOL gResult;
-	while (gResult = GetMessage(&msg, nullptr, 0, 0) > 0)
+	while (true)
 	{
-		TranslateMessage(&msg);
-		DispatchMessage(&msg);
-
-		while (!wnd.mouse.IsEmpty())
+		// process all messages pending, but to not block for new messages
+		if (const auto ecode = Window::ProcessMessages())
 		{
-			const auto e = wnd.mouse.Read();
-			if (e.GetType() == Mouse::Event::Type::Move)
-			{
-				std::ostringstream oss;
-				oss << "Mouse Position: (" << e.GetPosX() << "," << e.GetPosY() << ")";
-				wnd.SetTitle(oss.str());
-			}
-
+			// if return optional has value, means we're quitting so return exit code
+			return *ecode;
 		}
-
-
+		DoFrame();
 	}
 
-	if (gResult == -1)
-	{
-		throw CHWND_LAST_EXCEPT();
-	}
-	else
-	{
-		return msg.wParam;
-	}
 }
 
 void App::DoFrame()
 {
+	const auto t = timer.Peek();
+	std::ostringstream oss;
+	oss << "Time elapsed: " << std::setprecision(1) << std::fixed << t << "s";
+	wnd.SetTitle(oss.str());
 }
