@@ -24,8 +24,5 @@ int App::Go()
 
 void App::DoFrame()
 {
-	const auto t = timer.Peek();
-	std::ostringstream oss;
-	oss << "Time elapsed: " << std::setprecision(1) << std::fixed << t << "s";
-	wnd.SetTitle(oss.str());
+	wnd.Gfx().EndFrame();
 }

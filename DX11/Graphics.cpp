@@ -44,3 +44,20 @@ Graphics::Graphics(HWND hWnd)
 	);
 	
 }
+
+Graphics::~Graphics()
+{
+	if (context != nullptr)
+		context->Release();
+	
+	if (swapChain != nullptr)
+		swapChain->Release();
+
+	if (device != nullptr)
+		device->Release();
+}
+
+void Graphics::EndFrame()
+{
+	swapChain->Present(1u, 0u);
+}

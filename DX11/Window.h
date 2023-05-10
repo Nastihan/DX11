@@ -3,8 +3,11 @@
 #include "NastihanException.h"
 #include "Keyboard.h"
 #include "Mouse.h"
+#include "Graphics.h"
 #include <sstream>
 #include <optional>
+#include <memory>
+
 
 class Window
 {
@@ -36,7 +39,7 @@ private:
 		static constexpr const char* wndClassName = "Engine Window";
 		static WindowClass wndClass;
 		HINSTANCE hInst;
-		HBRUSH hBrush = CreateSolidBrush(RGB(255, 0, 0));
+
 	};
 
 public:
@@ -46,7 +49,7 @@ public:
 	Window& operator=(const Window&) = delete;
 	void SetTitle(const std::string& title);
 	static std::optional<int> ProcessMessages();
-
+	Graphics& Gfx();
 private:
 	static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 	static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
@@ -60,6 +63,7 @@ private:
 	int width;
 	int height;
 	HWND hWnd;
+	std::unique_ptr<Graphics> pGfx;
 
 };
 

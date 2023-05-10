@@ -6,6 +6,10 @@ class Graphics
 {
 public:
 	Graphics(HWND hWnd);
+	Graphics(const Graphics&) = delete;
+	Graphics& operator=(const Graphics&) = delete;
+	~Graphics();
+	void EndFrame();
 
 private:
 	ID3D11Device* device = nullptr;
