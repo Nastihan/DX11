@@ -42,11 +42,20 @@ Graphics::Graphics(HWND hWnd)
 		nullptr,
 		&context
 	);
+
+	ID3D11Resource* pbackBuffer = nullptr;
+	swapChain->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void**>(&pbackBuffer));
+	device->CreateRenderTargetView(pbackBuffer, nullptr, &targetView);
+
+	pbackBuffer->Release();
 	
 }
 
 Graphics::~Graphics()
 {
+	if (targetView != nullptr)
+		targetView->Release();
+
 	if (context != nullptr)
 		context->Release();
 	
@@ -55,6 +64,13 @@ Graphics::~Graphics()
 
 	if (device != nullptr)
 		device->Release();
+}
+
+void Graphics::ClearBuffer()
+{
+	const float colorsArray[] = { 2.0f,1.0f,0.0f,1.0f };
+
+	context->ClearRenderTargetView(targetView, colorsArray);
 }
 
 void Graphics::EndFrame()
