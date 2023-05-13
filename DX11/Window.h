@@ -44,7 +44,7 @@ private:
 		static HINSTANCE GetInstance() noexcept;
 	private:
 		WindowClass() noexcept;
-		~WindowClass();
+		~WindowClass() noexcept;
 		WindowClass(const WindowClass&) = delete;
 		WindowClass& operator=(const WindowClass&) = delete;
 		static constexpr const char* wndClassName = "Engine Window";

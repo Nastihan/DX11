@@ -3,6 +3,7 @@
 #include "NastihanException.h"
 #include <d3d11.h>
 #include <vector>
+#include <wrl.h>
 #include "DxgiInfoManager.h"
 
 class Graphics
@@ -41,7 +42,7 @@ public:
 	Graphics(HWND hWnd);
 	Graphics(const Graphics&) = delete;
 	Graphics& operator=(const Graphics&) = delete;
-	~Graphics();
+	~Graphics() = default;
 	void ClearBuffer();
 	void EndFrame();
 
@@ -49,8 +50,8 @@ private:
 #ifndef NDEBUG
 	DxgiInfoManager infoManager;
 #endif
-	ID3D11Device* device = nullptr;
-	IDXGISwapChain* swapChain = nullptr;
-	ID3D11DeviceContext* context = nullptr;
-	ID3D11RenderTargetView* targetView = nullptr;
+	Microsoft::WRL::ComPtr<ID3D11Device> device;
+	Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context ;
+	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> targetView;
 };
