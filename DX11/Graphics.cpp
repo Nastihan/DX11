@@ -12,10 +12,12 @@
 #define GFX_EXCEPT(hr) Graphics::HrException( __LINE__,__FILE__,(hr),infoManager.GetMessages() )
 #define GFX_THROW_INFO(hrcall) infoManager.Set(); if( FAILED( hr = (hrcall) ) ) throw GFX_EXCEPT(hr)
 #define GFX_DEVICE_REMOVED_EXCEPT(hr) Graphics::DeviceRemovedException( __LINE__,__FILE__,(hr),infoManager.GetMessages() )
+#define GFX_THROW_INFO_ONLY(call) infoManager.Set(); (call); {auto v = infoManager.GetMessages(); if(!v.empty()) {throw Graphics::InfoException( __LINE__,__FILE__,v);}}
 #else
 #define GFX_EXCEPT(hr) Graphics::HrException( __LINE__,__FILE__,(hr) )
 #define GFX_THROW_INFO(hrcall) GFX_THROW_NOINFO(hrcall)
 #define GFX_DEVICE_REMOVED_EXCEPT(hr) Graphics::DeviceRemovedException( __LINE__,__FILE__,(hr) )
+#define GFX_THROW_INFO_ONLY(call) (call)
 #endif
 
 
@@ -74,13 +76,52 @@ Graphics::Graphics(HWND hWnd)
 	
 }
 
-
-
-void Graphics::ClearBuffer()
+void Graphics::ClearBuffer() noexcept
 {
 	const float colorsArray[] = { 2.0f,1.0f,0.0f,1.0f };
 
 	context->ClearRenderTargetView(targetView.Get(), colorsArray);
+}
+
+
+
+void Graphics::DrawTriangle()
+{
+	HRESULT hr;
+
+	// define triangle vertex
+	struct Vertex
+	{
+		float x, y;
+	};
+	Vertex vertices[] =
+	{
+		{0.0f,0.5f},
+		{0.5f,-0.5f},
+		{-0.5f,-0.5f}
+	};
+
+	// create vertex buffer
+	Microsoft::WRL::ComPtr<ID3D11Buffer> pBuffer;
+	D3D11_BUFFER_DESC bDesc = {};
+	bDesc.ByteWidth = sizeof(vertices);
+	bDesc.StructureByteStride = sizeof(Vertex);
+	bDesc.Usage = D3D11_USAGE_DEFAULT;
+	bDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	bDesc.CPUAccessFlags = 0;
+	bDesc.MiscFlags = 0;
+	D3D11_SUBRESOURCE_DATA sData = {};
+	sData.pSysMem = vertices;
+	GFX_THROW_INFO(device->CreateBuffer(&bDesc, &sData, pBuffer.GetAddressOf()));
+
+	// bind vertex buffer
+	const UINT stride = sizeof(Vertex);
+	const UINT offset = 0u;
+	context->IASetVertexBuffers(0u, 1u, pBuffer.GetAddressOf(), &stride, &offset);
+
+	// draw
+	GFX_THROW_INFO_ONLY(context->Draw(3u, 0u));
+
 }
 
 void Graphics::EndFrame()
@@ -101,6 +142,9 @@ void Graphics::EndFrame()
 		}
 	}
 }
+
+
+
 
 /////////////// Graphics exception ///////////////
 Graphics::HrException::HrException(int line, const char* file, HRESULT hr, std::vector<std::string> infoMsgs) noexcept
@@ -168,5 +212,43 @@ std::string Graphics::HrException::GetErrorInfo() const noexcept
 const char* Graphics::DeviceRemovedException::GetType() const noexcept
 {
 	return "Nastihan Graphics Exception [Device Removed] (DXGI_ERROR_DEVICE_REMOVED)";
+}
+
+Graphics::InfoException::InfoException(int line, const char* file, std::vector<std::string> infoMsgs) noexcept
+	:
+	Exception(line, file)
+{
+	// join all info messages with newlines into single string
+	for (const auto& m : infoMsgs)
+	{
+		info += m;
+		info.push_back('\n');
+	}
+	// remove final newline if exists
+	if (!info.empty())
+	{
+		info.pop_back();
+	}
+}
+
+
+const char* Graphics::InfoException::what() const noexcept
+{
+	std::ostringstream oss;
+	oss << GetType() << std::endl
+		<< "\n[Error Info]\n" << GetErrorInfo() << std::endl << std::endl;
+	oss << GetOriginString();
+	whatBuffer = oss.str();
+	return whatBuffer.c_str();
+}
+
+const char* Graphics::InfoException::GetType() const noexcept
+{
+	return "Nastihan Graphics Info Exception";
+}
+
+std::string Graphics::InfoException::GetErrorInfo() const noexcept
+{
+	return info;
 }
 
