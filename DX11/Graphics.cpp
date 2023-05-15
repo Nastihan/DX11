@@ -99,8 +99,8 @@ void Graphics::DrawTriangle()
 	Vertex vertices[] =
 	{
 		{0.0f,0.5f},
-		/*{0.5f,-0.5f},
-		{-0.5f,-0.5f}*/
+		{0.5f,-0.5f},
+		{-0.5f,-0.5f}
 	};
 
 	// create vertex buffer
@@ -114,7 +114,7 @@ void Graphics::DrawTriangle()
 	bDesc.MiscFlags = 0;
 	D3D11_SUBRESOURCE_DATA sData = {};
 	sData.pSysMem = vertices;
-	GFX_THROW_INFO(device->CreateBuffer(&bDesc, &sData, pBuffer.GetAddressOf()));
+	GFX_THROW_INFO(device->CreateBuffer(&bDesc, &sData, &pBuffer));
 
 	// bind vertex buffer
 	const UINT stride = sizeof(Vertex);
@@ -126,23 +126,44 @@ void Graphics::DrawTriangle()
 	Microsoft::WRL::ComPtr <ID3DBlob> vBlob;
 	D3DReadFileToBlob(L"VertexShader.cso", &vBlob);
 	device->CreateVertexShader(vBlob->GetBufferPointer(), vBlob->GetBufferSize(), nullptr, &pVertexShader);
+	// Bind vertexshader
+	context->VSSetShader(pVertexShader.Get(), nullptr, 0u);
+
+	// vertex input layout
+	Microsoft::WRL::ComPtr<ID3D11InputLayout> pInputLayout;
+	const D3D11_INPUT_ELEMENT_DESC inputLayoutDesc[] = {
+	{ "Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+	device->CreateInputLayout(inputLayoutDesc, (UINT)std::size(inputLayoutDesc), vBlob->GetBufferPointer(), vBlob->GetBufferSize(), &pInputLayout);
+	// bind vertex layout
+	context->IASetInputLayout(pInputLayout.Get());
 
 	// PixelShader
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pPixelShader;
 	Microsoft::WRL::ComPtr <ID3DBlob> pBlob;
 	D3DReadFileToBlob(L"PixelShader.cso", &pBlob);
 	device->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
+	// Bind pixelshader
+	context->PSSetShader(pPixelShader.Get(), nullptr, 0u);
 
-	// Input layout
-	Microsoft::WRL::ComPtr<ID3D11InputLayout> pInputLayout;
-	D3D11_INPUT_ELEMENT_DESC inputLayoutDesc[] = {
-	{ "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-	device->CreateInputLayout(inputLayoutDesc, std::size(inputLayoutDesc), 0, 0, &pInputLayout);
-	context->IASetInputLayout(pInputLayout.Get());
+	// bind render target
+	context->OMSetRenderTargets(1u, targetView.GetAddressOf(), nullptr);
+
+	// configure viewport
+	D3D11_VIEWPORT vp;
+	vp.Width = 1000;
+	vp.Height = 800;
+	vp.MinDepth = 0;
+	vp.MaxDepth = 1;
+	vp.TopLeftX = 0;
+	vp.TopLeftY = 0;
+	context->RSSetViewports(1u, &vp);
+
+	// Topology
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// draw call
-	GFX_THROW_INFO_ONLY(context->Draw(3u, 0u));
+	GFX_THROW_INFO_ONLY(context->Draw((UINT)std::size(vertices), 0u));
 
 
 
