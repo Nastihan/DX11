@@ -1,8 +1,10 @@
 #include "Graphics.h"
 #include "dxerr.h"
 #include <sstream>
+#include <d3dcompiler.h>
 
 #pragma comment(lib,"d3d11.lib")
+#pragma comment(lib,"D3DCompiler.lib")
 
 // graphics exception checking/throwing macros (some with dxgi infos)
 #define GFX_EXCEPT_NOINFO(hr) Graphics::HrException( __LINE__,__FILE__,(hr) )
@@ -97,8 +99,8 @@ void Graphics::DrawTriangle()
 	Vertex vertices[] =
 	{
 		{0.0f,0.5f},
-		{0.5f,-0.5f},
-		{-0.5f,-0.5f}
+		/*{0.5f,-0.5f},
+		{-0.5f,-0.5f}*/
 	};
 
 	// create vertex buffer
@@ -119,8 +121,30 @@ void Graphics::DrawTriangle()
 	const UINT offset = 0u;
 	context->IASetVertexBuffers(0u, 1u, pBuffer.GetAddressOf(), &stride, &offset);
 
-	// draw
+	// VertexShader
+	Microsoft::WRL::ComPtr <ID3D11VertexShader> pVertexShader;
+	Microsoft::WRL::ComPtr <ID3DBlob> vBlob;
+	D3DReadFileToBlob(L"VertexShader.cso", &vBlob);
+	device->CreateVertexShader(vBlob->GetBufferPointer(), vBlob->GetBufferSize(), nullptr, &pVertexShader);
+
+	// PixelShader
+	Microsoft::WRL::ComPtr<ID3D11PixelShader> pPixelShader;
+	Microsoft::WRL::ComPtr <ID3DBlob> pBlob;
+	D3DReadFileToBlob(L"PixelShader.cso", &pBlob);
+	device->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
+
+	// Input layout
+	Microsoft::WRL::ComPtr<ID3D11InputLayout> pInputLayout;
+	D3D11_INPUT_ELEMENT_DESC inputLayoutDesc[] = {
+	{ "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+	};
+	device->CreateInputLayout(inputLayoutDesc, std::size(inputLayoutDesc), 0, 0, &pInputLayout);
+	context->IASetInputLayout(pInputLayout.Get());
+
+	// draw call
 	GFX_THROW_INFO_ONLY(context->Draw(3u, 0u));
+
+
 
 }
 
