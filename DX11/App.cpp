@@ -24,7 +24,9 @@ int App::Go()
 
 void App::DoFrame()
 {
+	
+	auto alpha = sin(timer.Peek() / 2.0f + 0.5f);
 	wnd.Gfx().ClearBuffer();
-	wnd.Gfx().DrawTriangle();
+	wnd.Gfx().DrawTriangle(timer.Peek());
 	wnd.Gfx().EndFrame();
 }

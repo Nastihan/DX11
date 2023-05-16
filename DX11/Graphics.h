@@ -54,7 +54,7 @@ public:
 	Graphics& operator=(const Graphics&) = delete;
 	~Graphics() = default;
 	void ClearBuffer() noexcept;
-	void DrawTriangle();
+	void DrawTriangle(float angle);
 	void EndFrame();
 
 private:

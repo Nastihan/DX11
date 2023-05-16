@@ -2,6 +2,7 @@
 #include "dxerr.h"
 #include <sstream>
 #include <d3dcompiler.h>
+#include <DirectXMath.h>
 
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib,"D3DCompiler.lib")
@@ -87,7 +88,7 @@ void Graphics::ClearBuffer() noexcept
 
 
 
-void Graphics::DrawTriangle()
+void Graphics::DrawTriangle(float angle)
 {
 	HRESULT hr;
 
@@ -114,7 +115,7 @@ void Graphics::DrawTriangle()
 		{ -0.5f,-0.5f,0,0,255,0 },
 		{ -0.3f,0.3f,0,255,0,0 },
 		{ 0.3f,0.3f,0,0,255,0 },
-		{ 0.0f,-0.8f,255,0,0,0 },
+		{ 0.0f,-0.7f,255,0,0,0 },
 	};
 
 	// create vertex buffer
@@ -154,9 +155,38 @@ void Graphics::DrawTriangle()
 	D3D11_SUBRESOURCE_DATA isd = {};
 	isd.pSysMem = indices;
 	GFX_THROW_INFO(device->CreateBuffer(&ibd, &isd, &pIndexBuffer));
-
 	// bind index buffer
 	context->IASetIndexBuffer(pIndexBuffer.Get(), DXGI_FORMAT_R16_UINT, 0u);
+
+	// create constant buffer
+	struct ConstantBuffer
+	{
+		DirectX::XMMATRIX transformation;
+	};
+	const ConstantBuffer cb
+	{
+		{
+			DirectX::XMMatrixTranspose(
+				DirectX::XMMatrixRotationZ(angle) *
+				DirectX::XMMatrixScaling(8.0f / 10.0f,1.0f,1.0f)*
+				DirectX::XMMatrixTranslation(0.4f,0.0f,0.0f))
+		}
+
+	};
+	Microsoft::WRL::ComPtr <ID3D11Buffer> pConstantBuffer;
+	D3D11_BUFFER_DESC cbDesc;
+	cbDesc.Usage = D3D11_USAGE_DYNAMIC;
+	cbDesc.ByteWidth = sizeof(cb);
+	cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
+	cbDesc.MiscFlags = 0u;
+	cbDesc.StructureByteStride = 0u;
+	D3D11_SUBRESOURCE_DATA cbData;
+	cbData.pSysMem = &cb;
+	GFX_THROW_INFO(device->CreateBuffer(&cbDesc, &cbData, &pConstantBuffer));
+	// bind Constant buffer
+	context->VSSetConstantBuffers(0u, 1u, pConstantBuffer.GetAddressOf());
+
 
 
 	// VertexShader
