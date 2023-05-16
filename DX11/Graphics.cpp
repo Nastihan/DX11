@@ -94,13 +94,17 @@ void Graphics::DrawTriangle()
 	// define triangle vertex
 	struct Vertex
 	{
-		float x, y;
+		float x;
+		float y;
+		float r;
+		float g;
+		float b;
 	};
 	Vertex vertices[] =
 	{
-		{0.0f,0.5f},
-		{0.5f,-0.5f},
-		{-0.5f,-0.5f}
+		{0.0f,0.5f,1.0f,0.0f,0.0f},
+		{0.5f,-0.5f,0.0f,1.0f,0.0f},
+		{-0.5f,-0.5f,0.0f,0.0f,1.0f}
 	};
 
 	// create vertex buffer
@@ -124,25 +128,26 @@ void Graphics::DrawTriangle()
 	// VertexShader
 	Microsoft::WRL::ComPtr <ID3D11VertexShader> pVertexShader;
 	Microsoft::WRL::ComPtr <ID3DBlob> vBlob;
-	D3DReadFileToBlob(L"VertexShader.cso", &vBlob);
-	device->CreateVertexShader(vBlob->GetBufferPointer(), vBlob->GetBufferSize(), nullptr, &pVertexShader);
+	GFX_THROW_INFO(D3DReadFileToBlob(L"VertexShader.cso", &vBlob));
+	GFX_THROW_INFO(device->CreateVertexShader(vBlob->GetBufferPointer(), vBlob->GetBufferSize(), nullptr, &pVertexShader));
 	// Bind vertexshader
 	context->VSSetShader(pVertexShader.Get(), nullptr, 0u);
 
 	// vertex input layout
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> pInputLayout;
 	const D3D11_INPUT_ELEMENT_DESC inputLayoutDesc[] = {
-	{ "Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "COLOR",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 }
 	};
-	device->CreateInputLayout(inputLayoutDesc, (UINT)std::size(inputLayoutDesc), vBlob->GetBufferPointer(), vBlob->GetBufferSize(), &pInputLayout);
+	GFX_THROW_INFO(device->CreateInputLayout(inputLayoutDesc, (UINT)std::size(inputLayoutDesc), vBlob->GetBufferPointer(), vBlob->GetBufferSize(), &pInputLayout));
 	// bind vertex layout
 	context->IASetInputLayout(pInputLayout.Get());
 
 	// PixelShader
 	Microsoft::WRL::ComPtr<ID3D11PixelShader> pPixelShader;
 	Microsoft::WRL::ComPtr <ID3DBlob> pBlob;
-	D3DReadFileToBlob(L"PixelShader.cso", &pBlob);
-	device->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader);
+	GFX_THROW_INFO(D3DReadFileToBlob(L"PixelShader.cso", &pBlob));
+	GFX_THROW_INFO(device->CreatePixelShader(pBlob->GetBufferPointer(), pBlob->GetBufferSize(), nullptr, &pPixelShader));
 	// Bind pixelshader
 	context->PSSetShader(pPixelShader.Get(), nullptr, 0u);
 
