@@ -27,7 +27,7 @@ void App::DoFrame()
 	
 	
 	wnd.Gfx().ClearBuffer();
-	wnd.Gfx().DrawTriangle(timer.Peek());
-	wnd.Gfx().DrawTriangle(timer.Peek()+ 10.7);
+	wnd.Gfx().DrawTriangle(timer.Peek()- 3.0f);
+	//wnd.Gfx().DrawTriangle(timer.Peek()+ 10.7);
 	wnd.Gfx().EndFrame();
 }

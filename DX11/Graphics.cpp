@@ -149,14 +149,11 @@ void Graphics::DrawTriangle(float angle)
 	};
 	Vertex vertices[] =
 	{
-		{ -1.0f,-1.0f,-1.0f,3,134,43	},
-		{ 1.0f,-1.0f,-1.0f,128,24,34	},
-		{ -1.0f,1.0f,-1.0f,78,23,205	},
-		{ 1.0f,1.0f,-1.0f,85,220,30		},
-		{ -1.0f,-1.0f,1.0f,230,0,165	},
-		{ 1.0f,-1.0f,1.0f,125,148,2		},
-		{ -1.0f,1.0f,1.0f,129,95,49		},
-		{ 1.0f,1.0f,1.0f,90,30,0		},
+		{ -1.0f, -1.0f, -1.0f, 3, 134, 43 },
+		{ 1.0f, -1.0f, -1.0f, 128, 24, 34 },
+		{ 1.0f, -1.0f, 1.0f, 125, 148, 2 },
+		{ -1.0f, -1.0f, 1.0f, 230, 0, 165 },
+		{ 0.0f, 2.0f, 0.0f, 90, 30, 0 },
 
 	};
 
@@ -181,12 +178,12 @@ void Graphics::DrawTriangle(float angle)
 	// create index buffer
 	const unsigned short indices[] =
 	{
-		0,2,1, 2,3,1,
-		1,3,5, 3,7,5,
-		2,6,3, 3,6,7,
-		4,5,7, 4,7,6,
-		0,4,2, 2,4,6,
-		0,1,4, 1,5,4
+		0, 2, 1,
+		0, 3, 2,
+		0, 4, 3,
+		0, 1, 4,
+		1, 2, 4,
+		2, 3, 4
 	};
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pIndexBuffer;
 	D3D11_BUFFER_DESC ibd = {};
@@ -211,7 +208,7 @@ void Graphics::DrawTriangle(float angle)
 	{
 		{
 			DirectX::XMMatrixTranspose(
-				DirectX::XMMatrixRotationZ(angle) *
+				//DirectX::XMMatrixRotationZ(angle) *
 				DirectX::XMMatrixRotationX(angle) *
 				DirectX::XMMatrixTranslation(0.0f,0.0f,4.0f) *
 				DirectX::XMMatrixPerspectiveLH(1.0f,0.8f,0.5f,10.0f)) 
