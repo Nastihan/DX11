@@ -47,6 +47,8 @@ Graphics::Graphics(HWND hWnd)
 	// Set how the contents of the back buffer are treated after a buffer swap
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	////////////////////////
+	swapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	swapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
 	swapChainDesc.Flags = 0;
 
 	UINT swapCreateFlags = 0u;
@@ -71,11 +73,46 @@ Graphics::Graphics(HWND hWnd)
 		nullptr,
 		&context
 	));
-
+	// gain access to texture subresource in swap chain (back buffer)
 	Microsoft::WRL::ComPtr<ID3D11Resource> pBackBuffer = nullptr;
 	GFX_THROW_INFO(swapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer));
 	GFX_THROW_INFO(device->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &targetView));
+	
+	// depth stencil
+	CD3D11_DEPTH_STENCIL_DESC dsDesc = {};
+	dsDesc.DepthEnable = true;
+	dsDesc.DepthWriteMask = D3D11_DEPTH_WRITE_MASK_ALL;
+	dsDesc.DepthFunc = D3D11_COMPARISON_LESS;
+	Microsoft::WRL::ComPtr<ID3D11DepthStencilState> pDepthStencilState;
+	GFX_THROW_INFO(device->CreateDepthStencilState(&dsDesc, &pDepthStencilState));
+	// bind depth stencil state
+	context->OMSetDepthStencilState(pDepthStencilState.Get(), 1u);
+	
+	// create depth stensil texture
+	Microsoft::WRL::ComPtr<ID3D11Texture2D> pDepthStencil;
+	D3D11_TEXTURE2D_DESC descDepth = {};
+	descDepth.Width = 1000u;
+	descDepth.Height = 800u;
+	descDepth.MipLevels = 1u;
+	descDepth.ArraySize = 1u;
+	descDepth.Format = DXGI_FORMAT_D32_FLOAT;
+	descDepth.SampleDesc.Count = 1u;
+	descDepth.SampleDesc.Quality = 0u;
+	descDepth.Usage = D3D11_USAGE_DEFAULT;
+	descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+	GFX_THROW_INFO(device->CreateTexture2D(&descDepth, nullptr, &pDepthStencil));
 
+	// create view of depth stensil texture
+	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
+	descDSV.Format = DXGI_FORMAT_D32_FLOAT;
+	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+	descDSV.Texture2D.MipSlice = 0u;
+	GFX_THROW_INFO(device->CreateDepthStencilView(
+		pDepthStencil.Get(), &descDSV, &pDSV
+	));
+
+	// bind depth stensil view to OM
+	context->OMSetRenderTargets(1u, targetView.GetAddressOf(), pDSV.Get());
 
 }
 
@@ -84,6 +121,7 @@ void Graphics::ClearBuffer() noexcept
 	const float colorsArray[] = { 0.7f,0.6f,1.0f,1.0f };
 
 	context->ClearRenderTargetView(targetView.Get(), colorsArray);
+	context->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 }
 
 
@@ -223,8 +261,12 @@ void Graphics::DrawTriangle(float angle)
 	// Bind pixelshader
 	context->PSSetShader(pPixelShader.Get(), nullptr, 0u);
 
-	// bind render target
-	context->OMSetRenderTargets(1u, targetView.GetAddressOf(), nullptr);
+
+
+
+	// Topology
+	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
 
 	// configure viewport
 	D3D11_VIEWPORT vp;
@@ -236,8 +278,6 @@ void Graphics::DrawTriangle(float angle)
 	vp.TopLeftY = 0;
 	context->RSSetViewports(1u, &vp);
 
-	// Topology
-	context->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 	// draw call
 	GFX_THROW_INFO_ONLY(context->DrawIndexed((UINT)std::size(indices), 0u, 0u));
