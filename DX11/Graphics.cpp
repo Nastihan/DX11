@@ -70,18 +70,18 @@ Graphics::Graphics(HWND hWnd)
 		&device,
 		nullptr,
 		&context
-	) );
+	));
 
 	Microsoft::WRL::ComPtr<ID3D11Resource> pBackBuffer = nullptr;
 	GFX_THROW_INFO(swapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer));
 	GFX_THROW_INFO(device->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &targetView));
 
-	
+
 }
 
 void Graphics::ClearBuffer() noexcept
 {
-	const float colorsArray[] = { 0.8f,0.0f,1.0f,1.0f };
+	const float colorsArray[] = { 0.7f,0.6f,1.0f,1.0f };
 
 	context->ClearRenderTargetView(targetView.Get(), colorsArray);
 }
@@ -99,6 +99,7 @@ void Graphics::DrawTriangle(float angle)
 		{
 			float x;
 			float y;
+			float z;
 		} pos;
 		struct
 		{
@@ -110,12 +111,15 @@ void Graphics::DrawTriangle(float angle)
 	};
 	Vertex vertices[] =
 	{
-		{ 0.0f,0.5f,255,0,0,0 },
-		{ 0.5f,-0.5f,0,255,0,0 },
-		{ -0.5f,-0.5f,0,0,255,0 },
-		{ -0.3f,0.3f,0,255,0,0 },
-		{ 0.3f,0.3f,0,0,255,0 },
-		{ 0.0f,-0.7f,255,0,0,0 },
+		{ -1.0f,-1.0f,-1.0f,3,134,43	},
+		{ 1.0f,-1.0f,-1.0f,128,24,34	},
+		{ -1.0f,1.0f,-1.0f,78,23,205	},
+		{ 1.0f,1.0f,-1.0f,85,220,30		},
+		{ -1.0f,-1.0f,1.0f,230,0,165	},
+		{ 1.0f,-1.0f,1.0f,125,148,2		},
+		{ -1.0f,1.0f,1.0f,129,95,49		},
+		{ 1.0f,1.0f,1.0f,90,30,0		},
+
 	};
 
 	// create vertex buffer
@@ -139,10 +143,12 @@ void Graphics::DrawTriangle(float angle)
 	// create index buffer
 	const unsigned short indices[] =
 	{
-		0,1,2,
-		0,2,3,
-		0,4,1,
-		2,1,5,
+		0,2,1, 2,3,1,
+		1,3,5, 3,7,5,
+		2,6,3, 3,6,7,
+		4,5,7, 4,7,6,
+		0,4,2, 2,4,6,
+		0,1,4, 1,5,4
 	};
 	Microsoft::WRL::ComPtr<ID3D11Buffer> pIndexBuffer;
 	D3D11_BUFFER_DESC ibd = {};
@@ -168,8 +174,10 @@ void Graphics::DrawTriangle(float angle)
 		{
 			DirectX::XMMatrixTranspose(
 				DirectX::XMMatrixRotationZ(angle) *
-				DirectX::XMMatrixScaling(8.0f / 10.0f,1.0f,1.0f)*
-				DirectX::XMMatrixTranslation(0.4f,0.0f,0.0f))
+				DirectX::XMMatrixRotationX(angle) *
+				DirectX::XMMatrixTranslation(0.0f,0.0f,4.0f) *
+				DirectX::XMMatrixPerspectiveLH(1.0f,0.8f,0.5f,10.0f)) 
+				
 		}
 
 	};
@@ -200,7 +208,7 @@ void Graphics::DrawTriangle(float angle)
 	// vertex input layout
 	Microsoft::WRL::ComPtr<ID3D11InputLayout> pInputLayout;
 	const D3D11_INPUT_ELEMENT_DESC inputLayoutDesc[] = {
-		{ "POSITION", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		{ "COLOR",0,DXGI_FORMAT_R8G8B8A8_UNORM,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 }
 	};
 	GFX_THROW_INFO(device->CreateInputLayout(inputLayoutDesc, (UINT)std::size(inputLayoutDesc), vBlob->GetBufferPointer(), vBlob->GetBufferSize(), &pInputLayout));
