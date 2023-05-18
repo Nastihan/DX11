@@ -16,6 +16,12 @@
     <Filter Include="Shader">
       <UniqueIdentifier>{875c5b58-bf1b-4956-bd83-07d5bae18b8a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="dxerr">
+      <UniqueIdentifier>{7fc1614d-c705-4b35-97e3-953cb8efd337}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Macros">
+      <UniqueIdentifier>{2496664b-e1d9-4b94-b4cb-1c1e6c161d2c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WInMain.cpp">
@@ -42,11 +48,11 @@
     <ClCompile Include="Graphics.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="dxerr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DxgiInfoManager.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dxerr.cpp">
+      <Filter>dxerr</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -74,11 +80,17 @@
     <ClInclude Include="Graphics.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dxerr.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DxgiInfoManager.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dxerr.h">
+      <Filter>dxerr</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowsThrowMacros.h">
+      <Filter>Macros</Filter>
+    </ClInclude>
+    <ClInclude Include="GraphicsThrowMacros.h">
+      <Filter>Macros</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -88,5 +100,16 @@
     <FxCompile Include="PixelShader.hlsl">
       <Filter>Shader</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DXGetErrorDescription.inl">
+      <Filter>dxerr</Filter>
+    </None>
+    <None Include="DXGetErrorString.inl">
+      <Filter>dxerr</Filter>
+    </None>
+    <None Include="DXTrace.inl">
+      <Filter>dxerr</Filter>
+    </None>
   </ItemGroup>
 </Project>
