@@ -28,6 +28,12 @@
     <Filter Include="Source Files\Bindable">
       <UniqueIdentifier>{23bf36a6-4ae7-41ff-a5a8-45ace023ec78}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Drawable">
+      <UniqueIdentifier>{76554042-8740-4316-8a95-2b27b6c594b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Drawable">
+      <UniqueIdentifier>{813c690d-0cff-4c49-825c-6251f492a899}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WInMain.cpp">
@@ -61,6 +67,9 @@
       <Filter>dxerr</Filter>
     </ClCompile>
     <ClCompile Include="BIndable.cpp">
+      <Filter>Source Files\Bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="VertexBuffer.cpp">
       <Filter>Source Files\Bindable</Filter>
     </ClCompile>
   </ItemGroup>
@@ -102,6 +111,12 @@
       <Filter>Macros</Filter>
     </ClInclude>
     <ClInclude Include="Bindable.h">
+      <Filter>Header Files\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="Drawable.h">
+      <Filter>Header Files\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="VertexBuffer.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
   </ItemGroup>

@@ -156,12 +156,14 @@
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="NastihanException.cpp" />
     <ClCompile Include="NastihanTimer.cpp" />
+    <ClCompile Include="VertexBuffer.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WInMain.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="App.h" />
     <ClInclude Include="Bindable.h" />
+    <ClInclude Include="Drawable.h" />
     <ClInclude Include="dxerr.h" />
     <ClInclude Include="DxgiInfoManager.h" />
     <ClInclude Include="Graphics.h" />
@@ -171,6 +173,7 @@
     <ClInclude Include="NastihanException.h" />
     <ClInclude Include="NastihanTimer.h" />
     <ClInclude Include="NastihanWin.h" />
+    <ClInclude Include="VertexBuffer.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WindowsThrowMacros.h" />
   </ItemGroup>
