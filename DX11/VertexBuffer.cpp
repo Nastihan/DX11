@@ -4,6 +4,10 @@
 template<typename V>
 inline VertexBuffer::VertexBuffer(Graphics& gfx, const std::vector<V> vertices)
 	: stride(sizeof(V)){
+
+	INFOMAN(gfx);
+
+
 	D3D11_BUFFER_DESC bufferDesc;
 	bufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	bufferDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -13,7 +17,7 @@ inline VertexBuffer::VertexBuffer(Graphics& gfx, const std::vector<V> vertices)
 	bufferDesc.StructureByteStride = sizeof(V);
 	D3D11_SUBRESOURCE_DATA sData;
 	sData.pSysMem = vertices.data();
-	GetDevice(gfx)->CreateBuffer(&bufferDesc, &sData, &pVertexBuffer);
+	GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&bufferDesc, &sData, &pVertexBuffer));
 }
 
 void VertexBuffer::Bind(Graphics& gfx) noexcept

@@ -5,6 +5,7 @@
 
 class VertexBuffer : Bindable
 {
+public:
 	template <typename V>
 	VertexBuffer(Graphics& gfx, const std::vector<V> vertices);
 	void Bind(Graphics& gfx) noexcept override;
