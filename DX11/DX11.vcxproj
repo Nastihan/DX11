@@ -158,8 +158,10 @@
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="NastihanException.cpp" />
     <ClCompile Include="NastihanTimer.cpp" />
+    <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="Topology.cpp" />
     <ClCompile Include="VertexBuffer.cpp" />
+    <ClCompile Include="VertexShader.cpp" />
     <ClCompile Include="Window.cpp" />
     <ClCompile Include="WInMain.cpp" />
   </ItemGroup>
@@ -178,8 +180,10 @@
     <ClInclude Include="NastihanException.h" />
     <ClInclude Include="NastihanTimer.h" />
     <ClInclude Include="NastihanWin.h" />
+    <ClInclude Include="PixelShader.h" />
     <ClInclude Include="Topology.h" />
     <ClInclude Include="VertexBuffer.h" />
+    <ClInclude Include="VertexShader.h" />
     <ClInclude Include="Window.h" />
     <ClInclude Include="WindowsThrowMacros.h" />
   </ItemGroup>
