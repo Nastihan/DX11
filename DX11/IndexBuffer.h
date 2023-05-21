@@ -1,7 +1,7 @@
 #pragma once
 #include "Bindable.h"
 
-class IndexBuffer : Bindable
+class IndexBuffer : public Bindable
 {
 public:
 	IndexBuffer(Graphics& gfx, std::vector<unsigned short> indiices);

@@ -102,14 +102,6 @@ Graphics::Graphics(HWND hWnd)
 
 }
 
-void Graphics::ClearBuffer() noexcept
-{
-	const float colorsArray[] = { 0.7f,0.6f,1.0f,1.0f };
-
-	context->ClearRenderTargetView(targetView.Get(), colorsArray);
-	context->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
-}
-
 
 
 void Graphics::DrawTriangle(float angle)
@@ -267,6 +259,31 @@ void Graphics::DrawTriangle(float angle)
 
 
 
+}
+
+
+
+void Graphics::DrawIndexed(UINT count) noexcept(!IS_DEBUG)
+{
+	GFX_THROW_INFO_ONLY(context->DrawIndexed(count, 0u, 0u));
+}
+
+void Graphics::SetProjection(DirectX::FXMMATRIX proj) noexcept
+{
+	projection = proj;
+}
+
+DirectX::XMMATRIX Graphics::GetProjection() const noexcept
+{
+	return projection;
+}
+
+void Graphics::ClearBuffer() noexcept
+{
+	const float colorsArray[] = { 0.7f,0.6f,1.0f,1.0f };
+
+	context->ClearRenderTargetView(targetView.Get(), colorsArray);
+	context->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 }
 
 void Graphics::EndFrame()

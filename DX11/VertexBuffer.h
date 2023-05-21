@@ -3,7 +3,7 @@
 #include "GraphicsThrowMacros.h"
 
 
-class VertexBuffer : Bindable
+class VertexBuffer : public Bindable
 {
 public:
 	template <typename V>

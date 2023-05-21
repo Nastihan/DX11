@@ -1,7 +1,7 @@
 #pragma once
 #include "Bindable.h"
 
-class Topology : Bindable
+class Topology : public Bindable
 {
 public:
 	Topology(Graphics& gfx, D3D11_PRIMITIVE_TOPOLOGY type);
