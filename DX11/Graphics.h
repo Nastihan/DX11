@@ -60,7 +60,6 @@ public:
 	Graphics& operator=(const Graphics&) = delete;
 	~Graphics() = default;
 	void ClearBuffer() noexcept;
-	void DrawTriangle(float angle);
 	void EndFrame();
 	void DrawIndexed(UINT count) noexcept(!IS_DEBUG);
 	void SetProjection(DirectX::FXMMATRIX proj) noexcept;

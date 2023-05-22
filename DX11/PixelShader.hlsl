@@ -1,10 +1,9 @@
-struct PS_Input
+cbuffer CBuf
 {
-    float4 pos : SV_Position;
-    float4 color : COLOR;
+    float4 face_colors[6];
 };
 
-float4 main(PS_Input input) : SV_TARGET
+float4 main(uint tid : SV_PrimitiveID) : SV_Target
 {
-	return float4(input.color);
+    return face_colors[tid / 2];
 }
