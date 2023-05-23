@@ -85,6 +85,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies> $(CoreLibraryDependencies);%(AdditionalDependencies)dxgi.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -123,6 +124,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies> $(CoreLibraryDependencies);%(AdditionalDependencies)dxgi.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -175,6 +177,7 @@
     <ClInclude Include="Box.h" />
     <ClInclude Include="ConstantBuffers.h" />
     <ClInclude Include="Drawable.h" />
+    <ClInclude Include="DrawableBase.h" />
     <ClInclude Include="dxerr.h" />
     <ClInclude Include="DxgiInfoManager.h" />
     <ClInclude Include="Graphics.h" />

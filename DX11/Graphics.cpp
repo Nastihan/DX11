@@ -130,7 +130,7 @@ DirectX::XMMATRIX Graphics::GetProjection() const noexcept
 
 void Graphics::ClearBuffer() noexcept
 {
-	const float colorsArray[] = { 0.7f,0.6f,1.0f,1.0f };
+	const float colorsArray[] = { 0.0f,0.0f,0.0f,1.0f };
 
 	context->ClearRenderTargetView(targetView.Get(), colorsArray);
 	context->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
