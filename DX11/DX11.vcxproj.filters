@@ -37,6 +37,12 @@
     <Filter Include="Header Files\Geometry">
       <UniqueIdentifier>{ff1669a9-97cf-4f67-97a0-b818033431c5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\PS">
+      <UniqueIdentifier>{86fa6dbd-4d57-405a-9c9d-59138d7addca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Vs">
+      <UniqueIdentifier>{3cbbf6a6-254a-4291-b374-a16e1a8c436d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WInMain.cpp">
@@ -97,6 +103,12 @@
       <Filter>Source Files\Drawable</Filter>
     </ClCompile>
     <ClCompile Include="Box.cpp">
+      <Filter>Source Files\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="Melon.cpp">
+      <Filter>Source Files\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="Pyramid.cpp">
       <Filter>Source Files\Drawable</Filter>
     </ClCompile>
   </ItemGroup>
@@ -197,13 +209,25 @@
     <ClInclude Include="Prism.h">
       <Filter>Header Files\Geometry</Filter>
     </ClInclude>
+    <ClInclude Include="Melon.h">
+      <Filter>Header Files\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="Pyramid.h">
+      <Filter>Header Files\Drawable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="VertexShader.hlsl">
-      <Filter>Shader</Filter>
+    <FxCompile Include="ColorBlendPS.hlsl">
+      <Filter>Shader\PS</Filter>
     </FxCompile>
-    <FxCompile Include="PixelShader.hlsl">
-      <Filter>Shader</Filter>
+    <FxCompile Include="ColorIndexedPS.hlsl">
+      <Filter>Shader\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="ColorIndexedVS.hlsl">
+      <Filter>Shader\Vs</Filter>
+    </FxCompile>
+    <FxCompile Include="ColorBlendVS.hlsl">
+      <Filter>Shader\Vs</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
