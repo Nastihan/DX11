@@ -14,8 +14,8 @@ Graphics::Graphics(HWND hWnd)
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
 	// Display mode of the backbuffer
-	swapChainDesc.BufferDesc.Height = 0;
-	swapChainDesc.BufferDesc.Height = 0;
+	swapChainDesc.BufferDesc.Height = 1600;
+	swapChainDesc.BufferDesc.Height = 900;
 	swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
 	swapChainDesc.BufferDesc.RefreshRate.Denominator = 0;
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
