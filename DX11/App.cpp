@@ -88,7 +88,7 @@ void App::DoFrame()
 	wnd.Gfx().ClearBuffer();
 	for (auto& d : drawables)
 	{
-		d->Update(!wnd.kbd.KeyIsEmpty() ? 0.0f : dt);
+		d->Update(wnd.kbd.KeyIsPressed(VK_TAB) ? 0.0f : dt);
 		d->Draw(wnd.Gfx());
 	}
 	wnd.Gfx().EndFrame();
