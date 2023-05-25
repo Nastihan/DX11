@@ -1,3 +1,4 @@
+
 #include "Keyboard.h"
 
 bool Keyboard::KeyIsPressed(unsigned char keycode) const noexcept
@@ -13,7 +14,8 @@ std::optional<Keyboard::Event> Keyboard::ReadKey() noexcept
 		keybuffer.pop();
 		return e;
 	}
-	return{};
+	else
+		return {};
 }
 
 bool Keyboard::KeyIsEmpty() const noexcept
@@ -21,25 +23,26 @@ bool Keyboard::KeyIsEmpty() const noexcept
 	return keybuffer.empty();
 }
 
+void Keyboard::FlushKey() noexcept
+{
+	keybuffer = std::queue<Event>();
+}
+
 std::optional<char> Keyboard::ReadChar() noexcept
 {
-	if (charbuffer.size() > 0u)
+	if (keybuffer.size() > 0u)
 	{
 		unsigned char charcode = charbuffer.front();
 		charbuffer.pop();
 		return charcode;
 	}
-	return{};
+	else
+		return {};
 }
 
 bool Keyboard::CharIsEmpty() const noexcept
 {
 	return charbuffer.empty();
-}
-
-void Keyboard::FlushKey() noexcept
-{
-	keybuffer = std::queue<Event>();
 }
 
 void Keyboard::FlushChar() noexcept

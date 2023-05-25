@@ -11,7 +11,6 @@ public:
 	template<class V>
 	static IndexedTriangleList<V> MakeTesselated(int divisions_x, int divisions_y)
 	{
-		namespace DirectX = DirectX;
 		assert(divisions_x >= 1);
 		assert(divisions_y >= 1);
 
