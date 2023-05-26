@@ -14,7 +14,7 @@ GDIPlusManager gdi;
 
 App::App()
 	:
-	wnd(1600, 900, "The Donkey Fart Box")
+	wnd(1600, 900, "DX11")
 {
 	class Factory
 	{
@@ -42,6 +42,11 @@ App::App()
 					gfx, rng, adist, ddist,
 					odist, rdist, longdist, latdist
 				);
+			case 3:
+				return std::make_unique<Sheet>(
+					gfx, rng, adist, ddist,
+					odist, rdist
+				);
 			default:
 				assert(false && "bad drawable type in factory");
 				return {};
@@ -57,27 +62,14 @@ App::App()
 		std::uniform_real_distribution<float> bdist{ 0.4f,3.0f };
 		std::uniform_int_distribution<int> latdist{ 5,20 };
 		std::uniform_int_distribution<int> longdist{ 10,40 };
-		std::uniform_int_distribution<int> typedist{ 0,2 };
+		std::uniform_int_distribution<int> typedist{ 0,3 };
 	};
 
 	Factory f(wnd.Gfx());
 	drawables.reserve(nDrawables);
 	std::generate_n(std::back_inserter(drawables), nDrawables, f);
 
-	/*std::mt19937 rng{ std::random_device{}() };
-	std::uniform_real_distribution<float> adist{ 0.0f,PI * 2.0f };
-	std::uniform_real_distribution<float> ddist{ 0.0f,PI * 0.5f };
-	std::uniform_real_distribution<float> odist{ 0.0f,PI * 0.08f };
-	std::uniform_real_distribution<float> rdist{ 6.0f,20.0f };
-	std::uniform_real_distribution<float> bdist{ 0.4f,3.0f };
-	std::uniform_int_distribution<int> latdist{ 5,20 };
-	std::uniform_int_distribution<int> longdist{ 10,40 };
-	std::uniform_int_distribution<int> typedist{ 0,2 };
 
-	drawables.push_back(std::make_unique<Sheet>(wnd.Gfx(), rng, adist, ddist,
-		odist, rdist, bdist));*/
-
-	
 
 	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 3.0f / 4.0f, 0.5f, 40.0f));
 }
@@ -88,7 +80,7 @@ void App::DoFrame()
 	wnd.Gfx().ClearBuffer();
 	for (auto& d : drawables)
 	{
-		d->Update(wnd.kbd.KeyIsPressed(VK_TAB) ? 0.0f : dt);
+		d->Update(wnd.kbd.KeyIsPressed(VK_SPACE) ? 0.0f : dt);
 		d->Draw(wnd.Gfx());
 	}
 	wnd.Gfx().EndFrame();

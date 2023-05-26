@@ -1,18 +1,18 @@
 #include "Sheet.h"
-#include "Plane.h"
 #include "BindableBase.h"
 #include "GraphicsThrowMacros.h"
+#include "Plane.h"
 #include "Surface.h"
-#include <vector>
+#include "Texture.h"
+#include "Sampler.h"
 
 
-Sheet::Sheet(Graphics & gfx,
+Sheet::Sheet(Graphics& gfx,
 	std::mt19937& rng,
 	std::uniform_real_distribution<float>& adist,
 	std::uniform_real_distribution<float>& ddist,
 	std::uniform_real_distribution<float>& odist,
-	std::uniform_real_distribution<float>& rdist,
-	std::uniform_real_distribution<float>& bdist)
+	std::uniform_real_distribution<float>& rdist)
 	:
 	r(rdist(rng)),
 	droll(ddist(rng)),
@@ -25,6 +25,7 @@ Sheet::Sheet(Graphics & gfx,
 	theta(adist(rng)),
 	phi(adist(rng))
 {
+
 	if (!IsStaticInitialized())
 	{
 		struct Vertex
@@ -33,18 +34,16 @@ Sheet::Sheet(Graphics & gfx,
 			DirectX::XMFLOAT2 tex;
 		};
 		auto model = Plane::Make<Vertex>();
-		model.vertices[0].tex = { 0.0f,0.0f };
-		model.vertices[1].tex = { 1.0f,0.0f };
-		model.vertices[2].tex = { 0.0f,1.0f };
-		model.vertices[3].tex = { 1.0f,1.0f };
+		model.vertices[0].tex = { -1.0f,-1.0f };
+		model.vertices[1].tex = { 2.0f,-1.0f };
+		model.vertices[2].tex = { -1.0f,2.0f };
+		model.vertices[3].tex = { 2.0f,2.0f };
 
-		AddStaticBind(std::make_unique<Texture>(gfx, Surface::FromFile("Images\\Wall.png")));
-
-		AddStaticBind(std::make_unique<Sampler>(gfx));
-
-		model.Transform(DirectX::XMMatrixScaling(1.0f, 1.0f, 1.2f));
+		AddStaticBind(std::make_unique<Texture>(gfx, Surface::FromFile("Images\\PlasmaBlue.jpg")));
 
 		AddStaticBind(std::make_unique<VertexBuffer>(gfx, model.vertices));
+
+		AddStaticBind(std::make_unique<Sampler>(gfx));
 
 		auto pvs = std::make_unique<VertexShader>(gfx, L"TextureVS.cso");
 		auto pvsbc = pvs->GetBytecode();
@@ -52,38 +51,12 @@ Sheet::Sheet(Graphics & gfx,
 
 		AddStaticBind(std::make_unique<PixelShader>(gfx, L"TexturePS.cso"));
 
-
 		AddStaticIndexBuffer(std::make_unique<IndexBuffer>(gfx, model.indices));
-
-		struct PixelShaderConstants
-		{
-			struct
-			{
-				float r;
-				float g;
-				float b;
-				float a;
-			} face_colors[8];
-		};
-		const PixelShaderConstants cb2 =
-		{
-			{
-				{ 1.0f,1.0f,1.0f },
-				{ 1.0f,0.0f,0.0f },
-				{ 0.0f,1.0f,0.0f },
-				{ 1.0f,1.0f,0.0f },
-				{ 0.0f,0.0f,1.0f },
-				{ 1.0f,0.0f,1.0f },
-				{ 0.0f,1.0f,1.0f },
-				{ 0.0f,0.0f,0.0f },
-			}
-		};
-		AddStaticBind(std::make_unique<PixelConstantBuffer<PixelShaderConstants>>(gfx, cb2));
 
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
 			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0},
+			{ "TexCoord",0,DXGI_FORMAT_R32G32_FLOAT,0,12,D3D11_INPUT_PER_VERTEX_DATA,0 },
 		};
 		AddStaticBind(std::make_unique<InputLayout>(gfx, ied, pvsbc));
 
@@ -93,13 +66,8 @@ Sheet::Sheet(Graphics & gfx,
 	{
 		SetIndexFromStatic();
 	}
-	AddBind(std::make_unique<TransformCbuf>(gfx, *this));
 
-	// model deformation transform (per instance, not stored as bind)
-	DirectX::XMStoreFloat3x3(
-		&mt,
-		DirectX::XMMatrixScaling(1.0f, 1.0f, bdist(rng))
-	);
+	AddBind(std::make_unique<TransformCbuf>(gfx, *this));
 }
 
 void Sheet::Update(float dt) noexcept
@@ -114,8 +82,8 @@ void Sheet::Update(float dt) noexcept
 
 DirectX::XMMATRIX Sheet::GetTransformXM() const noexcept
 {
-	return DirectX::XMLoadFloat3x3(&mt) *
-		DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
+	
+	return DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
 		DirectX::XMMatrixTranslation(r, 0.0f, 0.0f) *
 		DirectX::XMMatrixRotationRollPitchYaw(theta, phi, chi) *
 		DirectX::XMMatrixTranslation(0.0f, 0.0f, 20.0f);
