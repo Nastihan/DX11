@@ -4,6 +4,7 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 #include "GraphicsThrowMacros.h"
+#include <dxgi.h>
 
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib,"D3DCompiler.lib")
@@ -44,10 +45,17 @@ Graphics::Graphics(HWND hWnd)
 
 	// for checking results of d3d functions
 	HRESULT hr;
+	
+	// change the adapter used by DirectX 11 application to utilize graphics card instead of the integrated GPU ------------------- still working in a hybrid mode!!!!!!!!!!!!
+	IDXGIFactory* pFactory = nullptr;
+	CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&pFactory);
+	Microsoft::WRL::ComPtr<IDXGIAdapter> pAdapter;
+	pFactory->EnumAdapters(1u, &pAdapter);
+	pFactory->Release();
 
 	GFX_THROW_INFO(D3D11CreateDeviceAndSwapChain(
-		nullptr,
-		D3D_DRIVER_TYPE_HARDWARE,
+		pAdapter.Get(),
+		D3D_DRIVER_TYPE_UNKNOWN,
 		nullptr,
 		swapCreateFlags,
 		nullptr,
