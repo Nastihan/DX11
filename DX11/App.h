@@ -1,6 +1,7 @@
 #pragma once
 #include "Window.h"
 #include "NastihanTimer.h"
+#include "ImGuiManager.h"
 
 
 
@@ -13,6 +14,7 @@ public:
 	void DoFrame();
 
 private:
+	ImGuiManager imgui;
 	Window wnd;
 	NastihanTimer timer;
 	std::vector<std::unique_ptr<class Pyramid>> pyramids;

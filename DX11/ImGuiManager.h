@@ -2,6 +2,7 @@
 
 class ImGuiManager
 {
+public:
 	ImGuiManager();
 	~ImGuiManager();
 };

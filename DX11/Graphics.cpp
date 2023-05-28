@@ -4,6 +4,7 @@
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 #include "GraphicsThrowMacros.h"
+#include "ImGui/imgui_impl_dx11.h"
 #include <dxgi.h>
 
 #pragma comment(lib,"d3d11.lib")
@@ -117,6 +118,9 @@ Graphics::Graphics(HWND hWnd)
 	vp.TopLeftX = 0.0f;
 	vp.TopLeftY = 0.0f;
 	context->RSSetViewports(1u, &vp);
+
+	//
+	ImGui_ImplDX11_Init(device.Get(), context.Get());
 
 }
 
