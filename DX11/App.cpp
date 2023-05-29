@@ -89,13 +89,14 @@ void App::DoFrame()
 	
 	wnd.Gfx().BeginFrame();
 
+
 	for (auto& d : drawables)
 	{
 		d->Update( dt);
 		d->Draw(wnd.Gfx());
 	}
 
-
+	char buffer[1000] = {};
 
 	if (ImGui::Begin("Speed")) 
 	{
@@ -104,12 +105,7 @@ void App::DoFrame()
 	}
 	ImGui::End();
 
-	
-	
-
-	
-
-	
+		
 	wnd.Gfx().EndFrame();
 }
 
