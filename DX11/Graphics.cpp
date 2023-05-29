@@ -5,6 +5,7 @@
 #include <DirectXMath.h>
 #include "GraphicsThrowMacros.h"
 #include "ImGui/imgui_impl_dx11.h"
+#include "ImGui/imgui_impl_win32.h"
 #include <dxgi.h>
 
 #pragma comment(lib,"d3d11.lib")
@@ -140,16 +141,47 @@ DirectX::XMMATRIX Graphics::GetProjection() const noexcept
 	return projection;
 }
 
-void Graphics::ClearBuffer() noexcept
+void Graphics::EnableImgui() noexcept
 {
-	const float colorsArray[] = { 0.0f,0.1f,0.2f,1.0f };
+	imguiEnabled = true;
+}
 
+void Graphics::DisableImgui() noexcept
+{
+	imguiEnabled = false;
+}
+
+bool Graphics::IsImguiEnabled() const noexcept
+{
+	return imguiEnabled;
+}
+
+
+void Graphics::BeginFrame()
+{
+	if (imguiEnabled)
+	{
+		// ImGui stuff
+		ImGui_ImplDX11_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
+	}
+
+	// clear 
+	const float colorsArray[] = { 0.0f,0.1f,0.2f,1.0f };
 	context->ClearRenderTargetView(targetView.Get(), colorsArray);
 	context->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 }
 
 void Graphics::EndFrame()
 {
+	// ImGui stuff
+	if (imguiEnabled)
+	{
+		ImGui::Render();
+		ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	}
+
 	HRESULT hr;
 #ifndef NDEBUG
 	infoManager.Set();

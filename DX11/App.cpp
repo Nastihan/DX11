@@ -84,26 +84,32 @@ App::App()
 
 void App::DoFrame()
 {
-	const auto dt = timer.Mark();
-	wnd.Gfx().ClearBuffer();
+	const auto dt = timer.Mark() * speedFactor;
+	
+	
+	wnd.Gfx().BeginFrame();
+
 	for (auto& d : drawables)
 	{
-		d->Update(wnd.kbd.KeyIsPressed(VK_SPACE) ? 0.0f : dt);
+		d->Update( dt);
 		d->Draw(wnd.Gfx());
 	}
 
-	// imgui stuff
-	ImGui_ImplDX11_NewFrame();
-	ImGui_ImplWin32_NewFrame();
-	ImGui::NewFrame();
 
-	ImGui::ShowDemoWindow();
 
-	ImGui::Render();
+	if (ImGui::Begin("Speed")) 
+	{
+		ImGui::SliderFloat("speed factor", &speedFactor, 0.0f, 5.0f);
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+	}
+	ImGui::End();
 
-	ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
+	
+	
 
-	// 
+	
+
+	
 	wnd.Gfx().EndFrame();
 }
 

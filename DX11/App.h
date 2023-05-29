@@ -14,6 +14,8 @@ public:
 	void DoFrame();
 
 private:
+	float speedFactor = 1.0f;
+	bool showDemoWindow = true;
 	ImGuiManager imgui;
 	Window wnd;
 	NastihanTimer timer;
