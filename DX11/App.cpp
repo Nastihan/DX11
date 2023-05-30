@@ -80,24 +80,20 @@ App::App()
 
 
 	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 45.0f));
-	wnd.Gfx().SetCamera(DirectX::XMMatrixTranslation(0.0f, 0.0f, 20.0f));
 }
 
 void App::DoFrame()
 {
 	const auto dt = timer.Mark() * speedFactor;
 	
-	
 	wnd.Gfx().BeginFrame();
-
+	wnd.Gfx().SetCamera(cam.GetMatrix());
 
 	for (auto& d : drawables)
 	{
 		d->Update( wnd.kbd.KeyIsPressed(VK_SPACE)? 0.0f : dt);
 		d->Draw(wnd.Gfx());
 	}
-
-	char buffer[1000] = {};
 
 	if (ImGui::Begin("Speed")) 
 	{
@@ -106,6 +102,7 @@ void App::DoFrame()
 		ImGui::Text("Status: %s", wnd.kbd.KeyIsPressed(VK_SPACE) ? "PAUSED" : "RUNNING");		
 	}
 	ImGui::End();
+	cam.SpawnControlWindow();
 
 		
 	wnd.Gfx().EndFrame();

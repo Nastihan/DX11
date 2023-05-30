@@ -2,6 +2,8 @@
 #include "Window.h"
 #include "NastihanTimer.h"
 #include "ImGuiManager.h"
+#include "Camera.h"
+
 
 
 
@@ -19,6 +21,7 @@ private:
 	ImGuiManager imgui;
 	Window wnd;
 	NastihanTimer timer;
+	Camera cam;
 	std::vector<std::unique_ptr<class Drawable>> drawables;
 	static constexpr size_t nDrawables = 280;
 };
