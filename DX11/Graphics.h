@@ -58,7 +58,7 @@ public:
 	Graphics(HWND hWnd);
 	Graphics(const Graphics&) = delete;
 	Graphics& operator=(const Graphics&) = delete;
-	~Graphics() = default;
+	~Graphics();
 	void BeginFrame();
 	void EndFrame();
 	void DrawIndexed(UINT count) noexcept(!IS_DEBUG);

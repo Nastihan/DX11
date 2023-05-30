@@ -125,6 +125,11 @@ Graphics::Graphics(HWND hWnd)
 
 }
 
+Graphics::~Graphics()
+{
+	ImGui_ImplDX11_Shutdown();
+}
+
 
 void Graphics::DrawIndexed(UINT count) noexcept(!IS_DEBUG)
 {
