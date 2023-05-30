@@ -79,7 +79,8 @@ App::App()
 	std::generate_n(std::back_inserter(drawables), nDrawables, f);
 
 
-	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 40.0f));
+	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 45.0f));
+	wnd.Gfx().SetCamera(DirectX::XMMatrixTranslation(0.0f, 0.0f, 20.0f));
 }
 
 void App::DoFrame()
@@ -92,7 +93,7 @@ void App::DoFrame()
 
 	for (auto& d : drawables)
 	{
-		d->Update( dt);
+		d->Update( wnd.kbd.KeyIsPressed(VK_SPACE)? 0.0f : dt);
 		d->Draw(wnd.Gfx());
 	}
 
@@ -102,6 +103,7 @@ void App::DoFrame()
 	{
 		ImGui::SliderFloat("speed factor", &speedFactor, 0.0f, 5.0f);
 		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+		ImGui::Text("Status: %s", wnd.kbd.KeyIsPressed(VK_SPACE) ? "PAUSED" : "RUNNING");		
 	}
 	ImGui::End();
 

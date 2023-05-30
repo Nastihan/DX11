@@ -131,6 +131,16 @@ void Graphics::DrawIndexed(UINT count) noexcept(!IS_DEBUG)
 	GFX_THROW_INFO_ONLY(context->DrawIndexed(count, 0u, 0u));
 }
 
+void Graphics::SetCamera(DirectX::FXMMATRIX cam) noexcept
+{
+	camera = cam;
+}
+
+DirectX::XMMATRIX Graphics::GetCamera() const noexcept
+{
+	return camera;
+}
+
 void Graphics::SetProjection(DirectX::FXMMATRIX proj) noexcept
 {
 	projection = proj;
