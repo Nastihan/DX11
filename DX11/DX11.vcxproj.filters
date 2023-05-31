@@ -46,6 +46,12 @@
     <Filter Include="ImGui">
       <UniqueIdentifier>{0b57ee1b-e60f-4dc5-ba31-8ccfc086e282}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Phong">
+      <UniqueIdentifier>{1197ffdc-d0a4-48f7-9597-e94da5374105}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\Solid">
+      <UniqueIdentifier>{8c143298-e74b-4d01-bde8-4e0edf3e2be0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WInMain.cpp">
@@ -157,6 +163,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SolidSphere.cpp">
+      <Filter>Source Files\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="PointLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -314,6 +326,12 @@
     <ClInclude Include="Camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="PointLight.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SolidSphere.h">
+      <Filter>Header Files\Drawable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ColorBlendPS.hlsl">
@@ -333,6 +351,18 @@
     </FxCompile>
     <FxCompile Include="TexturePS.hlsl">
       <Filter>Shader\PS</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongVS.hlsl">
+      <Filter>Shader\Phong</Filter>
+    </FxCompile>
+    <FxCompile Include="SolidVS.hlsl">
+      <Filter>Shader\Solid</Filter>
+    </FxCompile>
+    <FxCompile Include="SolidPS.hlsl">
+      <Filter>Shader\Solid</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongPS.hlsl">
+      <Filter>Shader\Phong</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

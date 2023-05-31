@@ -11,8 +11,8 @@
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib,"D3DCompiler.lib")
 
-
-
+// dxguid.lib;dxgi.lib;d3d11.lib;winpixeventruntime.lib
+// $(CoreLibraryDependencies); % (AdditionalDependencies); dxgi.lib; gdiplus.lib
 Graphics::Graphics(HWND hWnd)
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
@@ -201,6 +201,8 @@ void Graphics::EndFrame()
 #ifndef NDEBUG
 	infoManager.Set();
 #endif
+
+	//swapChain->Present(1u, 0u);
 	if (FAILED(hr = swapChain->Present(1u, 0u)))
 	{
 		if (hr == DXGI_ERROR_DEVICE_REMOVED)

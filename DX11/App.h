@@ -3,6 +3,7 @@
 #include "NastihanTimer.h"
 #include "ImGuiManager.h"
 #include "Camera.h"
+#include "PointLight.h"
 
 
 
@@ -22,6 +23,7 @@ private:
 	Window wnd;
 	NastihanTimer timer;
 	Camera cam;
+	PointLight light;
 	std::vector<std::unique_ptr<class Drawable>> drawables;
 	static constexpr size_t nDrawables = 280;
 };
