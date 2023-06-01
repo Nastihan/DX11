@@ -60,6 +60,16 @@ Box::Box(Graphics& gfx,
 	}
 	AddBind(std::make_unique<TransformCbuf>(gfx, *this));
 
+	// constant buffer for material color
+	struct PSmaterialColor
+	{
+		DirectX::XMFLOAT3 color;
+		float padding;
+	};
+	PSmaterialColor cBuf{ DirectX::XMFLOAT3(0.2f,0.9f,0.2f) };
+
+	AddBind(std::make_unique<PixelConstantBuffer<PSmaterialColor>>(gfx, cBuf, 1u));
+
 	// model deformation transform (per instance, not stored as bind)
 	DirectX::XMStoreFloat3x3(
 		&mt,
