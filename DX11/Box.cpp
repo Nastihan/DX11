@@ -11,7 +11,8 @@ Box::Box(Graphics& gfx,
 	std::uniform_real_distribution<float>& ddist,
 	std::uniform_real_distribution<float>& odist,
 	std::uniform_real_distribution<float>& rdist,
-	std::uniform_real_distribution<float>& bdist)
+	std::uniform_real_distribution<float>& bdist,
+	DirectX::XMFLOAT3 material)
 	:
 	r(rdist(rng)),
 	droll(ddist(rng)),
@@ -65,8 +66,8 @@ Box::Box(Graphics& gfx,
 	{
 		DirectX::XMFLOAT3 color;
 		float padding;
-	};
-	PSmaterialColor cBuf{ DirectX::XMFLOAT3(0.2f,0.9f,0.2f) };
+	}cBuf;
+	cBuf.color = material;
 
 	AddBind(std::make_unique<PixelConstantBuffer<PSmaterialColor>>(gfx, cBuf, 1u));
 

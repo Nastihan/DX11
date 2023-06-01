@@ -34,7 +34,7 @@ void PointLight::SpawnControlWindow() noexcept
 void PointLight::Reset() noexcept
 {
 	cBufData.pos = { 0.0f,0.0f,0.0f };
-	cBufData.ambient = { 0.05f,0.05f,0.05f };
+	cBufData.ambient = { 0.01f,0.01f,0.01f };
 	cBufData.diffuseColor = { 1.0f,1.0f,1.0f };
 	cBufData.diffuseIntensity = 1.0f;
 	cBufData.attConst = 0.5f;
