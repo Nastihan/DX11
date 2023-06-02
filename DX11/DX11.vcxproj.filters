@@ -114,9 +114,6 @@
     <ClCompile Include="Box.cpp">
       <Filter>Source Files\Drawable</Filter>
     </ClCompile>
-    <ClCompile Include="Melon.cpp">
-      <Filter>Source Files\Drawable</Filter>
-    </ClCompile>
     <ClCompile Include="Pyramid.cpp">
       <Filter>Source Files\Drawable</Filter>
     </ClCompile>
@@ -131,9 +128,6 @@
     </ClCompile>
     <ClCompile Include="Sampler.cpp">
       <Filter>Source Files\Bindable</Filter>
-    </ClCompile>
-    <ClCompile Include="Sheet.cpp">
-      <Filter>Source Files\Drawable</Filter>
     </ClCompile>
     <ClCompile Include="WindowMessageMap.cpp">
       <Filter>Source Files</Filter>
@@ -170,6 +164,9 @@
     </ClCompile>
     <ClCompile Include="PointLight.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Cylinder.cpp">
+      <Filter>Source Files\Drawable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -269,9 +266,6 @@
     <ClInclude Include="Prism.h">
       <Filter>Header Files\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Melon.h">
-      <Filter>Header Files\Drawable</Filter>
-    </ClInclude>
     <ClInclude Include="Pyramid.h">
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
@@ -286,9 +280,6 @@
     </ClInclude>
     <ClInclude Include="Sampler.h">
       <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
-    <ClInclude Include="Sheet.h">
-      <Filter>Header Files\Drawable</Filter>
     </ClInclude>
     <ClInclude Include="WindowMessageMap.h">
       <Filter>Header Files</Filter>
@@ -332,6 +323,12 @@
     <ClInclude Include="SolidSphere.h">
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
+    <ClInclude Include="TestObject.h">
+      <Filter>Header Files\Drawable</Filter>
+    </ClInclude>
+    <ClInclude Include="Cylinder.h">
+      <Filter>Header Files\Drawable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="ColorBlendPS.hlsl">
@@ -362,6 +359,9 @@
       <Filter>Shader\Solid</Filter>
     </FxCompile>
     <FxCompile Include="PhongPS.hlsl">
+      <Filter>Shader\Phong</Filter>
+    </FxCompile>
+    <FxCompile Include="IndexedPhongPS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
   </ItemGroup>

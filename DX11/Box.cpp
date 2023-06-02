@@ -14,16 +14,7 @@ Box::Box(Graphics& gfx,
 	std::uniform_real_distribution<float>& bdist,
 	DirectX::XMFLOAT3 material)
 	:
-	r(rdist(rng)),
-	droll(ddist(rng)),
-	dpitch(ddist(rng)),
-	dyaw(ddist(rng)),
-	dphi(odist(rng)),
-	dtheta(odist(rng)),
-	dchi(odist(rng)),
-	chi(adist(rng)),
-	theta(adist(rng)),
-	phi(adist(rng))
+	TestObject::TestObject(gfx, rng, adist, ddist, odist, rdist)
 {
 	if (!IsStaticInitialized()) 
 	{
@@ -64,10 +55,10 @@ Box::Box(Graphics& gfx,
 	// constant buffer for material color
 	struct PSmaterialConstants
 	{
-		alignas(16) DirectX::XMFLOAT3 color;
-		float specularIntensity = 0.9f;
-		float specularPower = 6000.0f;
-		float padding[2];
+		DirectX::XMFLOAT3 color;
+		float specularIntensity = 0.6f;
+		float specularPower = 60.0f;
+		float padding[3];
 	}cBuf;
 	cBuf.color = material;
 
@@ -80,20 +71,8 @@ Box::Box(Graphics& gfx,
 	);
 }
 
-void Box::Update(float dt) noexcept
-{
-	roll += droll * dt;
-	pitch += dpitch * dt;
-	yaw += dyaw * dt;
-	theta += dtheta * dt;
-	phi += dphi * dt;
-	chi += dchi * dt;
-}
 
 DirectX::XMMATRIX Box::GetTransformXM() const noexcept
 {
-	return DirectX::XMLoadFloat3x3(&mt) *
-		DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll) *
-		DirectX::XMMatrixTranslation(r, 0.0f, 0.0f) *
-		DirectX::XMMatrixRotationRollPitchYaw(theta, phi, chi);
+	return (DirectX::XMLoadFloat3x3(&mt) * TestObject::GetTransformXM());
 }
