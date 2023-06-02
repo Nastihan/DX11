@@ -34,7 +34,7 @@ void PointLight::SpawnControlWindow() noexcept
 void PointLight::Reset() noexcept
 {
 	cBufData.pos = { 0.0f,0.0f,0.0f };
-	cBufData.ambient = { 0.01f,0.01f,0.01f };
+	cBufData.ambient = { 0.02f,0.02f,0.02f };
 	cBufData.diffuseColor = { 1.0f,1.0f,1.0f };
 	cBufData.diffuseIntensity = 1.0f;
 	cBufData.attConst = 0.5f;
@@ -48,8 +48,11 @@ void PointLight::Draw(Graphics& gfx) const noexcept(!IS_DEBUG)
 	mesh.Draw(gfx);
 }
 
-void PointLight::Bind(Graphics& gfx) const noexcept
+void PointLight::Bind(Graphics& gfx, DirectX::FXMMATRIX view) const noexcept
 {
-	cbuf.Update(gfx, PointLightCBuf{ cBufData });
+	auto dataCopy = cBufData;
+	const auto pos = DirectX::XMLoadFloat3(&cBufData.pos);
+	DirectX::XMStoreFloat3(&dataCopy.pos, DirectX::XMVector3Transform(pos, view));
+	cbuf.Update(gfx, dataCopy);
 	cbuf.Bind(gfx);
 }

@@ -183,7 +183,7 @@ void Graphics::BeginFrame()
 	}
 
 	// clear 
-	const float colorsArray[] = { 0.0f,0.1f,0.2f,1.0f };
+	const float colorsArray[] = { 0.0f,0.0f,0.07f,1.0f };
 	context->ClearRenderTargetView(targetView.Get(), colorsArray);
 	context->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0u);
 }

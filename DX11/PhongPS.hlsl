@@ -2,17 +2,19 @@
 cbuffer LightCBuf
 {
     float3 lightPos;
-    float3 ambient = { 0.05f, 0.05f, 0.05f };
-    float3 diffuseColor = { 1.0f, 1.0f, 1.0f };
-    float diffuseIntensity = 1.0f;
-    float attConst = 0.5f;
-    float attLin = 0.045f;
-    float attQuad = 0.0075f;
+    float3 ambient;
+    float3 diffuseColor;
+    float diffuseIntensity;
+    float attConst;
+    float attLin;
+    float attQuad;
 };
 
 cbuffer materialColorCBuf
 {
     float3 mColor;
+    float specularIntensity;
+    float specularPower;
 };
 
 struct PS_Input
@@ -21,8 +23,6 @@ struct PS_Input
     float3 n : Normal;
     float4 pos : SV_Position;
 };
-
-//static const float3 materialColor = { 0.7f, 0.2f, 0.1f };
 
 
 float4 main(PS_Input input) : SV_Target
@@ -33,8 +33,13 @@ float4 main(PS_Input input) : SV_Target
     const float3 dirToL = vToL / distToL;
 	// diffuse attenuation
     const float att = 1.0f / (attConst + attLin * distToL + attQuad * (distToL * distToL));
-	// diffuse intensity
+	// intensity
     const float3 diffuse = diffuseColor * diffuseIntensity * att * max(0.0f, dot(dirToL, input.n));
+    // reflected light vector
+    const float3 w = input.n * dot(vToL, input.n);
+    const float3 r = w * 2.0f - vToL;
+	// calculate specular intensity based on angle between viewing vector and reflection vector, narrow with power function
+    const float3 specular = att * (diffuseColor * diffuseIntensity) * specularIntensity * pow(max(0.0f, dot(normalize(-r), normalize(input.worldPos))), specularPower);
 	// final color
-    return float4(saturate((diffuse + ambient) * mColor), 1.0f);
+    return float4(saturate((diffuse + ambient + specular) * mColor), 1.0f);
 }

@@ -48,8 +48,8 @@ Box::Box(Graphics& gfx,
 
 		const std::vector<D3D11_INPUT_ELEMENT_DESC> ied =
 		{
-			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0 },
-			{ "Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,0,D3D11_INPUT_PER_VERTEX_DATA,0	}
+			{ "Position",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0 },
+			{ "Normal",0,DXGI_FORMAT_R32G32B32_FLOAT,0,D3D11_APPEND_ALIGNED_ELEMENT,D3D11_INPUT_PER_VERTEX_DATA,0	}
 		};
 		AddStaticBind(std::make_unique<InputLayout>(gfx, ied, pvsbc));
 
@@ -62,14 +62,16 @@ Box::Box(Graphics& gfx,
 	AddBind(std::make_unique<TransformCbuf>(gfx, *this));
 
 	// constant buffer for material color
-	struct PSmaterialColor
+	struct PSmaterialConstants
 	{
-		DirectX::XMFLOAT3 color;
-		float padding;
+		alignas(16) DirectX::XMFLOAT3 color;
+		float specularIntensity = 0.9f;
+		float specularPower = 6000.0f;
+		float padding[2];
 	}cBuf;
 	cBuf.color = material;
 
-	AddBind(std::make_unique<PixelConstantBuffer<PSmaterialColor>>(gfx, cBuf, 1u));
+	AddBind(std::make_unique<PixelConstantBuffer<PSmaterialConstants>>(gfx, cBuf, 1u));
 
 	// model deformation transform (per instance, not stored as bind)
 	DirectX::XMStoreFloat3x3(
