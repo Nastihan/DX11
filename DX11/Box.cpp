@@ -3,6 +3,7 @@
 #include "BindableBase.h"
 #include "GraphicsThrowMacros.h"
 #include <vector>
+#include "ImGui/imgui.h"
 
 
 Box::Box(Graphics& gfx,
@@ -52,17 +53,9 @@ Box::Box(Graphics& gfx,
 	}
 	AddBind(std::make_unique<TransformCbuf>(gfx, *this));
 
-	// constant buffer for material color
-	struct PSmaterialConstants
-	{
-		DirectX::XMFLOAT3 color;
-		float specularIntensity = 0.6f;
-		float specularPower = 60.0f;
-		float padding[3];
-	}cBuf;
-	cBuf.color = material;
-
-	AddBind(std::make_unique<PixelConstantBuffer<PSmaterialConstants>>(gfx, cBuf, 1u));
+	
+	materialConstants.color = material;
+	AddBind(std::make_unique<MaterialCbuf>(gfx, materialConstants, 1u));
 
 	// model deformation transform (per instance, not stored as bind)
 	DirectX::XMStoreFloat3x3(
@@ -76,3 +69,44 @@ DirectX::XMMATRIX Box::GetTransformXM() const noexcept
 {
 	return (DirectX::XMLoadFloat3x3(&mt) * TestObject::GetTransformXM());
 }
+
+bool Box::SpawnControlWindow(int id, Graphics& gfx) noexcept
+{
+	using namespace std::string_literals;
+
+	bool dirty = false;
+	bool open = true;
+	if (ImGui::Begin(("Box "s + std::to_string(id)).c_str(), &open))
+	{
+		ImGui::Text("Material Properties");
+		const auto cd = ImGui::ColorEdit3("Material Color", &materialConstants.color.x);
+		const auto sid = ImGui::SliderFloat("Specular Intensity", &materialConstants.specularIntensity, 0.05f, 4.0f, "%.2f", 2);
+		const auto spd = ImGui::SliderFloat("Specular Power", &materialConstants.specularPower, 1.0f, 200.0f, "%.2f", 2);
+		dirty = cd || sid || spd;
+
+		ImGui::Text("Position");
+		ImGui::SliderFloat("R", &r, 0.0f, 80.0f, "%.1f");
+		ImGui::SliderAngle("Theta", &theta, -180.0f, 180.0f);
+		ImGui::SliderAngle("Phi", &phi, -180.0f, 180.0f);
+		ImGui::Text("Orientation");
+		ImGui::SliderAngle("Roll", &roll, -180.0f, 180.0f);
+		ImGui::SliderAngle("Pitch", &pitch, -180.0f, 180.0f);
+		ImGui::SliderAngle("Yaw", &yaw, -180.0f, 180.0f);
+	}
+	ImGui::End();
+
+	if (dirty)
+	{
+		SyncMaterial(gfx);
+	}
+
+	return open;
+}
+
+void Box::SyncMaterial(Graphics& gfx) noexcept(!IS_DEBUG)
+{
+	auto pConstPS = QueryBindable<MaterialCbuf>();
+	assert(pConstPS != nullptr);
+	pConstPS->Update(gfx, materialConstants);
+}
+

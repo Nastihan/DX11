@@ -4,7 +4,7 @@
 #include "ImGuiManager.h"
 #include "Camera.h"
 #include "PointLight.h"
-
+#include <set>
 
 
 
@@ -14,8 +14,11 @@ public:
 	App();
 	~App();
 	int Go();
+private:
 	void DoFrame();
-
+	void SpawnSimulationWindow() noexcept;
+	void SpawnBoxWindowManagerWindow() noexcept;
+	void SpawnBoxWindows() noexcept;
 private:
 	float speedFactor = 1.0f;
 	bool showDemoWindow = true;
@@ -24,6 +27,9 @@ private:
 	NastihanTimer timer;
 	Camera cam;
 	PointLight light;
+	std::vector<class Box*> boxes;
 	std::vector<std::unique_ptr<class Drawable>> drawables;
 	static constexpr size_t nDrawables = 200;
+	std::optional<int> comboBoxIndex;
+	std::set<int> boxControlIds;
 };
