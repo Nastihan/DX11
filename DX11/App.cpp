@@ -1,6 +1,8 @@
 #include "App.h"
 #include "Box.h"
 #include "Cylinder.h"
+#include "Pyramid.h"
+#include "SkinnedBox.h"
 #include <memory>
 #include <algorithm>
 #include "NastihanMath.h"
@@ -35,6 +37,14 @@ App::App()
 					odist, rdist, bdist, material
 				);
 			case 1:
+				return std::make_unique<Pyramid>(
+					gfx, rng, adist, ddist,
+					odist, rdist,tdist );
+			case 2:
+				return std::make_unique<SkinnedBox>(
+					gfx, rng, adist, ddist,
+					odist, rdist);
+			case 3:
 				return std::make_unique<Cylinder>(
 					gfx, rng, adist, ddist, odist,
 					rdist, bdist, tdist
@@ -47,7 +57,7 @@ App::App()
 	private:
 		Graphics& gfx;
 		std::mt19937 rng{ std::random_device{}() };
-		std::uniform_int_distribution<int> sdist{ 0, 1 };
+		std::uniform_int_distribution<int> sdist{ 0, 3 };
 		std::uniform_real_distribution<float> adist{ 0.0f, PI * 2.0f };
 		std::uniform_real_distribution<float> ddist{ 0.0f, PI * 0.5f };
 		std::uniform_real_distribution<float> odist{ 0.0f, PI * 0.08f };

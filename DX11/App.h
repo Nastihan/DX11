@@ -25,5 +25,5 @@ private:
 	Camera cam;
 	PointLight light;
 	std::vector<std::unique_ptr<class Drawable>> drawables;
-	static constexpr size_t nDrawables = 220;
+	static constexpr size_t nDrawables = 200;
 };
