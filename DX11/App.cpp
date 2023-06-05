@@ -10,7 +10,10 @@
 #include "GDIPlusManager.h"
 #include "imgui/imgui.h"
 
-namespace dx = DirectX;
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
+
 
 GDIPlusManager gdipm;
 
@@ -19,6 +22,13 @@ App::App()
 	wnd(1600, 900, "DX11"),
 	light(wnd.Gfx())
 {
+
+	Assimp::Importer imp;
+	auto model = imp.ReadFile("Models\\suzanne.obj",
+		aiProcess_Triangulate |
+		aiProcess_JoinIdenticalVertices
+	);
+
 	class Factory
 	{
 	public:
@@ -79,7 +89,7 @@ App::App()
 		}
 	}
 
-	wnd.Gfx().SetProjection(dx::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 60.0f));
+	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 60.0f));
 }
 
 void App::DoFrame()
