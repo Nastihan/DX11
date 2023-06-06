@@ -20,7 +20,7 @@ AssimpTest::AssimpTest(Graphics& gfx, std::mt19937& rng,
 
 	if (!IsStaticInitialized())
 	{
-		DX11::VertexLayout vl{};  vl.Append<DX11::VertexLayout::Position3D>().Append<DX11::VertexLayout::Normal>();
+		DX11::VertexLayout vl{};  vl.Append(DX11::VertexLayout::Position3D).Append(DX11::VertexLayout::Normal);
 		DX11::VertexBuffer vb(vl);
 
 		Assimp::Importer imp;
