@@ -1,5 +1,6 @@
 #include "AssimpTest.h"
 #include "BindableBase.h"
+#include "Vertex.h"
 #include "GraphicsThrowMacros.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -19,11 +20,8 @@ AssimpTest::AssimpTest(Graphics& gfx, std::mt19937& rng,
 
 	if (!IsStaticInitialized())
 	{
-		struct Vertex
-		{
-			DirectX::XMFLOAT3 pos;
-			DirectX::XMFLOAT3 n;
-		};
+		DX11::VertexLayout vl{};  vl.Append<DX11::VertexLayout::Position3D>().Append<DX11::VertexLayout::Normal>();
+		DX11::VertexBuffer vb(vl);
 
 		Assimp::Importer imp;
 		const auto pModel = imp.ReadFile("Models\\suzanne.obj",
@@ -32,14 +30,13 @@ AssimpTest::AssimpTest(Graphics& gfx, std::mt19937& rng,
 		);
 		const auto pMesh = pModel->mMeshes[0];
 
-		std::vector<Vertex> vertices;
-		vertices.reserve(pMesh->mNumVertices);
+
 		for (unsigned int i = 0; i < pMesh->mNumVertices; i++)
 		{
-			vertices.push_back({
-				{ pMesh->mVertices[i].x * scale,pMesh->mVertices[i].y * scale,pMesh->mVertices[i].z * scale },
-				*reinterpret_cast<DirectX::XMFLOAT3*>(&pMesh->mNormals[i])
-				});
+			vb.EmplaceBack(
+				DirectX::XMFLOAT3{ pMesh->mVertices[i].x* scale, pMesh->mVertices[i].y* scale, pMesh->mVertices[i].z* scale },
+				* reinterpret_cast<DirectX::XMFLOAT3*>(&pMesh->mNormals[i])
+				);
 		}
 
 		std::vector<unsigned short> indices;
@@ -53,7 +50,7 @@ AssimpTest::AssimpTest(Graphics& gfx, std::mt19937& rng,
 			indices.push_back(face.mIndices[2]);
 		}
 
-		AddStaticBind(std::make_unique<VertexBuffer>(gfx, vertices));
+		AddStaticBind(std::make_unique<VertexBuffer>(gfx, vb));
 
 		AddStaticIndexBuffer(std::make_unique<IndexBuffer>(gfx, indices));
 
