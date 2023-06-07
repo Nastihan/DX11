@@ -5,6 +5,7 @@
 #include "Camera.h"
 #include "PointLight.h"
 #include <set>
+#include "Model.h"
 
 
 
@@ -32,4 +33,6 @@ private:
 	static constexpr size_t nDrawables = 100;
 	std::optional<int> comboBoxIndex;
 	std::set<int> boxControlIds;
+
+	Model nano{ wnd.Gfx(),"Models\\nanosuit.obj" };
 };
