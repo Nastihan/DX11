@@ -1,5 +1,5 @@
 #include "AssimpTest.h"
-#include "BindableBase.h"
+#include "BindableCommon.h"
 #include "Vertex.h"
 #include "GraphicsThrowMacros.h"
 #include <assimp/Importer.hpp>
@@ -59,7 +59,6 @@ AssimpTest::AssimpTest(Graphics& gfx, std::mt19937& rng,
 		AddStaticBind(std::move(pvs));
 
 		AddStaticBind(std::make_unique<PixelShader>(gfx, L"PhongPS.cso"));
-
 
 		AddStaticBind(std::make_unique<InputLayout>(gfx, vb.GetLayout().GetD3DLayout(), pvsbc));
 

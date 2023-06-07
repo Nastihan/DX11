@@ -37,9 +37,6 @@
     <Filter Include="Shader\PS">
       <UniqueIdentifier>{86fa6dbd-4d57-405a-9c9d-59138d7addca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader\Vs">
-      <UniqueIdentifier>{3cbbf6a6-254a-4291-b374-a16e1a8c436d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Macros">
       <UniqueIdentifier>{2496664b-e1d9-4b94-b4cb-1c1e6c161d2c}</UniqueIdentifier>
     </Filter>
@@ -165,9 +162,6 @@
     <ClCompile Include="PointLight.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Cylinder.cpp">
-      <Filter>Source Files\Drawable</Filter>
-    </ClCompile>
     <ClCompile Include="AssimpTest.cpp">
       <Filter>Source Files\Drawable</Filter>
     </ClCompile>
@@ -239,7 +233,7 @@
     <ClInclude Include="TransformCbuf.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
-    <ClInclude Include="BindableBase.h">
+    <ClInclude Include="BindableCommon.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
     <ClInclude Include="Box.h">
@@ -329,13 +323,13 @@
     <ClInclude Include="TestObject.h">
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
-    <ClInclude Include="Cylinder.h">
-      <Filter>Header Files\Drawable</Filter>
-    </ClInclude>
     <ClInclude Include="AssimpTest.h">
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
     <ClInclude Include="Vertex.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -345,15 +339,6 @@
     </FxCompile>
     <FxCompile Include="ColorIndexedPS.hlsl">
       <Filter>Shader\PS</Filter>
-    </FxCompile>
-    <FxCompile Include="ColorIndexedVS.hlsl">
-      <Filter>Shader\Vs</Filter>
-    </FxCompile>
-    <FxCompile Include="ColorBlendVS.hlsl">
-      <Filter>Shader\Vs</Filter>
-    </FxCompile>
-    <FxCompile Include="TextureVS.hlsl">
-      <Filter>Shader\Vs</Filter>
     </FxCompile>
     <FxCompile Include="TexturePS.hlsl">
       <Filter>Shader\PS</Filter>
@@ -371,18 +356,6 @@
       <Filter>Shader\Phong</Filter>
     </FxCompile>
     <FxCompile Include="IndexedPhongPS.hlsl">
-      <Filter>Shader\Phong</Filter>
-    </FxCompile>
-    <FxCompile Include="BlendedPhongVS.hlsl">
-      <Filter>Shader\Phong</Filter>
-    </FxCompile>
-    <FxCompile Include="BlendedPhongPS.hlsl">
-      <Filter>Shader\Phong</Filter>
-    </FxCompile>
-    <FxCompile Include="TexturedPhongVS.hlsl">
-      <Filter>Shader\Phong</Filter>
-    </FxCompile>
-    <FxCompile Include="TexturedPhongPS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
   </ItemGroup>

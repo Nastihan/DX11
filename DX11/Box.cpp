@@ -1,6 +1,6 @@
 #include "Box.h"
 #include "Cube.h"
-#include "BindableBase.h"
+#include "BindableCommon.h"
 #include "GraphicsThrowMacros.h"
 #include <vector>
 #include "ImGui/imgui.h"

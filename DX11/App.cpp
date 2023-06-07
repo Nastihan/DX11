@@ -1,6 +1,5 @@
 #include "App.h"
 #include "Box.h"
-#include "Cylinder.h"
 #include "Pyramid.h"
 #include "AssimpTest.h"
 #include "SkinnedBox.h"
@@ -55,11 +54,6 @@ App::App()
 				return std::make_unique<AssimpTest>(
 					gfx, rng, adist, ddist,
 					odist, rdist, material, 1.5f
-				);
-			case 4:
-				return std::make_unique<Cylinder>(
-					gfx, rng, adist, ddist, odist,
-					rdist, bdist, tdist
 				);
 			default:
 				assert(false && "impossible drawable option in factory");
