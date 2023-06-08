@@ -34,9 +34,6 @@
     <Filter Include="Header Files\Geometry">
       <UniqueIdentifier>{ff1669a9-97cf-4f67-97a0-b818033431c5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader\PS">
-      <UniqueIdentifier>{86fa6dbd-4d57-405a-9c9d-59138d7addca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Macros">
       <UniqueIdentifier>{2496664b-e1d9-4b94-b4cb-1c1e6c161d2c}</UniqueIdentifier>
     </Filter>
@@ -108,12 +105,6 @@
     <ClCompile Include="Drawable.cpp">
       <Filter>Source Files\Drawable</Filter>
     </ClCompile>
-    <ClCompile Include="Box.cpp">
-      <Filter>Source Files\Drawable</Filter>
-    </ClCompile>
-    <ClCompile Include="Pyramid.cpp">
-      <Filter>Source Files\Drawable</Filter>
-    </ClCompile>
     <ClCompile Include="GDIPlusManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -128,9 +119,6 @@
     </ClCompile>
     <ClCompile Include="WindowMessageMap.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SkinnedBox.cpp">
-      <Filter>Source Files\Drawable</Filter>
     </ClCompile>
     <ClCompile Include="ImGui\imgui.cpp">
       <Filter>ImGui</Filter>
@@ -164,6 +152,12 @@
     </ClCompile>
     <ClCompile Include="AssimpTest.cpp">
       <Filter>Source Files\Drawable</Filter>
+    </ClCompile>
+    <ClCompile Include="Vertex.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Model.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -236,9 +230,6 @@
     <ClInclude Include="BindableCommon.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
-    <ClInclude Include="Box.h">
-      <Filter>Header Files\Drawable</Filter>
-    </ClInclude>
     <ClInclude Include="DrawableBase.h">
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
@@ -263,9 +254,6 @@
     <ClInclude Include="Prism.h">
       <Filter>Header Files\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="Pyramid.h">
-      <Filter>Header Files\Drawable</Filter>
-    </ClInclude>
     <ClInclude Include="GDIPlusManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -280,9 +268,6 @@
     </ClInclude>
     <ClInclude Include="WindowMessageMap.h">
       <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SkinnedBox.h">
-      <Filter>Header Files\Drawable</Filter>
     </ClInclude>
     <ClInclude Include="ImGui\imconfig.h">
       <Filter>ImGui</Filter>
@@ -332,17 +317,14 @@
     <ClInclude Include="Model.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ConditionalNoexcept.h">
+      <Filter>Header Files\Macros</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="ColorBlendPS.hlsl">
-      <Filter>Shader\PS</Filter>
-    </FxCompile>
-    <FxCompile Include="ColorIndexedPS.hlsl">
-      <Filter>Shader\PS</Filter>
-    </FxCompile>
-    <FxCompile Include="TexturePS.hlsl">
-      <Filter>Shader\PS</Filter>
-    </FxCompile>
     <FxCompile Include="PhongVS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
@@ -353,9 +335,6 @@
       <Filter>Shader\Solid</Filter>
     </FxCompile>
     <FxCompile Include="PhongPS.hlsl">
-      <Filter>Shader\Phong</Filter>
-    </FxCompile>
-    <FxCompile Include="IndexedPhongPS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
   </ItemGroup>

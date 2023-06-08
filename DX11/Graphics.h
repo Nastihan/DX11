@@ -9,10 +9,16 @@
 #include <DirectXMath.h>
 #include <memory>
 #include <random>
+#include "ConditionalNoexcept.h"
+
+namespace Bind
+{
+	class Bindable;
+}
 
 class Graphics
 {
-	friend class Bindable;
+	friend Bind::Bindable;
 
 public:
 

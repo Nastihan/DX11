@@ -1,8 +1,5 @@
 #include "App.h"
-#include "Box.h"
-#include "Pyramid.h"
 #include "AssimpTest.h"
-#include "SkinnedBox.h"
 #include <memory>
 #include <algorithm>
 #include "NastihanMath.h"
