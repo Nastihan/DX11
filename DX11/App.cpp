@@ -42,6 +42,7 @@ void App::DoFrame()
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
 	SpawnModelControlWindow();
+	nano.ShowWindow();
 
 
 	// present

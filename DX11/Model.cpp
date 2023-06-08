@@ -1,4 +1,5 @@
 #include "Model.h"
+#include "ImGui/imgui.h"
 
 // Mesh
 Mesh::Mesh(Graphics& gfx, std::vector<std::unique_ptr<Bind::Bindable>> bindPtrs)
@@ -35,9 +36,10 @@ DirectX::XMMATRIX Mesh::GetTransformXM() const noexcept
 
 
 // Node
-Node::Node(std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform) noxnd
+Node::Node(std::string name ,std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform) noxnd
 	:
-meshPtrs(std::move(meshPtrs))
+meshPtrs(std::move(meshPtrs)),
+name(name)
 {
 	DirectX::XMStoreFloat4x4(&this->transform, transform);
 }
@@ -53,6 +55,19 @@ void Node::Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform) const no
 		pc->Draw(gfx, built);
 	}
 }
+
+void Node::RenderTree() const noxnd
+{
+	if (ImGui::TreeNode(name.c_str()))
+	{
+		for (auto& cp : childPtrs)
+		{
+			cp->RenderTree();
+		}
+		ImGui::TreePop();
+	}
+}
+
 void Node::AddChild(std::unique_ptr<Node> pChild) noxnd
 {
 	assert(pChild);
@@ -76,10 +91,21 @@ Model::Model(Graphics& gfx, const std::string fileName)
 
 	pRoot = ParseNode(*pScene->mRootNode);
 }
+
 void Model::Draw(Graphics& gfx, DirectX::FXMMATRIX transform) const
 {
 	pRoot->Draw(gfx, transform);
 }
+
+void Model::ShowWindow() const noexcept
+{
+	if (ImGui::Begin("Control"))
+	{
+		pRoot->RenderTree();
+	}
+	ImGui::End();
+}
+
 std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh)
 {
 	namespace dx = DirectX;
@@ -136,6 +162,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh)
 
 	return std::make_unique<Mesh>(gfx, std::move(bindablePtrs));
 }
+
 std::unique_ptr<Node> Model::ParseNode(const aiNode& node)
 {
 	namespace dx = DirectX;
@@ -151,7 +178,7 @@ std::unique_ptr<Node> Model::ParseNode(const aiNode& node)
 		curMeshPtrs.push_back(meshPtrs.at(meshIdx).get());
 	}
 
-	auto pNode = std::make_unique<Node>(std::move(curMeshPtrs), transform);
+	auto pNode = std::make_unique<Node>(node.mName.C_Str(), std::move(curMeshPtrs), transform);
 	for (size_t i = 0; i < node.mNumChildren; i++)
 	{
 		pNode->AddChild(ParseNode(*node.mChildren[i]));
