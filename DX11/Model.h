@@ -171,9 +171,9 @@ public:
 
 		return pNode;
 	}
-	void Draw(Graphics& gfx) const
+	void Draw(Graphics& gfx, DirectX::FXMMATRIX transformation) const
 	{
-		pRoot->Draw(gfx, DirectX::XMMatrixIdentity());
+		pRoot->Draw(gfx, transformation);
 	}
 private:
 	std::unique_ptr<Node> pRoot;

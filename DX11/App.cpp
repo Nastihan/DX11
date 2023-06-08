@@ -36,7 +36,7 @@ void App::DoFrame()
 	wnd.Gfx().SetCamera(cam.GetMatrix());
 	light.Bind(wnd.Gfx(),cam.GetMatrix());
 
-	nano.Draw(wnd.Gfx());
+	nano.Draw(wnd.Gfx(),(DirectX::XMMatrixRotationRollPitchYaw(model.pitch,model.yaw,model.roll) * DirectX::XMMatrixTranslation(model.x,model.y,model.z)));
 	light.Draw(wnd.Gfx());
 
 
@@ -44,8 +44,8 @@ void App::DoFrame()
 	SpawnSimulationWindow();
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
-	SpawnBoxWindowManagerWindow();
-	SpawnBoxWindows();
+	SpawnModelControlWindow();
+
 
 	// present
 	wnd.Gfx().EndFrame();
@@ -62,51 +62,22 @@ void App::SpawnSimulationWindow() noexcept
 	ImGui::End();
 }
 
-void App::SpawnBoxWindowManagerWindow() noexcept
+void App::SpawnModelControlWindow() noexcept
 {
-	if (ImGui::Begin("Boxes"))
+	if(ImGui::Begin("Model"))
 	{
-		using namespace std::string_literals;
-		const auto preview = comboBoxIndex ? std::to_string(*comboBoxIndex) : "Choose a box..."s;
-		if (ImGui::BeginCombo("Box Number", preview.c_str()))
-		{
-			for (int i = 0; i < boxes.size(); i++)
-			{
-				const bool selected = *comboBoxIndex == i;
-				if (ImGui::Selectable(std::to_string(i).c_str(), selected))
-				{
-					comboBoxIndex = i;
-				}
-				if (selected)
-				{
-					ImGui::SetItemDefaultFocus();
-				}
-			}
-			ImGui::EndCombo();
-		}
-		if (ImGui::Button("Spawn Control Window") && comboBoxIndex)
-		{
-			boxControlIds.insert(*comboBoxIndex);
-			comboBoxIndex.reset();
-		}
+		ImGui::SliderAngle("roll", &model.roll, -180.0f, 180.0f);
+		ImGui::SliderAngle("pitch", &model.pitch, -180.0f, 180.0f);
+		ImGui::SliderAngle("yaw", &model.yaw, -180.0f, 180.0f);
+		ImGui::SliderFloat("x", &model.x, -40.0f, 40.0f);
+		ImGui::SliderFloat("y", &model.y, -40.0f, 40.0f);
+		ImGui::SliderFloat("z", &model.z, -40.0f, 40.0f);
+
 	}
 	ImGui::End();
 }
 
-void App::SpawnBoxWindows() noexcept
-{
-	for (auto i = boxControlIds.begin(); i != boxControlIds.end(); )
-	{
-		if (!boxes[*i]->SpawnControlWindow(*i, wnd.Gfx()))
-		{
-			i = boxControlIds.erase(i);
-		}
-		else
-		{
-			i++;
-		}
-	}
-}
+
 
 App::~App()
 {}

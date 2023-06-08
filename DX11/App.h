@@ -18,8 +18,7 @@ public:
 private:
 	void DoFrame();
 	void SpawnSimulationWindow() noexcept;
-	void SpawnBoxWindowManagerWindow() noexcept;
-	void SpawnBoxWindows() noexcept;
+	void SpawnModelControlWindow() noexcept;
 private:
 	float speedFactor = 1.0f;
 	bool showDemoWindow = true;
@@ -28,11 +27,16 @@ private:
 	NastihanTimer timer;
 	Camera cam;
 	PointLight light;
-	std::vector<class Box*> boxes;
-	std::vector<std::unique_ptr<class Drawable>> drawables;
-	static constexpr size_t nDrawables = 100;
-	std::optional<int> comboBoxIndex;
-	std::set<int> boxControlIds;
+
+	struct transformation
+	{
+		float roll;
+		float pitch;
+		float yaw;
+		float x = 0.0f;
+		float y = 0.0f;
+		float z = 0.0f;
+	}model;
 
 	Model nano{ wnd.Gfx(),"Models\\nanosuit.obj" };
 };
