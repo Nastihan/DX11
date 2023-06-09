@@ -6,6 +6,7 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include "ConditionalNoexcept.h"
+#include <optional>
 
 class Mesh : public DrawableBase<Mesh>
 {
@@ -23,13 +24,15 @@ class Node
 public:
 	Node(std::string name,std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform) noxnd;
 	void Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform) const noxnd;
+	void ShowTree(int& nodeIndex, std::optional<int>& selectedIndex, Node*& thisNode) const noexcept;
+	void SetAppliedTransform(DirectX::FXMMATRIX transform) noexcept;
 private:
-	void RenderTree() const noxnd;
 	void AddChild(std::unique_ptr<Node> pChild) noxnd;
 private:
 	std::vector<std::unique_ptr<Node>> childPtrs;
 	std::vector<Mesh*> meshPtrs;
-	DirectX::XMFLOAT4X4 transform;
+	DirectX::XMFLOAT4X4 baseTransform;
+	DirectX::XMFLOAT4X4 appliedTransform;
 	std::string name;
 };
 
@@ -37,12 +40,15 @@ class Model
 {
 public:
 	Model(Graphics& gfx, const std::string fileName);
-	void Draw(Graphics& gfx, DirectX::FXMMATRIX transform) const;
-	void ShowWindow() const noexcept;;
+	void Draw(Graphics& gfx) const;
+	void showWindow() noexcept;
+	~Model() noexcept;
 private:
 	static std::unique_ptr<Mesh> ParseMesh(Graphics& gfx, const aiMesh& mesh);
 	std::unique_ptr<Node> ParseNode(const aiNode& node);
 private:
+	
+	std::unique_ptr<class ModelWindow> pModelWindow;
 	std::unique_ptr<Node> pRoot;
 	std::vector<std::unique_ptr<Mesh>> meshPtrs;
 };

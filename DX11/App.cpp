@@ -33,7 +33,7 @@ void App::DoFrame()
 	wnd.Gfx().SetCamera(cam.GetMatrix());
 	light.Bind(wnd.Gfx(),cam.GetMatrix());
 
-	nano.Draw(wnd.Gfx(),(DirectX::XMMatrixRotationRollPitchYaw(model.pitch,model.yaw,model.roll) * DirectX::XMMatrixTranslation(model.x,model.y,model.z)));
+	nano.Draw(wnd.Gfx());
 	light.Draw(wnd.Gfx());
 
 
@@ -41,8 +41,7 @@ void App::DoFrame()
 	SpawnSimulationWindow();
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
-	SpawnModelControlWindow();
-	nano.ShowWindow();
+	nano.showWindow();
 
 
 	// present
@@ -59,22 +58,6 @@ void App::SpawnSimulationWindow() noexcept
 	}
 	ImGui::End();
 }
-
-void App::SpawnModelControlWindow() noexcept
-{
-	if(ImGui::Begin("Model"))
-	{
-		ImGui::SliderAngle("roll", &model.roll, -180.0f, 180.0f);
-		ImGui::SliderAngle("pitch", &model.pitch, -180.0f, 180.0f);
-		ImGui::SliderAngle("yaw", &model.yaw, -180.0f, 180.0f);
-		ImGui::SliderFloat("x", &model.x, -40.0f, 40.0f);
-		ImGui::SliderFloat("y", &model.y, -40.0f, 40.0f);
-		ImGui::SliderFloat("z", &model.z, -40.0f, 40.0f);
-
-	}
-	ImGui::End();
-}
-
 
 
 App::~App()
