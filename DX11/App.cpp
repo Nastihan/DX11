@@ -20,9 +20,7 @@ App::App()
 	wnd(1600, 900, "DX11"),
 	light(wnd.Gfx())
 {
-	
-
-
+	wnd.DisableCursor();
 	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 60.0f));
 }
 
@@ -35,7 +33,6 @@ void App::DoFrame()
 
 	nano.Draw(wnd.Gfx());
 	light.Draw(wnd.Gfx());
-
 
 	// imgui windows
 	SpawnSimulationWindow();

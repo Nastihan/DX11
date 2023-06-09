@@ -60,9 +60,15 @@ public:
 	Window(const Window&) = delete;
 	Window& operator=(const Window&) = delete;
 	void SetTitle(const std::string& title);
+	void EnableCursor();
+	void DisableCursor();
 	static std::optional<int> ProcessMessages() noexcept;
 	Graphics& Gfx();
 private:
+	void HideCursor();
+	void ShowCursor();
+	void EnableImGuiMouse();
+	void DisableImGuiMouse();
 	static LRESULT CALLBACK HandleMsgSetup(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 	static LRESULT CALLBACK HandleMsgThunk(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
 	LRESULT HandleMsg(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam) noexcept;
@@ -72,6 +78,7 @@ public:
 	Mouse mouse;
 	
 private:
+	bool cursorEnabled = false;
 	int width;
 	int height;
 	HWND hWnd;

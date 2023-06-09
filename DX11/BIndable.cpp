@@ -12,7 +12,7 @@ namespace Bind
 		return gfx.device.Get();
 	}
 
-	DxgiInfoManager& Bindable::GetInfoManager(Graphics& gfx) noexcept(IS_DEBUG)
+	DxgiInfoManager& Bindable::GetInfoManager(Graphics& gfx)
 	{
 #ifndef NDEBUG
 		return gfx.infoManager;
