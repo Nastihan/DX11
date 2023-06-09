@@ -28,5 +28,5 @@ private:
 	PointLight light;
 
 
-	Model nano{ wnd.Gfx(),"Models\\nanosuit.obj" };
+	Model nano{ wnd.Gfx(),"Models\\nano.gltf" };
 };
