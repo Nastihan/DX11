@@ -34,32 +34,54 @@ void App::DoFrame()
 	nano.Draw(wnd.Gfx());
 	light.Draw(wnd.Gfx());
 
+
+	while (const auto e = wnd.kbd.ReadKey())
+	{
+		if (e->IsPress() && e->GetCode() == VK_SPACE)
+		{
+			if (wnd.CursorEnabled())
+			{
+				wnd.DisableCursor();
+				wnd.mouse.EnableRaw();
+			}
+			else
+			{
+				wnd.EnableCursor();
+				wnd.mouse.DisableRaw();
+			}
+		}
+	}
+	
+
 	// imgui windows
-	SpawnSimulationWindow();
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
 	nano.showWindow();
-
+	ShowRawInputWindow();
 
 	// present
 	wnd.Gfx().EndFrame();
-}
-
-void App::SpawnSimulationWindow() noexcept
-{
-	if (ImGui::Begin("Simulation Speed"))
-	{
-		ImGui::SliderFloat("Speed Factor", &speedFactor, 0.0f, 6.0f, "%.4f", 3.2f);
-		ImGui::Text("%.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-		ImGui::Text("Status: %s", wnd.kbd.KeyIsPressed(VK_SPACE) ? "PAUSED" : "RUNNING (hold spacebar to pause)");
-	}
-	ImGui::End();
 }
 
 
 App::~App()
 {}
 
+void App::ShowRawInputWindow()
+{
+	while (const auto d = wnd.mouse.ReadRawDelta())
+	{
+		x += d->x;
+		y += d->y;
+	}
+	if (ImGui::Begin("Raw Input"))
+	{
+		ImGui::Text("Tally: (%d,%d)", x, y);
+		ImGui::Text("Cursor: %s", wnd.CursorEnabled() ? "enabled" : "disabled");
+
+	}
+	ImGui::End();
+}
 
 int App::Go()
 {

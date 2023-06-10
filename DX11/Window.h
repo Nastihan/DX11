@@ -64,6 +64,7 @@ public:
 	Graphics& Gfx();
 	void EnableCursor() noexcept;
 	void DisableCursor() noexcept;
+	bool CursorEnabled() const noexcept;
 private:
 	void ConfineCursor() noexcept;
 	void FreeCursor() noexcept;
@@ -80,11 +81,12 @@ public:
 	Mouse mouse;
 	
 private:
-	bool cursorEnabled = false;
+	bool cursorEnabled = true;
 	int width;
 	int height;
 	HWND hWnd;
 	std::unique_ptr<Graphics> pGfx;
+	std::vector<BYTE> rawBuffer;
 
 };
 
