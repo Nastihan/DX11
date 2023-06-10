@@ -17,10 +17,8 @@ public:
 	int Go();
 private:
 	void DoFrame();
-	void ShowRawInputWindow();
+	void showHelperWindow();
 private:
-	int x{};
-	int y{};
 	float speedFactor = 1.0f;
 	bool showDemoWindow = true;
 	ImGuiManager imgui;

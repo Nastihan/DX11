@@ -1,5 +1,4 @@
 #include "App.h"
-#include "AssimpTest.h"
 #include <memory>
 #include <algorithm>
 #include "NastihanMath.h"
@@ -20,7 +19,7 @@ App::App()
 	wnd(1600, 900, "DX11"),
 	light(wnd.Gfx())
 {
-	wnd.DisableCursor();
+	//wnd.DisableCursor();
 	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 60.0f));
 }
 
@@ -52,36 +51,64 @@ void App::DoFrame()
 		}
 	}
 	
+	if (!wnd.CursorEnabled())
+	{
+		if (wnd.kbd.KeyIsPressed('W'))
+		{
+			cam.Translate({ 0.0f,0.0f,dt });
+		}
+		if (wnd.kbd.KeyIsPressed('A'))
+		{
+			cam.Translate({ -dt,0.0f,0.0f });
+		}
+		if (wnd.kbd.KeyIsPressed('S'))
+		{
+			cam.Translate({ 0.0f,0.0f,-dt });
+		}
+		if (wnd.kbd.KeyIsPressed('D'))
+		{
+			cam.Translate({ dt,0.0f,0.0f });
+		}
+		if (wnd.kbd.KeyIsPressed('R'))
+		{
+			cam.Translate({ 0.0f,dt,0.0f });
+		}
+		if (wnd.kbd.KeyIsPressed('F'))
+		{
+			cam.Translate({ 0.0f,-dt,0.0f });
+		}
+	}
+
+	while (const auto delta = wnd.mouse.ReadRawDelta())
+	{
+		if (!wnd.CursorEnabled())
+		{
+			cam.Rotate(delta->x, delta->y);
+		}
+	}
 
 	// imgui windows
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
 	nano.showWindow();
-	ShowRawInputWindow();
+	showHelperWindow();
 
 	// present
 	wnd.Gfx().EndFrame();
 }
 
-
-App::~App()
-{}
-
-void App::ShowRawInputWindow()
+void App::showHelperWindow()
 {
-	while (const auto d = wnd.mouse.ReadRawDelta())
+	if (ImGui::Begin("How to use"))
 	{
-		x += d->x;
-		y += d->y;
-	}
-	if (ImGui::Begin("Raw Input"))
-	{
-		ImGui::Text("Tally: (%d,%d)", x, y);
-		ImGui::Text("Cursor: %s", wnd.CursorEnabled() ? "enabled" : "disabled");
-
+		ImGui::BulletText("press the SPACE bar to toggle between free-look mode and default mode");
 	}
 	ImGui::End();
 }
+
+
+App::~App()
+{}
 
 int App::Go()
 {
