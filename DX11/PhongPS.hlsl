@@ -12,9 +12,9 @@ cbuffer LightCBuf
 
 cbuffer materialColorCBuf
 {
-    float3 mColor;
     float specularIntensity;
     float specularPower;
+    float2 padding;
 };
 
 struct PS_Input
@@ -22,8 +22,11 @@ struct PS_Input
     float3 worldPos : Position;
     float3 n : Normal;
     float4 pos : SV_Position;
+    float2 tc : TEXCOORD;
 };
 
+Texture2D tex;
+SamplerState smplr;
 
 float4 main(PS_Input input) : SV_Target
 {
@@ -41,5 +44,5 @@ float4 main(PS_Input input) : SV_Target
 	// calculate specular intensity based on angle between viewing vector and reflection vector, narrow with power function
     const float3 specular = att * (diffuseColor * diffuseIntensity) * specularIntensity * pow(max(0.0f, dot(normalize(-r), normalize(input.worldPos))), specularPower);
 	// final color
-    return float4(saturate((diffuse + ambient + specular) * mColor), 1.0f);
+    return float4(saturate(diffuse + ambient + specular), 1.0f) * tex.Sample(smplr, input.tc);
 }
