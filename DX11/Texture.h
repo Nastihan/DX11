@@ -8,9 +8,10 @@ namespace Bind
 	class Texture : public Bindable
 	{
 	public:
-		Texture(Graphics& gfx, const class Surface& surface);
+		Texture(Graphics& gfx, const class Surface& surface,UINT slot = 0u);
 		void Bind(Graphics& gfx) noexcept override;
 	private:
+		UINT slot = 0;
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pTextureView;
 
 	};

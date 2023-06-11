@@ -331,6 +331,9 @@
     <FxCompile Include="PhongPS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
+    <FxCompile Include="PhongSpecularMapPS.hlsl">
+      <Filter>Shader\Phong</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="DXGetErrorDescription.inl">
