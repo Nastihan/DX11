@@ -12,6 +12,7 @@ namespace Bind
 		void Bind(Graphics& gfx) noexcept override;
 	private:
 		UINT slot = 0;
+	protected:
 		Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> pTextureView;
 
 	};

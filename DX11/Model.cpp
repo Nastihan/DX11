@@ -269,13 +269,13 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 
 	
 	bool hasSpecularMap =  false;
-
+	float shininess = 35.0f;
 	if (mesh.mMaterialIndex >= 0)
 	{
 		auto& material = *pMaterials[mesh.mMaterialIndex];
 
 		using namespace std::string_literals;
-		const auto base = "Models\\nano_textured\\"s;
+		const auto base = "Models\\nano_textured2\\"s;
 		aiString texFileName;
 
 		material.GetTexture(aiTextureType_DIFFUSE, 0, &texFileName);
@@ -285,6 +285,10 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 		{
 			bindablePtrs.push_back(std::make_unique<Bind::Texture>(gfx, Surface::FromFile(base + texFileName.C_Str()), 1));
 			hasSpecularMap = true;
+		}
+		else
+		{
+			material.Get(AI_MATKEY_SHININESS, shininess);
 		}
 
 		bindablePtrs.push_back(std::make_unique<Bind::Sampler>(gfx));
@@ -310,9 +314,10 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 		struct PSMaterialConstant
 		{
 			float specularIntensity = 0.8f;
-			float specularPower = 40.0f;
+			float specularPower ;
 			float padding[2];
 		} pmc;
+		pmc.specularPower = shininess;
 		bindablePtrs.push_back(std::make_unique<Bind::PixelConstantBuffer<PSMaterialConstant>>(gfx, pmc, 1u));
 	}
 
