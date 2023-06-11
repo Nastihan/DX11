@@ -20,7 +20,7 @@ App::App()
 	light(wnd.Gfx())
 {
 	//wnd.DisableCursor();
-	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 60.0f));
+	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 100.0f));
 }
 
 void App::DoFrame()
@@ -83,14 +83,14 @@ void App::DoFrame()
 	{
 		if (!wnd.CursorEnabled())
 		{
-			cam.Rotate(delta->x, delta->y);
+			cam.Rotate((float)delta->x, (float)delta->y);
 		}
 	}
 
 	// imgui windows
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
-	nano.showWindow();
+	nano.ShowWindow();
 	showHelperWindow();
 
 	// present
