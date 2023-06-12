@@ -17,7 +17,8 @@ public:
 	int Go();
 private:
 	void DoFrame();
-	void showHelperWindow();
+	void ShowHelperWindow();
+	void ShowFPSWindow();
 private:
 	float speedFactor = 1.0f;
 	bool showDemoWindow = true;

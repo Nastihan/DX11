@@ -91,17 +91,27 @@ void App::DoFrame()
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
 	nano.ShowWindow();
-	showHelperWindow();
+	ShowHelperWindow();
+	ShowFPSWindow();
 
 	// present
 	wnd.Gfx().EndFrame();
 }
 
-void App::showHelperWindow()
+void App::ShowHelperWindow()
 {
 	if (ImGui::Begin("How to use"))
 	{
 		ImGui::BulletText("press the SPACE bar to toggle between free-look mode and default mode");
+	}
+	ImGui::End();
+}
+
+void App::ShowFPSWindow()
+{
+	if (ImGui::Begin("FPS"))
+	{
+		ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
 	}
 	ImGui::End();
 }
