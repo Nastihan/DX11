@@ -1,6 +1,7 @@
 #pragma once
 #include <unordered_map>
 #include <string>
+#include <type_traits>
 #include <memory>
 #include "Drawable.h"
 
@@ -8,9 +9,11 @@ namespace Bind
 {
 	class Codex
 	{
+	public:
 		template<class T,typename...Params>
 		static std::shared_ptr<T> Resolve(Graphics& gfx,Params&&...p) noxnd
 		{
+			static_assert(std::is_base_of<Bindable, T>::value, "Can only resolve classes derived from Bindable");
 			return Get().Resolve_<T>(gfx, std::forward<Params>(p)...);
 		}
 	private:
