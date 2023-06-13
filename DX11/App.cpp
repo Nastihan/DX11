@@ -18,7 +18,8 @@ GDIPlusManager gdipm;
 App::App()
 	:
 	wnd(1600, 900, "DX11"),
-	light(wnd.Gfx())
+	light(wnd.Gfx()),
+	plane(wnd.Gfx(),3.0f)
 {
 	plane.SetPos({ 0.0f,13.0f,-2.0f });
 	//wnd.DisableCursor();
@@ -93,8 +94,9 @@ void App::DoFrame()
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
 	nano.ShowWindow();
+	plane.SpawnControlWindow(wnd.Gfx());
 	ShowHelperWindow();
-	ShowFPSWindow();
+	//ShowFPSWindow();
 
 	// present
 	wnd.Gfx().EndFrame();

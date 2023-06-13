@@ -28,6 +28,6 @@ private:
 	Camera cam;
 	PointLight light;
 
-	TestPlane plane{ wnd.Gfx(), 3.0f };
+	TestPlane plane;
 	Model nano{ wnd.Gfx(),"Models\\nano_textured\\nanosuit.obj" };
 };
