@@ -6,7 +6,7 @@
 #include "PointLight.h"
 #include <set>
 #include "Model.h"
-
+#include "TestPlane.h"
 
 
 class App
@@ -28,6 +28,6 @@ private:
 	Camera cam;
 	PointLight light;
 
-
+	TestPlane plane{ wnd.Gfx(), 3.0f };
 	Model nano{ wnd.Gfx(),"Models\\nano_textured\\nanosuit.obj" };
 };
