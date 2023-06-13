@@ -23,7 +23,8 @@ namespace Bind
 			GetContext(gfx)->Unmap(pConstantBuffer.Get(), 0u);
 		}
 		ConstantBuffer(Graphics& gfx, const C& consts, UINT slot = 0u)
-			: slot(slot)
+			:
+			slot(slot)
 		{
 			INFOMAN(gfx);
 
@@ -40,7 +41,8 @@ namespace Bind
 			GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&cbd, &csd, &pConstantBuffer));
 		}
 		ConstantBuffer(Graphics& gfx, UINT slot = 0u)
-			: slot(slot)
+			:
+			slot(slot)
 		{
 			INFOMAN(gfx);
 
@@ -62,25 +64,34 @@ namespace Bind
 	class VertexConstantBuffer : public ConstantBuffer<C>
 	{
 		using ConstantBuffer<C>::pConstantBuffer;
-		using Bindable::GetContext;
 		using ConstantBuffer<C>::slot;
+		using Bindable::GetContext;
 	public:
 		using ConstantBuffer<C>::ConstantBuffer;
 		void Bind(Graphics& gfx) noexcept override
 		{
 			GetContext(gfx)->VSSetConstantBuffers(slot, 1u, pConstantBuffer.GetAddressOf());
 		}
-		static std::shared_ptr<VertexConstantBuffer> Resolve(Graphics& gfx)
+		static std::shared_ptr<Bindable> Resolve(Graphics& gfx, const C& consts, UINT slot = 0)
 		{
-			return Codex::Resolve<VertexConstantBuffer>(gfx);
+			return Codex::Resolve<VertexConstantBuffer>(gfx, consts, slot);
 		}
-		static std::string GenerateUID()
+		static std::shared_ptr<Bindable> Resolve(Graphics& gfx, UINT slot = 0)
 		{
-			return typeid(VertexConstantBuffer).name();
+			return Codex::Resolve<VertexConstantBuffer>(gfx, slot);
+		}
+		static std::string GenerateUID(const C&, UINT slot)
+		{
+			return GenerateUID(slot);
+		}
+		static std::string GenerateUID(UINT slot = 0)
+		{
+			using namespace std::string_literals;
+			return typeid(VertexConstantBuffer).name() + "#"s + std::to_string(slot);
 		}
 		std::string GetUID() const noexcept override
 		{
-			return GenerateUID();
+			return GenerateUID(slot);
 		}
 	};
 
@@ -88,25 +99,34 @@ namespace Bind
 	class PixelConstantBuffer : public ConstantBuffer<C>
 	{
 		using ConstantBuffer<C>::pConstantBuffer;
-		using Bindable::GetContext;
 		using ConstantBuffer<C>::slot;
+		using Bindable::GetContext;
 	public:
 		using ConstantBuffer<C>::ConstantBuffer;
 		void Bind(Graphics& gfx) noexcept override
 		{
 			GetContext(gfx)->PSSetConstantBuffers(slot, 1u, pConstantBuffer.GetAddressOf());
 		}
-		std::shared_ptr<PixelConstantBuffer> Resolve(Graphics& gfx)
+		static std::shared_ptr<Bindable> Resolve(Graphics& gfx, const C& consts, UINT slot = 0)
 		{
-			return Codex::Resolve<PixelConstantBuffer>(gfx);
+			return Codex::Resolve<PixelConstantBuffer>(gfx, consts, slot);
 		}
-		static std::string GenerateUID()
+		static std::shared_ptr<Bindable> Resolve(Graphics& gfx, UINT slot = 0)
 		{
-			return typeid(PixelConstantBuffer).name();
+			return Codex::Resolve<PixelConstantBuffer>(gfx, slot);
+		}
+		static std::string GenerateUID(const C&, UINT slot)
+		{
+			return GenerateUID(slot);
+		}
+		static std::string GenerateUID(UINT slot = 0)
+		{
+			using namespace std::string_literals;
+			return typeid(PixelConstantBuffer).name() + "#"s + std::to_string(slot);
 		}
 		std::string GetUID() const noexcept override
 		{
-			return GenerateUID();
+			return GenerateUID(slot);
 		}
 	};
 }

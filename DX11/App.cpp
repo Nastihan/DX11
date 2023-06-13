@@ -29,7 +29,6 @@ void App::DoFrame()
 	wnd.Gfx().BeginFrame();
 	wnd.Gfx().SetCamera(cam.GetMatrix());
 	light.Bind(wnd.Gfx(),cam.GetMatrix());
-
 	nano.Draw(wnd.Gfx());
 	light.Draw(wnd.Gfx());
 

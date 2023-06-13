@@ -33,7 +33,7 @@ const std::string& ModelException::GetNote() const noexcept
 Mesh::Mesh(Graphics& gfx, std::vector<std::shared_ptr<Bind::Bindable>> bindPtrs)
 {
 
-	AddBind(std::make_shared<Bind::Topology>(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
+	AddBind(Bind::Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
 	for (auto& pb : bindPtrs)
 	{
@@ -227,6 +227,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 {
 
 	using DX11::VertexLayout;
+	using namespace Bind;
 
 	DX11::VertexBuffer vbuf(std::move(
 		VertexLayout{}
@@ -255,25 +256,26 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 		indices.push_back(face.mIndices[2]);
 	}
 
-	std::vector<std::shared_ptr<Bind::Bindable>> bindablePtrs;
+	std::vector<std::shared_ptr<Bindable>> bindablePtrs;
 
-	
+	using namespace std::string_literals;
+	const auto base = "Models\\nano_textured\\"s;
+
 	bool hasSpecularMap =  false;
 	float shininess = 35.0f;
 	if (mesh.mMaterialIndex >= 0)
 	{
 		auto& material = *pMaterials[mesh.mMaterialIndex];
 
-		using namespace std::string_literals;
-		const auto base = "Models\\nano_textured\\"s;
+		
 		aiString texFileName;
 
 		material.GetTexture(aiTextureType_DIFFUSE, 0, &texFileName);
-		bindablePtrs.push_back(std::make_shared<Bind::Texture>(gfx, (base + texFileName.C_Str())));
+		bindablePtrs.push_back(Bind::Texture::Resolve(gfx, (base + texFileName.C_Str())));
 
 		if (material.GetTexture(aiTextureType_SPECULAR, 0, &texFileName) == aiReturn_SUCCESS)
 		{
-			bindablePtrs.push_back(std::make_shared<Bind::Texture>(gfx, base + texFileName.C_Str(), 1));
+			bindablePtrs.push_back(Texture::Resolve(gfx, base + texFileName.C_Str(), 1));
 			hasSpecularMap = true;
 		}
 		else
@@ -281,25 +283,27 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 			material.Get(AI_MATKEY_SHININESS, shininess);
 		}
 
-		bindablePtrs.push_back(std::make_shared<Bind::Sampler>(gfx));
+		bindablePtrs.push_back(Sampler::Resolve(gfx));
 	}
+	// tag as UID for creating vertexbuffer and indexbuffer
+	auto meshTag = base + "%" + mesh.mName.C_Str();
 
 	
-	bindablePtrs.push_back(std::make_shared<Bind::VertexBuffer>(gfx, vbuf));
+	bindablePtrs.push_back(VertexBuffer::Resolve(gfx, meshTag,vbuf));
 
-	bindablePtrs.push_back(std::make_shared<Bind::IndexBuffer>(gfx, indices));
+	bindablePtrs.push_back(IndexBuffer::Resolve(gfx, meshTag,indices));
 
-	auto pvs = std::make_shared<Bind::VertexShader>(gfx, "PhongVS.cso");
-	auto pvsbc = pvs->GetBytecode();
+	auto pvs = VertexShader::Resolve(gfx, "PhongVS.cso");
+	auto pvsbc = static_cast<VertexShader&>(*pvs).GetBytecode();
 	bindablePtrs.push_back(std::move(pvs));
 
 	if (hasSpecularMap)
 	{
-		bindablePtrs.push_back(std::make_shared<Bind::PixelShader>(gfx, "PhongSpecularMapPS.cso"));
+		bindablePtrs.push_back(PixelShader::Resolve(gfx, "PhongSpecularMapPS.cso"));
 	}
 	else
 	{
-		bindablePtrs.push_back(std::make_shared<Bind::PixelShader>(gfx, "PhongPS.cso"));
+		bindablePtrs.push_back(PixelShader::Resolve(gfx, "PhongPS.cso"));
 		struct PSMaterialConstant
 		{
 			float specularIntensity = 0.8f;
@@ -307,7 +311,9 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 			float padding[2];
 		} pmc;
 		pmc.specularPower = shininess;
-		bindablePtrs.push_back(std::make_shared<Bind::PixelConstantBuffer<PSMaterialConstant>>(gfx, pmc, 1u));
+		// this is CLEARLY an issue... all meshes will share same mat const, but may have different
+				// Ns (specular power) specified for each in the material properties... bad conflict
+		bindablePtrs.push_back(PixelConstantBuffer<PSMaterialConstant>::Resolve(gfx, pmc, 1u));
 	}
 
 
