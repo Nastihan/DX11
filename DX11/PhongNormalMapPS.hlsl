@@ -18,6 +18,12 @@ cbuffer ObjectCBuf
     float padding[1];
 };
 
+cbuffer transform
+{
+    matrix modelView;
+    matrix modelViewProj;
+}; 
+
 struct PS_Input
 {
     float3 worldPos : Position;
@@ -35,9 +41,11 @@ float4 main(PS_Input input) : SV_Target
     if (normalMapEnabled)
     {
         const float3 normalSample = nmap.Sample(smplr, input.tc).xyz;
-        input.n.x = normalSample.x * 2.0f - 1.0f;
-        input.n.y = -normalSample.y * 2.0f + 1.0f;
-        input.n.z = -normalSample.z;
+        input.n = normalSample * 2.0f - 1.0f;
+        input.n.y = -input.n.y;
+        input.n.z = -input.n.z;
+        
+        input.n = mul(input.n, modelView);
     }
 
     // fragment to light vector data
