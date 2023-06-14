@@ -18,34 +18,40 @@ cbuffer ObjectCBuf
     float padding[1];
 };
 
-cbuffer transform
-{
-    matrix modelView;
-    matrix modelViewProj;
-}; 
+//cbuffer transform
+//{
+  //  matrix modelView;
+    //matrix modelViewProj;
+//}; 
 
 struct PS_Input
 {
-    float3 worldPos : Position;
-    float3 n : Normal;
+    float3 worldPos : POSITION;
+    float3 n : NORMAL;
+    float3 tan : TANGENT;
+    float3 bitan : BITANGENT;
     float4 pos : SV_Position;
     float2 tc : TEXCOORD;
 };
 
 Texture2D tex;
-Texture2D nmap;
+Texture2D nmap : register(t2);
 SamplerState smplr;
 
 float4 main(PS_Input input) : SV_Target
 {
     if (normalMapEnabled)
     {
+        const float3x3 tanTransform =   { 
+            normalize(input.tan), normalize(input.bitan), normalize(input.n)
+        };
+        
         const float3 normalSample = nmap.Sample(smplr, input.tc).xyz;
         input.n = normalSample * 2.0f - 1.0f;
         input.n.y = -input.n.y;
         input.n.z = -input.n.z;
         
-        input.n = mul(input.n, modelView);
+        input.n = mul(input.n, tanTransform);
     }
 
     // fragment to light vector data

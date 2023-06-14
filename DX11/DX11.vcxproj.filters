@@ -340,10 +340,13 @@
     <FxCompile Include="PhongPS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
-    <FxCompile Include="PhongSpecularMapPS.hlsl">
+    <FxCompile Include="PhongSpecularNormalMapPS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
     <FxCompile Include="PhongNormalMapPS.hlsl">
+      <Filter>Shader\Phong</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongNormalMapVS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
   </ItemGroup>

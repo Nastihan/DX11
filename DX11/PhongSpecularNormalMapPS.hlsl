@@ -10,22 +10,45 @@ cbuffer LightCBuf
     float attQuad;
 };
 
+cbuffer ObjectCBuf
+{
+    bool normalMapEnabled;
+    float padding[3];
+};
 
 struct PS_Input
 {
-    float3 worldPos : Position;
-    float3 n : Normal;
+    float3 worldPos : POSITION;
+    float3 n : NORMAL;
+    float3 tan : TANGENT;
+    float3 bitan : BITANGENT;
     float4 pos : SV_Position;
     float2 tc : TEXCOORD;
 };
 
 Texture2D tex;
 Texture2D spec;
+Texture2D nmap;
 SamplerState splr;
 
 static const float specularPowerFactor = 100.0f;
 float4 main(PS_Input input) : SV_Target
 {
+    if (normalMapEnabled)
+    {
+        const float3x3 tanTransform =
+        {
+            normalize(input.tan), normalize(input.bitan), normalize(input.n)
+        };
+        
+        const float3 normalSample = nmap.Sample(splr, input.tc).xyz;
+        input.n = normalSample * 2.0f - 1.0f;
+        input.n.y = -input.n.y;
+        input.n.z = -input.n.z;
+        
+        input.n = mul(input.n, tanTransform);
+    }
+    
 	// fragment to light vector data
     const float3 vToL = lightPos - input.worldPos;
     const float distToL = length(vToL);
