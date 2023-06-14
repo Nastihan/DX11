@@ -48,6 +48,7 @@ float4 main(PS_Input input) : SV_Target
         
         const float3 normalSample = nmap.Sample(smplr, input.tc).xyz;
         input.n = normalSample * 2.0f - 1.0f;
+       
         
         input.n = mul(input.n, tanTransform);
     }
