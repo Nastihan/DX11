@@ -96,7 +96,7 @@ void App::DoFrame()
 	nano.ShowWindow();
 	plane.SpawnControlWindow(wnd.Gfx());
 	ShowHelperWindow();
-	//ShowFPSWindow();
+	ShowFPSWindow();
 
 	// present
 	wnd.Gfx().EndFrame();
