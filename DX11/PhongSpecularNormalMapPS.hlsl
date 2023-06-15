@@ -13,7 +13,7 @@ cbuffer LightCBuf
 cbuffer ObjectCBuf
 {
     bool normalMapEnabled;
-    float padding[3];
+   float padding[3];
 };
 
 struct PS_Input
@@ -26,9 +26,9 @@ struct PS_Input
     float2 tc : TEXCOORD;
 };
 
-Texture2D tex;
-Texture2D spec;
-Texture2D nmap;
+Texture2D tex : register(t0);
+Texture2D spec : register(t1);
+Texture2D nmap : register(t2);
 SamplerState splr;
 
 static const float specularPowerFactor = 100.0f;

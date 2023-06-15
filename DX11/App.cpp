@@ -30,7 +30,7 @@ void App::DoFrame()
 	wnd.Gfx().BeginFrame();
 	wnd.Gfx().SetCamera(cam.GetMatrix());
 	light.Bind(wnd.Gfx(),cam.GetMatrix());
-	nano.Draw(wnd.Gfx());
+	goblin.Draw(wnd.Gfx());
 	light.Draw(wnd.Gfx());
 
 	while (const auto e = wnd.kbd.ReadKey())
@@ -90,7 +90,7 @@ void App::DoFrame()
 	// imgui windows
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
-	nano.ShowWindow();
+	goblin.ShowWindow();
 	ShowHelperWindow();
 	ShowFPSWindow();
 

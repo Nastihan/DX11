@@ -349,6 +349,12 @@
     <FxCompile Include="PhongNormalMapVS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
+    <FxCompile Include="PhongNoTexPS.hlsl">
+      <Filter>Shader\Phong</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongNoTexVS.hlsl">
+      <Filter>Shader\Phong</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="DXGetErrorDescription.inl">

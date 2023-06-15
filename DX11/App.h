@@ -28,5 +28,5 @@ private:
 	Camera cam;
 	PointLight light;
 
-	Model nano{ wnd.Gfx(),"Models\\brick_wall\\brick_wall.obj" };
+	Model goblin{ wnd.Gfx(),"Models\\gobber\\GoblinX.obj" };
 };
