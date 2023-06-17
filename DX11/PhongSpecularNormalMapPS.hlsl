@@ -48,7 +48,7 @@ float4 main(PS_Input input) : SV_Target
         float3 tanNormal;
         tanNormal = normalSample * 2.0f - 1.0f;
         // bring normal from tanspace into view space
-        input.viewNormal = mul(tanNormal, tanTransform);
+        input.viewNormal = normalize(mul(tanNormal, tanTransform));
     }
     
 	// fragment to light vector data

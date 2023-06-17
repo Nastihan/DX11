@@ -30,6 +30,7 @@ SamplerState smplr;
 
 float4 main(PS_Input input) : SV_Target
 {
+    input.viewNormal = normalize(input.viewNormal);
 	// fragment to light vector data
     const float3 vToL = lightPos - input.viewPos;
     const float distToL = length(vToL);
