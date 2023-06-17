@@ -1,7 +1,8 @@
 #include "TestPlane.h"
 #include "Plane.h"
 #include "BindableCommon.h"
-#include "ImGui/imgui.h"
+#include "imgui/imgui.h"
+#include "TransformCbufPS.h"
 
 TestPlane::TestPlane(Graphics& gfx, float size)
 {
@@ -14,15 +15,14 @@ TestPlane::TestPlane(Graphics& gfx, float size)
 	AddBind(VertexBuffer::Resolve(gfx, geometryTag, model.vertices));
 	AddBind(IndexBuffer::Resolve(gfx, geometryTag, model.indices));
 
-	AddBind(Texture::Resolve(gfx, "Images\\BrickWall\\brickwall.jpg",0u));
-	AddBind(Texture::Resolve(gfx, "Images\\BrickWall\\brickwall_normal.jpg", 1u));
-
+	AddBind(Texture::Resolve(gfx, "Images\\brickwall.jpg"));
+	AddBind(Texture::Resolve(gfx, "Images\\brickwall_normal_obj.png", 2u));
 
 	auto pvs = VertexShader::Resolve(gfx, "PhongVS.cso");
 	auto pvsbc = pvs->GetBytecode();
 	AddBind(std::move(pvs));
 
-	AddBind(PixelShader::Resolve(gfx, "PhongNormalMapPS.cso"));
+	AddBind(PixelShader::Resolve(gfx, "PhongNormalMapObjectPS.cso"));
 
 	AddBind(PixelConstantBuffer<PSMaterialConstant>::Resolve(gfx, pmc, 1u));
 
@@ -30,7 +30,7 @@ TestPlane::TestPlane(Graphics& gfx, float size)
 
 	AddBind(Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
-	AddBind(std::make_shared<TransformCbufPS>(gfx, *this,0u,2u));
+	AddBind(std::make_shared<TransformCbufPS>(gfx, *this, 0u, 2u));
 }
 
 void TestPlane::SetPos(DirectX::XMFLOAT3 pos) noexcept

@@ -46,6 +46,9 @@
     <Filter Include="Shader\Solid">
       <UniqueIdentifier>{8c143298-e74b-4d01-bde8-4e0edf3e2be0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\ShaderIncludes">
+      <UniqueIdentifier>{28114c33-c3f6-4dd9-8f78-3d744955f6a5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WInMain.cpp">
@@ -326,6 +329,9 @@
     <ClInclude Include="TransformCbufPS.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
+    <ClInclude Include="NormalMapTwerker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PhongVS.hlsl">
@@ -355,6 +361,9 @@
     <FxCompile Include="PhongNoTexVS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
+    <FxCompile Include="PhongNormalMapObjectPS.hlsl">
+      <Filter>Shader\Phong</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="DXGetErrorDescription.inl">
@@ -365,6 +374,18 @@
     </None>
     <None Include="DXTrace.inl">
       <Filter>dxerr</Filter>
+    </None>
+    <None Include="PointLight.hlsli">
+      <Filter>Shader\ShaderIncludes</Filter>
+    </None>
+    <None Include="ShaderOps.hlsli">
+      <Filter>Shader\ShaderIncludes</Filter>
+    </None>
+    <None Include="Transform.hlsli">
+      <Filter>Shader\ShaderIncludes</Filter>
+    </None>
+    <None Include="LightVectorData.hlsli">
+      <Filter>Shader\ShaderIncludes</Filter>
     </None>
   </ItemGroup>
 </Project>

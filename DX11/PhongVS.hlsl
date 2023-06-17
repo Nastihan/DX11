@@ -18,7 +18,6 @@ struct VS_Output
     float3 viewNormal : NORMAL;
     float4 pos : SV_Position;
     float2 tc : TEXCOORD;
-
 };
 
 VS_Output main( VS_Input input )  
