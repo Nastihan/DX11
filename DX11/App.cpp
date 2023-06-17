@@ -90,7 +90,7 @@ void App::DoFrame()
 	// imgui windows
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
-	goblin.ShowWindow();
+	goblin.ShowWindow(wnd.Gfx());
 	ShowHelperWindow();
 	ShowFPSWindow();
 

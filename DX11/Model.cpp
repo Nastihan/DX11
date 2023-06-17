@@ -107,6 +107,39 @@ void Node::ShowTree(Node*& pSelectedNode) const noexcept
 	}
 }
 
+void Node::ControlMe(Graphics& gfx, PSMaterialConstantFullmonte& c)
+{
+	if (meshPtrs.empty())
+	{
+		return;
+	}
+
+	if (auto pcb = meshPtrs.front()->QueryBindable<Bind::PixelConstantBuffer<PSMaterialConstantFullmonte>>())
+	{
+		ImGui::Text("Material");
+
+		bool normalMapEnabled = (bool)c.normalMapEnabled;
+		ImGui::Checkbox("Norm Map", &normalMapEnabled);
+		c.normalMapEnabled = normalMapEnabled ? TRUE : FALSE;
+
+		bool specularMapEnabled = (bool)c.specularMapEnabled;
+		ImGui::Checkbox("Spec Map", &specularMapEnabled);
+		c.specularMapEnabled = specularMapEnabled ? TRUE : FALSE;
+
+		bool hasGlossMap = (bool)c.hasGlossMap;
+		ImGui::Checkbox("Gloss Alpha", &hasGlossMap);
+		c.hasGlossMap = hasGlossMap ? TRUE : FALSE;
+
+		ImGui::SliderFloat("Spec Weight", &c.specularMapWeight, 0.0f, 2.0f);
+
+		ImGui::SliderFloat("Spec Pow", &c.specularPower, 0.0f, 1000.0f, "%f", 5.0f);
+
+		ImGui::ColorPicker3("Spec Color", reinterpret_cast<float*>(&c.specularColor));
+
+		pcb->Update(gfx, c);
+	}
+}
+
 void Node::SetAppliedTransform(DirectX::FXMMATRIX transform) noexcept
 {
 	DirectX::XMStoreFloat4x4(&appliedTransform, transform);
@@ -127,7 +160,7 @@ void Node::AddChild(std::unique_ptr<Node> pChild) noxnd
 class ModelWindow
 {
 public:
-	void Show(const char* windowName, const Node& root) noexcept
+	void Show(Graphics& gfx,const char* windowName, const Node& root) noexcept
 	{
 		// window name defaults to "Model"
 		windowName = windowName ? windowName : "Model";
@@ -150,6 +183,8 @@ public:
 				ImGui::SliderFloat("X", &transform.x, -20.0f, 20.0f);
 				ImGui::SliderFloat("Y", &transform.y, -20.0f, 20.0f);
 				ImGui::SliderFloat("Z", &transform.z, -20.0f, 20.0f);
+				pSelectedNode->ControlMe(gfx, mc);
+
 			}
 		}
 		ImGui::End();
@@ -177,6 +212,8 @@ private:
 		float z = 0.0f;
 	};
 	std::unordered_map<int, transformationParams> transforms;
+	Node::PSMaterialConstantFullmonte mc;
+
 };
 
 // Model
@@ -215,9 +252,9 @@ void Model::Draw(Graphics& gfx) const
 	pRoot->Draw(gfx, DirectX::XMMatrixIdentity());
 }
 
-void Model::ShowWindow(const char* windowName) noexcept
+void Model::ShowWindow(Graphics& gfx,const char* windowName) noexcept
 {
-	pModelWindow->Show(windowName, *pRoot);
+	pModelWindow->Show(gfx,windowName, *pRoot);
 }
 
 void Model::SetRootTransform(DirectX::FXMMATRIX tf) noexcept
@@ -333,20 +370,12 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 
 		bindablePtrs.push_back(InputLayout::Resolve(gfx, vbuf.GetLayout(), pvsbc));
 
-		struct PSMaterialConstantFullmonte
-		{
-			BOOL  normalMapEnabled = TRUE;
-			BOOL  specularMapEnabled = TRUE;
-			BOOL  hasGlossMap;
-			float specularPower;
-			dx::XMFLOAT3 specularColor = { 1.0f,1.0f,1.0f };
-			float specularMapWeight = 1.0f;
-		} pmc;
+		Node::PSMaterialConstantFullmonte pmc;
 		pmc.specularPower = shininess;
 		pmc.hasGlossMap = hasAlphaGloss ? TRUE : FALSE;
 		// this is CLEARLY an issue... all meshes will share same mat const, but may have different
 		// Ns (specular power) specified for each in the material properties... bad conflict
-		bindablePtrs.push_back(PixelConstantBuffer<PSMaterialConstantFullmonte>::Resolve(gfx, pmc, 1u));
+		bindablePtrs.push_back(PixelConstantBuffer<Node::PSMaterialConstantFullmonte>::Resolve(gfx, pmc, 1u));
 	}
 	else if (hasDiffuseMap && hasNormalMap)
 	{
