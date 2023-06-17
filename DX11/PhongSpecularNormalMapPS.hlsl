@@ -22,7 +22,7 @@ cbuffer ObjectCBuf
 struct PS_Input
 {
     float3 viewPos : POSITION;
-    float3 n : NORMAL;
+    float3 viewNormal : NORMAL;
     float3 tan : TANGENT;
     float3 bitan : BITANGENT;
     float4 pos : SV_Position;
@@ -41,13 +41,14 @@ float4 main(PS_Input input) : SV_Target
     {
         const float3x3 tanTransform =
         {
-            normalize(input.tan), normalize(input.bitan), normalize(input.n)
+            normalize(input.tan), normalize(input.bitan), normalize(input.viewNormal)
         };
         
         const float3 normalSample = nmap.Sample(splr, input.tc).xyz;
-        input.n = normalSample * 2.0f - 1.0f;
-
-        input.n = mul(input.n, tanTransform);
+        float3 tanNormal;
+        tanNormal = normalSample * 2.0f - 1.0f;
+        // bring normal from tanspace into view space
+        input.viewNormal = mul(tanNormal, tanTransform);
     }
     
 	// fragment to light vector data
@@ -57,9 +58,9 @@ float4 main(PS_Input input) : SV_Target
 	// diffuse attenuation
     const float att = 1.0f / (attConst + attLin * distToL + attQuad * (distToL * distToL));
 	// intensity
-    const float3 diffuse = diffuseColor * diffuseIntensity * att * max(0.0f, dot(dirToL, input.n));
+    const float3 diffuse = diffuseColor * diffuseIntensity * att * max(0.0f, dot(dirToL, input.viewNormal));
     // reflected light vector
-    const float3 w = input.n * dot(vToL, input.n);
+    const float3 w = input.viewNormal * dot(vToL, input.viewNormal);
     const float3 r = w * 2.0f - vToL;
 	// calculate specular intensity based on angle between viewing vector and reflection vector, narrow with power function
     float3 specularReflectionColor;
