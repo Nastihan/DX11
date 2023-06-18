@@ -5,7 +5,9 @@ PointLight::PointLight(Graphics& gfx, float radius)
 	:
 	mesh(gfx, radius),
 	cbuf(gfx,0u)
-{}
+{
+	Reset();
+}
 
 void PointLight::SpawnControlWindow() noexcept
 {
@@ -33,8 +35,8 @@ void PointLight::SpawnControlWindow() noexcept
 
 void PointLight::Reset() noexcept
 {
-	cBufData.pos = { 0.0f,0.0f,0.0f };
-	cBufData.ambient = { 0.4f,0.4f,0.4f };
+	cBufData.pos = { 0.0f,7.0f,0.0f };
+	cBufData.ambient = { 0.06f,0.06f,0.06f };
 	cBufData.diffuseColor = { 1.0f,1.0f,1.0f };
 	cBufData.diffuseIntensity = 1.0f;
 	cBufData.attConst = 0.5f;
