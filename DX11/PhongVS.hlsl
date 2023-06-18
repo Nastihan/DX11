@@ -1,9 +1,4 @@
-
-cbuffer cb
-{
-    matrix modelView;
-    matrix modelViewProj;
-};
+#include "Transform.hlsli"
 
 struct VS_Input
 {

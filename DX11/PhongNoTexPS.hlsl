@@ -1,16 +1,9 @@
+#include "ShaderOps.hlsli"
+#include "LightVectorData.hlsli"
 
-cbuffer LightCBuf
-{
-    float3 lightPos;
-    float3 ambient;
-    float3 diffuseColor;
-    float diffuseIntensity;
-    float attConst;
-    float attLin;
-    float attQuad;
-};
+#include "PointLight.hlsli"
 
-cbuffer materialColorCBuf
+cbuffer ObjectCBuf
 {
     float4 materialColor;
     float4 specularColor;
@@ -19,28 +12,26 @@ cbuffer materialColorCBuf
 
 struct PS_Input
 {
-    float3 viewPos : Position;
-    float3 viewNormal : Normal;
+    float3 viewFragPos : POSITION;
+    float3 viewNormal : NORMAL;
     float4 pos : SV_Position;
 };
 
-
 float4 main(PS_Input input) : SV_Target
 {
+    // normalize the mesh normal
     input.viewNormal = normalize(input.viewNormal);
 	// fragment to light vector data
-    const float3 vToL = lightPos - input.viewPos;
-    const float distToL = length(vToL);
-    const float3 dirToL = vToL / distToL;
-	// diffuse attenuation
-    const float att = 1.0f / (attConst + attLin * distToL + attQuad * (distToL * distToL));
-	// intensity
-    const float3 diffuse = diffuseColor * diffuseIntensity * att * max(0.0f, dot(dirToL, input.viewNormal));
-    // reflected light vector
-    const float3 w = input.viewNormal * dot(vToL, input.viewNormal);
-    const float3 r = w * 2.0f - vToL;
-	// calculate specular intensity based on angle between viewing vector and reflection vector, narrow with power function
-    const float4 specular = att * (float4(diffuseColor, 1.0f) * diffuseIntensity) * specularColor * pow(max(0.0f, dot(normalize(-r), normalize(input.viewPos))), specularPower);
+    const LightVectorData lv = CalculateLightVectorData(viewLightPos, input.viewFragPos);
+	// attenuation
+    const float att = Attenuate(attConst, attLin, attQuad, lv.distToL);
+	// diffuse
+    const float3 diffuse = Diffuse(diffuseColor, diffuseIntensity, att, lv.dirToL, input.viewNormal);
+    // specular
+    const float3 specular = Speculate(
+        specularColor.rgb, 1.0f, input.viewNormal,
+        lv.vToL, input.viewFragPos, att, specularPower
+    );
 	// final color
-    return saturate(float4(diffuse + ambient, 1.0f) * materialColor + specular);
+    return float4(saturate((diffuse + ambient) * materialColor.rgb + specular), 1.0f);
 }

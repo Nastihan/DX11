@@ -56,7 +56,7 @@ void App::DoFrame()
 	wnd.Gfx().SetCamera(cam.GetMatrix());
 	light.Bind(wnd.Gfx(),cam.GetMatrix());
 	goblin.Draw(wnd.Gfx());
-	wall.Draw(wnd.Gfx());
+	//wall.Draw(wnd.Gfx());
 	tp.Draw(wnd.Gfx());
 	nano.Draw(wnd.Gfx());
 	light.Draw(wnd.Gfx());
@@ -120,7 +120,7 @@ void App::DoFrame()
 	light.SpawnControlWindow();
 	goblin.ShowWindow(wnd.Gfx());
 	nano.ShowWindow(wnd.Gfx());
-	wall.ShowWindow(wnd.Gfx(), "wall");
+	//wall.ShowWindow(wnd.Gfx(), "wall");
 	ShowHelperWindow();
 	ShowFPSWindow();
 

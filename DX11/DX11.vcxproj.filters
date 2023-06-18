@@ -165,6 +165,9 @@
     <ClCompile Include="TransformCbufPS.cpp">
       <Filter>Source Files\Bindable</Filter>
     </ClCompile>
+    <ClCompile Include="NastihanXM.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -332,6 +335,9 @@
     <ClInclude Include="NormalMapTwerker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NastihanXM.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PhongVS.hlsl">
@@ -362,6 +368,9 @@
       <Filter>Shader\Phong</Filter>
     </FxCompile>
     <FxCompile Include="PhongNormalMapObjectPS.hlsl">
+      <Filter>Shader\Phong</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongSpecularPS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
   </ItemGroup>
