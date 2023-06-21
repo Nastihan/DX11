@@ -2,8 +2,6 @@
 #include "LightVectorData.hlsli"
 #include "PointLight.hlsli"
 
-
-
 cbuffer ObjectCBuf
 {
     bool normalMapEnabled;
@@ -31,8 +29,17 @@ SamplerState splr;
 static const float specularPowerFactor = 100.0f;
 float4 main(PS_Input input) : SV_Target
 {
+    
+    #ifdef MASK
+    // alpha testing
     float alpha = tex.Sample(splr, input.tc).a;
     clip(alpha > 0.1 ? 1.0 : -1.0);
+    // flip normal when backface
+    if (dot(input.viewNormal, input.viewFragPos) >= 0.0f)
+    {
+        input.viewNormal = -input.viewNormal;
+    }
+    #endif
     
     input.viewNormal = normalize(input.viewNormal);
     if (normalMapEnabled)
@@ -70,5 +77,5 @@ float4 main(PS_Input input) : SV_Target
         lv.vToL, input.viewFragPos, att, specularPower
     ); 
     // final color
-    return float4(saturate((diffuse + ambient) * tex.Sample(splr, input.tc).rgb + specularReflected), 1.0f);
+    return float4(saturate((diffuse + ambient) * tex.Sample(splr, input.tc).rgb + specularReflected), tex.Sample(splr, input.tc).a);
 }

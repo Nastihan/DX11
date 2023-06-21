@@ -391,6 +391,9 @@
     <FxCompile Include="PhongSpecularPS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
+    <FxCompile Include="PhongSpecularNormalMaskPS.hlsl">
+      <Filter>Shader\Phong</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="DXGetErrorDescription.inl">
