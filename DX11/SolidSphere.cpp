@@ -33,6 +33,8 @@ SolidSphere::SolidSphere(Graphics& gfx, float radius)
 
 	AddBind(Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
+	AddBind(Rasterizer::Resolve(gfx, false));
+
 	AddBind(std::make_shared<TransformCbuf>(gfx, *this));
 }
 
