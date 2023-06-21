@@ -31,6 +31,9 @@ SamplerState splr;
 static const float specularPowerFactor = 100.0f;
 float4 main(PS_Input input) : SV_Target
 {
+    float alpha = tex.Sample(splr, input.tc).a;
+    clip(alpha > 0.1 ? 1.0 : -1.0);
+    
     input.viewNormal = normalize(input.viewNormal);
     if (normalMapEnabled)
     {
