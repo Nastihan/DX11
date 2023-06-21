@@ -68,6 +68,7 @@ float4 main(PS_Input input) : SV_Target
     const float3 specularReflected = Speculate(
         specularReflectionColor, 1.0f, input.viewNormal,
         lv.vToL, input.viewFragPos, att, specularPower
-    ); // final color
+    ); 
+    // final color
     return float4(saturate((diffuse + ambient) * tex.Sample(splr, input.tc).rgb + specularReflected), 1.0f);
 }
