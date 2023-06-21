@@ -9,7 +9,7 @@ namespace Bind
 		INFOMAN(gfx);
 
 		D3D11_RASTERIZER_DESC rDesc = CD3D11_RASTERIZER_DESC(CD3D11_DEFAULT{});
-		rDesc.CullMode = D3D11_CULL_BACK;
+		rDesc.CullMode = twoSided ? D3D11_CULL_NONE : D3D11_CULL_BACK;
 		GetDevice(gfx)->CreateRasterizerState(&rDesc, pRasterizer.GetAddressOf());
 	}
 
