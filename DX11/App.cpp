@@ -3,7 +3,6 @@
 #include <algorithm>
 #include "NastihanMath.h"
 #include "Surface.h"
-#include "GDIPlusManager.h"
 #include "imgui/imgui.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -11,54 +10,18 @@
 #include "Vertex.h"
 #include "TestPlane.h"
 #include "NormalMapTwerker.h"
-#include "TexturePreprocessor.h"
-#include <shellapi.h>
-#include <DxTex/DirectXTex.h>
+#include "NastihanUtil.h"
 
-GDIPlusManager gdipm;
+
 
 
 App::App(const std::string& commandLine)
 	:
 	commandLine(commandLine),
 	wnd(1600, 900, "DX11"),
+	scriptCommander(TokenizeQuoted(commandLine)),
 	light(wnd.Gfx())
 {
-
-	auto scratch = DirectX::ScratchImage{};
-	DirectX::LoadFromWICFile(L"Images\\brickwall.jpg", DirectX::WIC_FLAGS_NONE, nullptr, scratch);
-	auto image = scratch.GetImage(0, 0, 0);
-
-	// makeshift cli for doing some preprocessing bullshit (so many hacks here)
-	if (this->commandLine != "")
-	{
-		int nArgs;
-		const auto pLineW = GetCommandLineW();
-		const auto pArgs = CommandLineToArgvW(pLineW, &nArgs);
-		if (nArgs >= 4 && std::wstring(pArgs[1]) == L"--ntwerk-rotx180")
-		{
-			const std::wstring pathInWide = pArgs[2];
-			const std::wstring pathOutWide = pArgs[3];
-			NormalMapTwerker::RotateXAxis180(
-				std::string(pathInWide.begin(), pathInWide.end()),
-				std::string(pathOutWide.begin(), pathOutWide.end())
-			);
-			throw std::runtime_error("Normal map processed successfully. Just kidding about that whole runtime error thing.");
-		}
-		else if (nArgs >= 4 && std::wstring(pArgs[1]) == L"--twerk-validate")
-		{
-			const std::wstring minWide = pArgs[2];
-			const std::wstring maxWide = pArgs[3];
-			const std::wstring pathWide = pArgs[4];
-			TexturePreprocessor::ValidateNormalMap(
-				std::string(pathWide.begin(), pathWide.end()), std::stof(minWide), std::stof(maxWide)
-			);
-			throw std::runtime_error("Normal map validated successfully. Just kidding about that whole runtime error thing.");
-		}
-	}
-
-	////////////////////////////////
-
 
 	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 200.0f));
 

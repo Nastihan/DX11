@@ -2,6 +2,7 @@
 #include "GraphicsThrowMacros.h"
 #include <d3dcompiler.h>
 #include "BindableCodex.h"
+#include "NastihanUtil.h"
 
 #pragma comment(lib,"D3DCompiler.lib")
 
@@ -11,8 +12,8 @@ namespace Bind
 		: path(path)
 	{
 		INFOMAN(gfx);
-		GFX_THROW_INFO(D3DReadFileToBlob(std::wstring{path.begin(), path.end()}.c_str(), & pBytecodeBlob));
-		//GFX_THROW_INFO(D3DReadFileToBlob(path.c_str(), &pBytecodeBlob));
+
+		GFX_THROW_INFO(D3DReadFileToBlob(ToWide(path).c_str(), &pBytecodeBlob));
 		GFX_THROW_INFO(GetDevice(gfx)->CreateVertexShader(
 			pBytecodeBlob->GetBufferPointer(),
 			pBytecodeBlob->GetBufferSize(),

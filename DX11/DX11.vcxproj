@@ -90,7 +90,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);IS_DEBUG=true</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);IS_DEBUG=true;_SILENCE_CXX20_CISO646_REMOVED_WARNING;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -114,7 +114,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_MBCS;%(PreprocessorDefinitions);IS_DEBUG=false</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_MBCS;%(PreprocessorDefinitions);IS_DEBUG=false;_SILENCE_CXX20_CISO646_REMOVED_WARNING;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -134,7 +134,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);IS_DEBUG=true</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);IS_DEBUG=true;_SILENCE_CXX20_CISO646_REMOVED_WARNING;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -158,7 +158,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_MBCS;%(PreprocessorDefinitions);IS_DEBUG=false</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_MBCS;%(PreprocessorDefinitions);IS_DEBUG=false;_SILENCE_CXX20_CISO646_REMOVED_WARNING;</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
@@ -198,11 +198,13 @@
     <ClCompile Include="Mouse.cpp" />
     <ClCompile Include="NastihanException.cpp" />
     <ClCompile Include="NastihanTimer.cpp" />
+    <ClCompile Include="NastihanUtil.cpp" />
     <ClCompile Include="NastihanXM.cpp" />
     <ClCompile Include="PixelShader.cpp" />
     <ClCompile Include="PointLight.cpp" />
     <ClCompile Include="Rasterizer.cpp" />
     <ClCompile Include="Sampler.cpp" />
+    <ClCompile Include="ScriptCommander.cpp" />
     <ClCompile Include="SolidSphere.cpp" />
     <ClCompile Include="Surface.cpp" />
     <ClCompile Include="TestPlane.cpp" />
@@ -254,6 +256,7 @@
     <ClInclude Include="NastihanException.h" />
     <ClInclude Include="NastihanMath.h" />
     <ClInclude Include="NastihanTimer.h" />
+    <ClInclude Include="NastihanUtil.h" />
     <ClInclude Include="NastihanWin.h" />
     <ClInclude Include="NastihanXM.h" />
     <ClInclude Include="NormalMapTwerker.h" />
@@ -263,6 +266,7 @@
     <ClInclude Include="Prism.h" />
     <ClInclude Include="Rasterizer.h" />
     <ClInclude Include="Sampler.h" />
+    <ClInclude Include="ScriptCommander.h" />
     <ClInclude Include="SolidSphere.h" />
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Surface.h" />

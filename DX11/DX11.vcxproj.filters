@@ -177,6 +177,12 @@
     <ClCompile Include="Rasterizer.cpp">
       <Filter>Source Files\Bindable</Filter>
     </ClCompile>
+    <ClCompile Include="NastihanUtil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScriptCommander.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -355,6 +361,12 @@
     </ClInclude>
     <ClInclude Include="Rasterizer.h">
       <Filter>Header Files\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="NastihanUtil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ScriptCommander.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

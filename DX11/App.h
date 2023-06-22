@@ -7,6 +7,7 @@
 #include <set>
 #include "Model.h"
 #include "TestPlane.h"
+#include "ScriptCommander.h"
 
 
 class App
@@ -25,6 +26,7 @@ private:
 	bool showDemoWindow = true;
 	ImGuiManager imgui;
 	Window wnd;
+	ScriptCommander scriptCommander;
 	NastihanTimer timer;
 	Camera cam;
 	PointLight light;
