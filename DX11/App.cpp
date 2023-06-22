@@ -13,6 +13,7 @@
 #include "NormalMapTwerker.h"
 #include "TexturePreprocessor.h"
 #include <shellapi.h>
+#include <DxTex/DirectXTex.h>
 
 GDIPlusManager gdipm;
 
@@ -23,6 +24,11 @@ App::App(const std::string& commandLine)
 	wnd(1600, 900, "DX11"),
 	light(wnd.Gfx())
 {
+
+	auto scratch = DirectX::ScratchImage{};
+	DirectX::LoadFromWICFile(L"Images\\brickwall.jpg", DirectX::WIC_FLAGS_NONE, nullptr, scratch);
+	auto image = scratch.GetImage(0, 0, 0);
+
 	// makeshift cli for doing some preprocessing bullshit (so many hacks here)
 	if (this->commandLine != "")
 	{
