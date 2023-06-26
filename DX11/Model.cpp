@@ -720,6 +720,8 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 		throw std::runtime_error("terrible combination of textures in material smh");
 	}
 
+	bindablePtrs.push_back(std::make_shared<Stencil>(gfx, Stencil::Mode::Off));
+
 	bindablePtrs.push_back(std::make_unique<Rasterizer>(gfx, hasAlphaDiffuse));
 
 	return std::make_unique<Mesh>(gfx, std::move(bindablePtrs));
