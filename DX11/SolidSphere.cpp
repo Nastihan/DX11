@@ -35,6 +35,8 @@ SolidSphere::SolidSphere(Graphics& gfx, float radius)
 
 	AddBind(Rasterizer::Resolve(gfx, false));
 
+	AddBind(std::make_shared<Stencil>(gfx, Stencil::Mode::Off));
+
 	AddBind(std::make_shared<TransformCbuf>(gfx, *this));
 }
 

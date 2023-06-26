@@ -35,7 +35,7 @@ TestCube::TestCube(Graphics& gfx, float size)
 	auto tcbdb = std::make_shared<TransformCbufPS>(gfx, *this, 0u, 2u);
 	AddBind(tcbdb);
 
-	AddBind(std::make_shared<Stencil>(gfx));
+	AddBind(std::make_shared<Stencil>(gfx,Stencil::Mode::Write));
 
 
 	outlineEffect.push_back(VertexBuffer::Resolve(gfx, geometryTag, model.vertices));
@@ -52,7 +52,7 @@ TestCube::TestCube(Graphics& gfx, float size)
 	outlineEffect.push_back(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
 	outlineEffect.push_back(Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 	outlineEffect.push_back(std::move(tcbdb));
-	outlineEffect.push_back(std::make_shared<Stencil>(gfx));
+	outlineEffect.push_back(std::make_shared<Stencil>(gfx,Stencil::Mode::Mask));
 }
 
 void TestCube::SetPos(DirectX::XMFLOAT3 pos) noexcept

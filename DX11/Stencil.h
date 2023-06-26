@@ -8,7 +8,13 @@ namespace Bind
 	class Stencil : public Bindable
 	{
 	public:
-		Stencil(Graphics& gfx);
+		enum Mode
+		{
+			Off,
+			Write,
+			Mask,
+		};
+		Stencil(Graphics& gfx, Mode mode);
 		void Bind(Graphics& gfx) noexcept override;
 
 

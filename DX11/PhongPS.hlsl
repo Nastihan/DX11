@@ -35,7 +35,7 @@ float4 main(PS_input input) : SV_Target
 	// diffuse
     const float3 diffuse = Diffuse(diffuseColor, diffuseIntensity, att, lv.dirToL, input.viewNormal);
 	// specular
-    const float3 specular = Speculate(diffuseColor, diffuseIntensity, input.viewNormal, lv.vToL, input.viewFragPos, att, specularPower);
+    const float3 specular = Speculate(diffuseColor, diffuseIntensity * specularIntensity, input.viewNormal, lv.vToL, input.viewFragPos, att, specularPower);
 	// final color
     return float4(saturate((diffuse + ambient) * tex.Sample(splr, input.tc).rgb + specular), 1.0f);
 }

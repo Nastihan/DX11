@@ -32,6 +32,6 @@ private:
 	Camera cam;
 	PointLight light;
 
-	TestCube cube{ wnd.Gfx(),1.0f };
+	TestCube cube{ wnd.Gfx(),1.2f };
 	//Model sponza{ wnd.Gfx(),"Models\\Sponza\\sponza.obj",1/20.0f };
 };
