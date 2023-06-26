@@ -31,5 +31,5 @@ private:
 	Camera cam;
 	PointLight light;
 
-	Model sponza{ wnd.Gfx(),"Models\\Sponza\\sponza.obj",1/20.0f };
+	//Model sponza{ wnd.Gfx(),"Models\\Sponza\\sponza.obj",1/20.0f };
 };
