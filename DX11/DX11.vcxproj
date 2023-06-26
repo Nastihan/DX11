@@ -210,6 +210,7 @@
     <ClCompile Include="SolidSphere.cpp" />
     <ClCompile Include="Stencil.cpp" />
     <ClCompile Include="Surface.cpp" />
+    <ClCompile Include="TestCube.cpp" />
     <ClCompile Include="TestPlane.cpp" />
     <ClCompile Include="Texture.cpp" />
     <ClCompile Include="TexturePreprocessor.cpp" />
@@ -277,6 +278,7 @@
     <ClInclude Include="Sphere.h" />
     <ClInclude Include="Stencil.h" />
     <ClInclude Include="Surface.h" />
+    <ClInclude Include="TestCube.h" />
     <ClInclude Include="TestPlane.h" />
     <ClInclude Include="Texture.h" />
     <ClInclude Include="TexturePreprocessor.h" />

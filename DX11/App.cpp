@@ -32,6 +32,8 @@ void App::DoFrame()
 	wnd.Gfx().BeginFrame();
 	wnd.Gfx().SetCamera(cam.GetMatrix());
 	light.Bind(wnd.Gfx(),cam.GetMatrix());
+	cube.Draw(wnd.Gfx());
+	cube.DrawOutline(wnd.Gfx());
 	//sponza.Draw(wnd.Gfx());
 	light.Draw(wnd.Gfx());
 
@@ -94,6 +96,7 @@ void App::DoFrame()
 	light.SpawnControlWindow();
 	ShowHelperWindow();
 	ShowFPSWindow();
+	cube.SpawnControlWindow(wnd.Gfx(), "cube");
 	//sponza.ShowWindow(wnd.Gfx());
 	// present
 	wnd.Gfx().EndFrame();

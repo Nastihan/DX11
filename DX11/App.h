@@ -7,6 +7,7 @@
 #include <set>
 #include "Model.h"
 #include "TestPlane.h"
+#include "TestCube.h"
 #include "ScriptCommander.h"
 
 
@@ -31,5 +32,6 @@ private:
 	Camera cam;
 	PointLight light;
 
+	TestCube cube{ wnd.Gfx(),1.0f };
 	//Model sponza{ wnd.Gfx(),"Models\\Sponza\\sponza.obj",1/20.0f };
 };
