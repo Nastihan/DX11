@@ -17,12 +17,12 @@ TestCube::TestCube(Graphics& gfx, float size)
 	pIndices = IndexBuffer::Resolve(gfx, geometryTag, model.indices);
 	pVertices = VertexBuffer::Resolve(gfx, geometryTag, model.vertices);
 
-	
+	// lambertian
+	{
 		Technique lambertian{};
-
 		{
-			Step first{0};
-			
+			Step first{ 0 };
+
 			first.AddBindable(Texture::Resolve(gfx, "Images\\brickwall.jpg"));
 			first.AddBindable(Sampler::Resolve(gfx));
 
@@ -39,11 +39,14 @@ TestCube::TestCube(Graphics& gfx, float size)
 			auto tcb = std::make_shared<TransformCbuf>(gfx, 0u);
 			first.AddBindable(tcb);
 
-			//first.AddBindable();
-			//first.AddBindable();
+			first.AddBindable(Rasterizer::Resolve(gfx, false));
 
+			first.AddBindable(Blender::Resolve(gfx, false));
+
+			lambertian.AddStep(std::move(first));
 		}
-
+		AddTechnique(lambertian);
+	}
 
 	/*using namespace Bind;
 	namespace dx = DirectX;

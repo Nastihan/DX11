@@ -9,7 +9,7 @@
 #include "TestPlane.h"
 #include "TestCube.h"
 #include "ScriptCommander.h"
-
+#include "FrameCommander.h"
 
 class App
 {
@@ -31,8 +31,9 @@ private:
 	NastihanTimer timer;
 	Camera cam;
 	PointLight light;
+	FrameCommander fc;
 
-	/*TestCube cube1{ wnd.Gfx(),3.6f };
-	TestCube cube2{ wnd.Gfx(),4.2f };*/
+	TestCube cube1{ wnd.Gfx(),3.6f };
+	//TestCube cube2{ wnd.Gfx(),4.2f };
 	//Model sponza{ wnd.Gfx(),"Models\\Sponza\\sponza.obj",1/20.0f };
 };

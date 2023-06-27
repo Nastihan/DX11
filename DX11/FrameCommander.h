@@ -23,17 +23,17 @@ public:
 		Stencil::Resolve(gfx, Stencil::Mode::Off)->Bind(gfx);
 		passes[0].Execute(gfx);
 		// outline masking pass
-		Stencil::Resolve(gfx, Stencil::Mode::Write)->Bind(gfx);
-		NullPixelShader::Resolve(gfx)->Bind(gfx);
-		passes[1].Execute(gfx);
-		// outline drawing pass
-		Stencil::Resolve(gfx, Stencil::Mode::Mask)->Bind(gfx);
-		struct SolidColorBuffer
-		{
-			DirectX::XMFLOAT4 color = { 1.0f,0.4f,0.4f,1.0f };
-		} scb;
-		PixelConstantBuffer<SolidColorBuffer>::Resolve(gfx, scb, 1u)->Bind(gfx);
-		passes[2].Execute(gfx);
+		//Stencil::Resolve(gfx, Stencil::Mode::Write)->Bind(gfx);
+		//NullPixelShader::Resolve(gfx)->Bind(gfx);
+		//passes[1].Execute(gfx);
+		//// outline drawing pass
+		//Stencil::Resolve(gfx, Stencil::Mode::Mask)->Bind(gfx);
+		//struct SolidColorBuffer
+		//{
+		//	DirectX::XMFLOAT4 color = { 1.0f,0.4f,0.4f,1.0f };
+		//} scb;
+		//PixelConstantBuffer<SolidColorBuffer>::Resolve(gfx, scb, 1u)->Bind(gfx);
+		//passes[2].Execute(gfx);
 	}
 	void Reset() noexcept
 	{
