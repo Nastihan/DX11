@@ -7,7 +7,45 @@
 
 TestCube::TestCube(Graphics& gfx, float size)
 {
+	auto model = Cube::MakeIndependentTextured();
+	model.Transform(DirectX::XMMatrixScaling(size, size, size));
+	model.SetNormalsIndependentFlat();
+	const auto geometryTag = "$cube." + std::to_string(size);
+
 	using namespace Bind;
+	pTopology = Topology::Resolve(gfx, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pIndices = IndexBuffer::Resolve(gfx, geometryTag, model.indices);
+	pVertices = VertexBuffer::Resolve(gfx, geometryTag, model.vertices);
+
+	
+		Technique lambertian{};
+
+		{
+			Step first{0};
+			
+			first.AddBindable(Texture::Resolve(gfx, "Images\\brickwall.jpg"));
+			first.AddBindable(Sampler::Resolve(gfx));
+
+			auto pvs = VertexShader::Resolve(gfx, "PhongVS.cso");
+			auto pvsbc = pvs->GetBytecode();
+			first.AddBindable(std::move(pvs));
+
+			first.AddBindable(PixelShader::Resolve(gfx, "PhongPS.cso"));
+
+			first.AddBindable(PixelConstantBuffer<PSMaterialConstant>::Resolve(gfx, pmc, 1u));
+
+			first.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
+
+			auto tcb = std::make_shared<TransformCbuf>(gfx, 0u);
+			first.AddBindable(tcb);
+
+			//first.AddBindable();
+			//first.AddBindable();
+
+		}
+
+
+	/*using namespace Bind;
 	namespace dx = DirectX;
 
 	auto model = Cube::MakeIndependentTextured();
@@ -52,7 +90,7 @@ TestCube::TestCube(Graphics& gfx, float size)
 	outlineEffect.push_back(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
 	outlineEffect.push_back(Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 	outlineEffect.push_back(std::move(tcbdb));
-	outlineEffect.push_back(std::make_shared<Stencil>(gfx,Stencil::Mode::Mask));
+	outlineEffect.push_back(std::make_shared<Stencil>(gfx,Stencil::Mode::Mask));*/
 }
 
 void TestCube::SetPos(DirectX::XMFLOAT3 pos) noexcept
@@ -80,7 +118,7 @@ DirectX::XMMATRIX TestCube::GetTransformXM() const noexcept
 
 void TestCube::SpawnControlWindow(Graphics& gfx, const char* name) noexcept
 {
-	if (ImGui::Begin(name))
+	/*if (ImGui::Begin(name))
 	{
 		ImGui::Text("Position");
 		ImGui::SliderFloat("X", &pos.x, -80.0f, 80.0f, "%.1f");
@@ -101,5 +139,5 @@ void TestCube::SpawnControlWindow(Graphics& gfx, const char* name) noexcept
 			QueryBindable<Bind::PixelConstantBuffer<PSMaterialConstant>>()->Update(gfx, pmc);
 		}
 	}
-	ImGui::End();
+	ImGui::End();*/
 }

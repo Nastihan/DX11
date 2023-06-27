@@ -18,7 +18,7 @@ public:
 		{
 			b->Bind(gfx);
 		}
-		gfx.DrawIndexed(QueryBindable<Bind::IndexBuffer>()->GetCount());
+		//gfx.DrawIndexed(QueryBindable<Bind::IndexBuffer>()->GetCount());
 		outlining = false;
 	}
 private:

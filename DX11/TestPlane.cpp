@@ -6,7 +6,7 @@
 
 TestPlane::TestPlane(Graphics& gfx, float size)
 {
-	using namespace Bind;
+	/*using namespace Bind;
 	namespace dx = DirectX;
 
 	auto model = Plane::Make();
@@ -30,7 +30,7 @@ TestPlane::TestPlane(Graphics& gfx, float size)
 
 	AddBind(Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
 
-	AddBind(std::make_shared<TransformCbufPS>(gfx, *this, 0u, 2u));
+	AddBind(std::make_shared<TransformCbufPS>(gfx, *this, 0u, 2u));*/
 }
 
 void TestPlane::SetPos(DirectX::XMFLOAT3 pos) noexcept
@@ -52,7 +52,7 @@ DirectX::XMMATRIX TestPlane::GetTransformXM() const noexcept
 }
 
 void TestPlane::SpawnControlWindow(Graphics& gfx) noexcept
-{
+{/*
 	if (ImGui::Begin("Plane"))
 	{
 		ImGui::Text("Position");
@@ -74,5 +74,5 @@ void TestPlane::SpawnControlWindow(Graphics& gfx) noexcept
 			QueryBindable<Bind::PixelConstantBuffer<PSMaterialConstant>>()->Update(gfx, pmc);
 		}
 	}
-	ImGui::End();
+	ImGui::End();*/
 }

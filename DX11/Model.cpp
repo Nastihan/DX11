@@ -35,23 +35,12 @@ const std::string& ModelException::GetNote() const noexcept
 }
 
 // Mesh
-Mesh::Mesh(Graphics& gfx, std::vector<std::shared_ptr<Bind::Bindable>> bindPtrs)
+void Mesh::Submit(FrameCommander& frame,DirectX::FXMMATRIX accumulatedTranform) const noxnd
 {
-
-	AddBind(Bind::Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
-
-	for (auto& pb : bindPtrs)
-	{
-			AddBind(std::move(pb));
-	}
-
-	AddBind(std::make_shared<Bind::TransformCbuf>(gfx, *this));
+	DirectX::XMStoreFloat4x4(&transform, accumulatedTranform);
+	Drawable::Submit(frame);
 }
-void Mesh::Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform) const noexcept(!IS_DEBUG)
-{
-	DirectX::XMStoreFloat4x4(&transform, accumulatedTransform);
-	Drawable::Draw(gfx);
-}
+
 DirectX::XMMATRIX Mesh::GetTransformXM() const noexcept
 {
 	return DirectX::XMLoadFloat4x4(&transform);
@@ -68,19 +57,19 @@ name(name)
 	DirectX::XMStoreFloat4x4(&transform, transform_in);
 	DirectX::XMStoreFloat4x4(&appliedTransform, DirectX::XMMatrixIdentity());
 }
-void Node::Draw(Graphics& gfx, DirectX::FXMMATRIX accumulatedTransform) const noxnd
+void Node::Submit(FrameCommander& frame, DirectX::FXMMATRIX accumulatedTransform) const noxnd
 {
 	const auto built =
 		DirectX::XMLoadFloat4x4(&appliedTransform) *
 		DirectX::XMLoadFloat4x4(&transform) *
-		accumulatedTransform;	
+		accumulatedTransform;
 	for (const auto pm : meshPtrs)
 	{
-		pm->Draw(gfx, built);
+		pm->Submit(frame, accumulatedTransform);
 	}
 	for (const auto& pc : childPtrs)
 	{
-		pc->Draw(gfx, built);
+		pc->Submit(frame, accumulatedTransform);
 	}
 }
 
@@ -112,22 +101,22 @@ void Node::ShowTree(Node*& pSelectedNode) const noexcept
 	}
 }
 
-const Dcb::Buffer* Node::GetMaterialConstants() const noxnd
-{
-	if (meshPtrs.size() == 0)
-	{
-		return nullptr;
-	}
-	auto pBindable = meshPtrs.front()->QueryBindable<Bind::CachingPixelConstantBufferEX>();
-	return &pBindable->GetBuffer();
-}
-
-void Node::SetMaterialConstants(const Dcb::Buffer& buf_in) noxnd
-{
-	auto pcb = meshPtrs.front()->QueryBindable<Bind::CachingPixelConstantBufferEX>();
-	assert(pcb != nullptr);
-	pcb->SetBuffer(buf_in);
-}
+//const Dcb::Buffer* Node::GetMaterialConstants() const noxnd
+//{
+//	if (meshPtrs.size() == 0)
+//	{
+//		return nullptr;
+//	}
+//	auto pBindable = meshPtrs.front()->QueryBindable<Bind::CachingPixelConstantBufferEX>();
+//	return &pBindable->GetBuffer();
+//}
+//
+//void Node::SetMaterialConstants(const Dcb::Buffer& buf_in) noxnd
+//{
+//	auto pcb = meshPtrs.front()->QueryBindable<Bind::CachingPixelConstantBufferEX>();
+//	assert(pcb != nullptr);
+//	pcb->SetBuffer(buf_in);
+//}
 
 void Node::SetAppliedTransform(DirectX::FXMMATRIX transform) noexcept
 {
@@ -156,103 +145,103 @@ class ModelWindow
 public:
 	void Show(Graphics& gfx,const char* windowName, const Node& root) noexcept
 	{
-		// window name defaults to "Model"
-		windowName = windowName ? windowName : "Model";
-		// need an ints to track node indices and selected node
-		int nodeIndexTracker = 0;
-		if (ImGui::Begin(windowName))
-		{
-			ImGui::Columns(2, nullptr, true);
-			root.ShowTree(pSelectedNode);
+		//// window name defaults to "Model"
+		//windowName = windowName ? windowName : "Model";
+		//// need an ints to track node indices and selected node
+		//int nodeIndexTracker = 0;
+		//if (ImGui::Begin(windowName))
+		//{
+		//	ImGui::Columns(2, nullptr, true);
+		//	root.ShowTree(pSelectedNode);
 
-			ImGui::NextColumn();
-			if (pSelectedNode != nullptr)
-			{
-				const auto id = pSelectedNode->GetId();
-				auto i = transforms.find(id);
-				if (i == transforms.end())
-				{
-					const auto& applied = pSelectedNode->GetAppliedTransform();
-					const auto angles = ExtractEulerAngles(applied);
-					const auto translation = ExtractTranslation(applied);
-					transformParams tp;
-					tp.roll = angles.z;
-					tp.pitch = angles.x;
-					tp.yaw = angles.y;
-					tp.x = translation.x;
-					tp.y = translation.y;
-					tp.z = translation.z;
-					auto pMatConst = pSelectedNode->GetMaterialConstants();
-					auto buf = pMatConst != nullptr ? std::optional<Dcb::Buffer>{ *pMatConst } : std::optional<Dcb::Buffer>{};
-					std::tie(i, std::ignore) = transforms.insert({ id,{ tp,false,std::move(buf),false } });
-				}
-				// link imgui ctrl to our cached transform params
-				{
-					auto& transform = i->second.tranformParams;
-					// dirty check
-					auto& dirty = i->second.transformParamsDirty;
-					const auto dcheck = [&dirty](bool changed) {dirty = dirty || changed; };
-					// widgets
-					ImGui::Text("Orientation");
-					dcheck(ImGui::SliderAngle("Roll", &transform.roll, -180.0f, 180.0f));
-					dcheck(ImGui::SliderAngle("Pitch", &transform.pitch, -180.0f, 180.0f));
-					dcheck(ImGui::SliderAngle("Yaw", &transform.yaw, -180.0f, 180.0f));
-					ImGui::Text("Position");
-					dcheck(ImGui::SliderFloat("X", &transform.x, -20.0f, 20.0f));
-					dcheck(ImGui::SliderFloat("Y", &transform.y, -20.0f, 20.0f));
-					dcheck(ImGui::SliderFloat("Z", &transform.z, -20.0f, 20.0f));
-				}
+		//	ImGui::NextColumn();
+		//	if (pSelectedNode != nullptr)
+		//	{
+		//		const auto id = pSelectedNode->GetId();
+		//		auto i = transforms.find(id);
+		//		if (i == transforms.end())
+		//		{
+		//			const auto& applied = pSelectedNode->GetAppliedTransform();
+		//			const auto angles = ExtractEulerAngles(applied);
+		//			const auto translation = ExtractTranslation(applied);
+		//			transformParams tp;
+		//			tp.roll = angles.z;
+		//			tp.pitch = angles.x;
+		//			tp.yaw = angles.y;
+		//			tp.x = translation.x;
+		//			tp.y = translation.y;
+		//			tp.z = translation.z;
+		//			auto pMatConst = pSelectedNode->GetMaterialConstants();
+		//			auto buf = pMatConst != nullptr ? std::optional<Dcb::Buffer>{ *pMatConst } : std::optional<Dcb::Buffer>{};
+		//			std::tie(i, std::ignore) = transforms.insert({ id,{ tp,false,std::move(buf),false } });
+		//		}
+		//		// link imgui ctrl to our cached transform params
+		//		{
+		//			auto& transform = i->second.tranformParams;
+		//			// dirty check
+		//			auto& dirty = i->second.transformParamsDirty;
+		//			const auto dcheck = [&dirty](bool changed) {dirty = dirty || changed; };
+		//			// widgets
+		//			ImGui::Text("Orientation");
+		//			dcheck(ImGui::SliderAngle("Roll", &transform.roll, -180.0f, 180.0f));
+		//			dcheck(ImGui::SliderAngle("Pitch", &transform.pitch, -180.0f, 180.0f));
+		//			dcheck(ImGui::SliderAngle("Yaw", &transform.yaw, -180.0f, 180.0f));
+		//			ImGui::Text("Position");
+		//			dcheck(ImGui::SliderFloat("X", &transform.x, -20.0f, 20.0f));
+		//			dcheck(ImGui::SliderFloat("Y", &transform.y, -20.0f, 20.0f));
+		//			dcheck(ImGui::SliderFloat("Z", &transform.z, -20.0f, 20.0f));
+		//		}
 
-				// link imgui ctrl to our cached material params
-				if (i->second.materialCbuf)
-				{
-					auto& mat = *i->second.materialCbuf;
-					// dirty check
-					auto& dirty = i->second.materialCbufDirty;
-					const auto dcheck = [&dirty](bool changed) {dirty = dirty || changed; };
-					// widgets
-					ImGui::Text("Material");
-					if (auto v = mat["normalMapEnabled"]; v.Exists())
-					{
-						dcheck(ImGui::Checkbox("Norm Map", &v));
-					}
-					if (auto v = mat["specularMapEnabled"]; v.Exists())
-					{
-						dcheck(ImGui::Checkbox("Spec Map", &v));
-					}
-					if (auto v = mat["hasGlossMap"]; v.Exists())
-					{
-						dcheck(ImGui::Checkbox("Gloss Map", &v));
-					}
-					if (auto v = mat["materialColor"]; v.Exists())
-					{
-						dcheck(ImGui::ColorPicker3("Diff Color", reinterpret_cast<float*>(&static_cast<DirectX::XMFLOAT3&>(v))));
-					}
-					if (auto v = mat["specularPower"]; v.Exists())
-					{
-						dcheck(ImGui::SliderFloat("Spec Power", &v, 0.0f, 100.0f, "%.1f", 1.5f));
-					}
-					if (auto v = mat["specularColor"]; v.Exists())
-					{
-						dcheck(ImGui::ColorPicker3("Spec Color", reinterpret_cast<float*>(&static_cast<DirectX::XMFLOAT3&>(v))));
-					}
-					if (auto v = mat["specularMapWeight"]; v.Exists())
-					{
-						dcheck(ImGui::SliderFloat("Spec Weight", &v, 0.0f, 4.0f));
-					}
-					if (auto v = mat["specularIntensity"]; v.Exists())
-					{
-						dcheck(ImGui::SliderFloat("Spec Intens", &v, 0.0f, 1.0f));
-					}
-				}
+		//		// link imgui ctrl to our cached material params
+		//		if (i->second.materialCbuf)
+		//		{
+		//			auto& mat = *i->second.materialCbuf;
+		//			// dirty check
+		//			auto& dirty = i->second.materialCbufDirty;
+		//			const auto dcheck = [&dirty](bool changed) {dirty = dirty || changed; };
+		//			// widgets
+		//			ImGui::Text("Material");
+		//			if (auto v = mat["normalMapEnabled"]; v.Exists())
+		//			{
+		//				dcheck(ImGui::Checkbox("Norm Map", &v));
+		//			}
+		//			if (auto v = mat["specularMapEnabled"]; v.Exists())
+		//			{
+		//				dcheck(ImGui::Checkbox("Spec Map", &v));
+		//			}
+		//			if (auto v = mat["hasGlossMap"]; v.Exists())
+		//			{
+		//				dcheck(ImGui::Checkbox("Gloss Map", &v));
+		//			}
+		//			if (auto v = mat["materialColor"]; v.Exists())
+		//			{
+		//				dcheck(ImGui::ColorPicker3("Diff Color", reinterpret_cast<float*>(&static_cast<DirectX::XMFLOAT3&>(v))));
+		//			}
+		//			if (auto v = mat["specularPower"]; v.Exists())
+		//			{
+		//				dcheck(ImGui::SliderFloat("Spec Power", &v, 0.0f, 100.0f, "%.1f", 1.5f));
+		//			}
+		//			if (auto v = mat["specularColor"]; v.Exists())
+		//			{
+		//				dcheck(ImGui::ColorPicker3("Spec Color", reinterpret_cast<float*>(&static_cast<DirectX::XMFLOAT3&>(v))));
+		//			}
+		//			if (auto v = mat["specularMapWeight"]; v.Exists())
+		//			{
+		//				dcheck(ImGui::SliderFloat("Spec Weight", &v, 0.0f, 4.0f));
+		//			}
+		//			if (auto v = mat["specularIntensity"]; v.Exists())
+		//			{
+		//				dcheck(ImGui::SliderFloat("Spec Intens", &v, 0.0f, 1.0f));
+		//			}
+		//		}
 
-			}
-		}
-		ImGui::End();
+		//	}
+		//}
+		//ImGui::End();
 	}
 	void ApplyParameters() noxnd
 	{
-		if (TransformDirty())
+		/*if (TransformDirty())
 		{
 			pSelectedNode->SetAppliedTransform(GetTransform());
 			ResetTransformDirty();
@@ -261,7 +250,7 @@ public:
 		{
 			pSelectedNode->SetMaterialConstants(GetMaterial());
 			ResetMaterialDirty();
-		}
+		}*/
 	}
 private:
 	DirectX::XMMATRIX GetTransform() const noxnd
@@ -345,13 +334,13 @@ Model::Model(Graphics& gfx, const std::string& pathString, const float scale)
 	pRoot = ParseNode(nextId, *pScene->mRootNode);
 }
 
-void Model::Draw(Graphics& gfx) const
+void Model::Submit(FrameCommander& frame) const noxnd
 {
-	// I'm still not happy about updating parameters (i.e. mutating a bindable GPU state
+	// still not happy about updating parameters (i.e. mutating a bindable GPU state
 	// which is part of a mesh which is part of a node which is part of the model that is
 	// const in this call) Can probably do this elsewhere
 	pModelWindow->ApplyParameters();
-	pRoot->Draw(gfx, DirectX::XMMatrixIdentity());
+	pRoot->Submit(frame, DirectX::XMMatrixIdentity());
 }
 
 void Model::ShowWindow(Graphics& gfx,const char* windowName) noexcept
@@ -371,7 +360,7 @@ Model::~Model() noexcept
 std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const aiMaterial* const* pMaterials, const std::filesystem::path& path, float scale)
 {
 
-	using namespace std::string_literals;
+	/*using namespace std::string_literals;
 	using DX11::VertexLayout;
 	namespace dx = DirectX;
 	using namespace Bind;
@@ -722,9 +711,10 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 
 	bindablePtrs.push_back(std::make_shared<Stencil>(gfx, Stencil::Mode::Off));
 
-	bindablePtrs.push_back(std::make_unique<Rasterizer>(gfx, hasAlphaDiffuse));
+	bindablePtrs.push_back(std::make_unique<Rasterizer>(gfx, hasAlphaDiffuse));*/
 
-	return std::make_unique<Mesh>(gfx, std::move(bindablePtrs));
+	//return std::make_unique<Mesh>(gfx, std::move(bindablePtrs));
+return {};
 }
 
 std::unique_ptr<Node> Model::ParseNode(int& nextId, const aiNode& node) noexcept
