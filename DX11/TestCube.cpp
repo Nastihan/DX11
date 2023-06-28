@@ -47,6 +47,67 @@ TestCube::TestCube(Graphics& gfx, float size)
 		}
 		AddTechnique(lambertian);
 	}
+	// outlining
+	{
+		Technique outline{};
+		{
+			Step mask{ 1 };
+			{
+				mask.AddBindable(Texture::Resolve(gfx, "Images\\brickwall.jpg"));
+				mask.AddBindable(Sampler::Resolve(gfx));
+
+				auto pvs = VertexShader::Resolve(gfx, "PhongVS.cso");
+				auto pvsbc = pvs->GetBytecode();
+				mask.AddBindable(std::move(pvs));
+
+				mask.AddBindable(PixelConstantBuffer<PSMaterialConstant>::Resolve(gfx, pmc, 1u));
+
+				mask.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
+
+				auto tcb = std::make_shared<TransformCbuf>(gfx, 0u);
+				mask.AddBindable(tcb);
+
+				mask.AddBindable(Rasterizer::Resolve(gfx, false));
+
+				mask.AddBindable(Blender::Resolve(gfx, false));
+			}
+			outline.AddStep(mask);
+
+			Step draw{ 2 };
+			{
+				auto pvs = VertexShader::Resolve(gfx, "SolidVS.cso");
+				auto pvsbc = pvs->GetBytecode();
+				draw.AddBindable(std::move(pvs));
+
+				draw.AddBindable(PixelShader::Resolve(gfx, "SolidPS.cso"));
+
+				draw.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
+
+				class TransformCbufScaling : public TransformCbuf
+				{
+				public:
+					using TransformCbuf::TransformCbuf;
+					void Bind(Graphics& gfx) noexcept override
+					{
+						const auto scale = DirectX::XMMatrixScaling(1.04f, 1.04f, 1.04f);
+						auto xf = GetTransforms(gfx);
+						xf.modelView = xf.modelView * scale;
+						xf.modelViewProj = xf.modelViewProj * scale;
+						UpdateBindImpl(gfx, xf);
+					}
+				};
+
+				draw.AddBindable(std::make_shared<TransformCbufScaling>(gfx, 0u));
+
+				draw.AddBindable(Rasterizer::Resolve(gfx, false));
+
+				draw.AddBindable(Blender::Resolve(gfx, false));
+			}
+			outline.AddStep(draw);
+		}
+		AddTechnique(outline);
+	}
+
 
 	/*using namespace Bind;
 	namespace dx = DirectX;

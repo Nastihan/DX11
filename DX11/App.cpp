@@ -35,8 +35,9 @@ void App::DoFrame()
 	light.Bind(wnd.Gfx(),cam.GetMatrix());
 
 
-	light.Submit(fc);
 	cube1.Submit(fc);
+	light.Submit(fc);
+
 	//sponza.Draw(wnd.Gfx());
 
 	fc.Execute(wnd.Gfx());
