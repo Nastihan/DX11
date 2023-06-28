@@ -11,18 +11,14 @@ public:
 		:
 		targetPass{ targetPass_in }
 	{}
-	//template<class B>
-	//B* QueryBindable() noexcept
-	//{
-	//	for( auto& pb : binds )
-	//	{
-	//		if( auto pt = dynamic_cast<T*>(pb.get()) )
-	//		{
-	//			return pt;
-	//		}
-	//	}
-	//	return nullptr;
-	//}
+	void Accept(class Probe& probe)
+	{
+		for (auto& b : bindables)
+		{
+			b->Accept(probe);
+		}
+	
+	}
 	void AddBindable(std::shared_ptr<Bind::Bindable> bind_in) noexcept
 	{
 		bindables.push_back(std::move(bind_in));

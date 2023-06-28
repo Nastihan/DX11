@@ -4,6 +4,7 @@
 #include "Graphics.h"
 #include "Job.h"
 #include "Pass.h"
+#include "PerfLog.h"
 
 class FrameCommander
 {
@@ -23,9 +24,11 @@ public:
 		Stencil::Resolve(gfx, Stencil::Mode::Off)->Bind(gfx);
 		passes[0].Execute(gfx);
 		// outline masking pass
+		//PerfLog::Start("begin");
 		Stencil::Resolve(gfx, Stencil::Mode::Write)->Bind(gfx);
 		NullPixelShader::Resolve(gfx)->Bind(gfx);
 		passes[1].Execute(gfx);
+		//PerfLog::Mark("end");
 		//// outline drawing pass
 		Stencil::Resolve(gfx, Stencil::Mode::Mask)->Bind(gfx);
 		struct SolidColorBuffer

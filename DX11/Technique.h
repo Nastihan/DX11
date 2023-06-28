@@ -19,6 +19,13 @@ public:
 	{
 		active = false;
 	}
+	void Accept(Probe& probe)
+	{
+		for (auto& s : steps)
+		{
+			s.Accept(probe);
+		}
+	}
 	void InitializeParentReferences(const class Drawable& parent) noexcept;
 private:
 	bool active = true;

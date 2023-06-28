@@ -1,7 +1,9 @@
 #pragma once
 #include "Graphics.h"
+//#include "Probe.h"
 
 class Drawable;
+class Probe;
 
 namespace Bind
 {
@@ -15,6 +17,10 @@ namespace Bind
 		{
 			assert(false);
 			return "";
+		}
+		virtual void Accept(class Probe& probe) 
+		{
+			// pretty much most of the bindable do not do anything when they accept a probe
 		}
 		virtual ~Bindable() = default;
 	protected:

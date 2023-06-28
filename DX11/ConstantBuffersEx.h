@@ -93,6 +93,10 @@ namespace Bind
 			}
 			PixelConstantBufferEX::Bind(gfx);
 		}
+		void Accept(Probe& probe) override
+		{
+			probe.DoSth();
+		}
 	private:
 		bool dirty = false;
 		Dcb::Buffer buf;

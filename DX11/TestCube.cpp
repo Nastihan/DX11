@@ -4,6 +4,8 @@
 #include "TransformCbufPS.h"
 #include "imgui/imgui.h"
 #include "Stencil.h"
+#include "DynamicConstant.h"
+#include "ConstantBuffersEx.h"
 
 TestCube::TestCube(Graphics& gfx, float size)
 {
@@ -32,6 +34,16 @@ TestCube::TestCube(Graphics& gfx, float size)
 
 			first.AddBindable(PixelShader::Resolve(gfx, "PhongPS.cso"));
 
+			Dcb::RawLayout layout;
+			layout.Add<Dcb::Float>("specularIntensity");
+			layout.Add<Dcb::Float>("specularPower");
+			layout.Add<Dcb::Bool>("normalMappingEnabled");
+			Dcb::Buffer buf(std::move(layout));
+			buf["specularIntensity"] = 0.1f;
+			buf["specularPower"] = 20.0f;
+			first.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEX>(gfx, buf, 1u));
+
+
 			first.AddBindable(PixelConstantBuffer<PSMaterialConstant>::Resolve(gfx, pmc, 1u));
 
 			first.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
@@ -59,6 +71,8 @@ TestCube::TestCube(Graphics& gfx, float size)
 				auto pvs = VertexShader::Resolve(gfx, "PhongVS.cso");
 				auto pvsbc = pvs->GetBytecode();
 				mask.AddBindable(std::move(pvs));
+
+				
 
 				mask.AddBindable(PixelConstantBuffer<PSMaterialConstant>::Resolve(gfx, pmc, 1u));
 
@@ -108,6 +122,7 @@ TestCube::TestCube(Graphics& gfx, float size)
 		AddTechnique(outline);
 	}
 
+	
 
 	/*using namespace Bind;
 	namespace dx = DirectX;
@@ -182,7 +197,11 @@ DirectX::XMMATRIX TestCube::GetTransformXM() const noexcept
 
 void TestCube::SpawnControlWindow(Graphics& gfx, const char* name) noexcept
 {
-	/*if (ImGui::Begin(name))
+	static Probe probe;
+
+	Accept(probe);
+
+	if (ImGui::Begin(name))
 	{
 		ImGui::Text("Position");
 		ImGui::SliderFloat("X", &pos.x, -80.0f, 80.0f, "%.1f");
@@ -192,7 +211,12 @@ void TestCube::SpawnControlWindow(Graphics& gfx, const char* name) noexcept
 		ImGui::SliderAngle("Roll", &roll, -180.0f, 180.0f);
 		ImGui::SliderAngle("Pitch", &pitch, -180.0f, 180.0f);
 		ImGui::SliderAngle("Yaw", &yaw, -180.0f, 180.0f);
-		ImGui::Text("Shading");
+
+
+
+
+
+		/*ImGui::Text("Shading");
 		bool changed0 = ImGui::SliderFloat("Spec. Int.", &pmc.specularIntensity, 0.0f, 1.0f);
 		bool changed1 = ImGui::SliderFloat("Spec. Power", &pmc.specularPower, 0.0f, 100.0f);
 		bool checkState = pmc.normalMappingEnabled == TRUE;
@@ -201,7 +225,7 @@ void TestCube::SpawnControlWindow(Graphics& gfx, const char* name) noexcept
 		if (changed0 || changed1 || changed2)
 		{
 			QueryBindable<Bind::PixelConstantBuffer<PSMaterialConstant>>()->Update(gfx, pmc);
-		}
+		}*/
 	}
-	ImGui::End();*/
+	ImGui::End();
 }

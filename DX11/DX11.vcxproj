@@ -248,6 +248,7 @@
     <ClInclude Include="GDIPlusManager.h" />
     <ClInclude Include="Graphics.h" />
     <ClInclude Include="GraphicsThrowMacros.h" />
+    <ClInclude Include="PerfLog.h" />
     <ClInclude Include="NullPixelShader.h" />
     <ClInclude Include="Pass.h" />
     <ClInclude Include="Job.h" />
@@ -278,6 +279,7 @@
     <ClInclude Include="Plane.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Prism.h" />
+    <ClInclude Include="Probe.h" />
     <ClInclude Include="Rasterizer.h" />
     <ClInclude Include="Sampler.h" />
     <ClInclude Include="ScriptCommander.h" />
