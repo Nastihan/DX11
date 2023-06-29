@@ -3,6 +3,7 @@
 #include <memory>
 #include "Bindable.h"
 #include "Graphics.h"
+#include "TechniqueProbe.h"
 
 class Step
 {
@@ -11,13 +12,13 @@ public:
 		:
 		targetPass{ targetPass_in }
 	{}
-	void Accept(class Probe& probe)
+	void Accept(TechniqueProbe& probe)
 	{
-		for (auto& b : bindables)
+		probe.SetStep(this);
+		for (auto& pb : bindables)
 		{
-			b->Accept(probe);
+			pb->Accept(probe);
 		}
-	
 	}
 	void AddBindable(std::shared_ptr<Bind::Bindable> bind_in) noexcept
 	{

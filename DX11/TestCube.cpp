@@ -6,6 +6,7 @@
 #include "Stencil.h"
 #include "DynamicConstant.h"
 #include "ConstantBuffersEx.h"
+#include "TechniqueProbe.h"
 
 TestCube::TestCube(Graphics& gfx, float size)
 {
@@ -21,7 +22,7 @@ TestCube::TestCube(Graphics& gfx, float size)
 
 	// lambertian
 	{
-		Technique lambertian{};
+		Technique lambertian{"Lambertian"};
 		{
 			Step first{ 0 };
 
@@ -43,9 +44,6 @@ TestCube::TestCube(Graphics& gfx, float size)
 			buf["specularPower"] = 20.0f;
 			first.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEX>(gfx, buf, 1u));
 
-
-			first.AddBindable(PixelConstantBuffer<PSMaterialConstant>::Resolve(gfx, pmc, 1u));
-
 			first.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
 
 			auto tcb = std::make_shared<TransformCbuf>(gfx, 0u);
@@ -61,7 +59,7 @@ TestCube::TestCube(Graphics& gfx, float size)
 	}
 	// outlining
 	{
-		Technique outline{};
+		Technique outline{"Outline"};
 		{
 			Step mask{ 1 };
 			{
@@ -71,10 +69,6 @@ TestCube::TestCube(Graphics& gfx, float size)
 				auto pvs = VertexShader::Resolve(gfx, "PhongVS.cso");
 				auto pvsbc = pvs->GetBytecode();
 				mask.AddBindable(std::move(pvs));
-
-				
-
-				mask.AddBindable(PixelConstantBuffer<PSMaterialConstant>::Resolve(gfx, pmc, 1u));
 
 				mask.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
 
@@ -95,23 +89,48 @@ TestCube::TestCube(Graphics& gfx, float size)
 
 				draw.AddBindable(PixelShader::Resolve(gfx, "SolidPS.cso"));
 
+				Dcb::RawLayout lay;
+				lay.Add<Dcb::Float4>("color");
+				auto buf = Dcb::Buffer(std::move(lay));
+				buf["color"] = DirectX::XMFLOAT4{ 1.0f,0.4f,0.4f,1.0f };
+				draw.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEX>(gfx, buf, 1u));
+
 				draw.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
 
 				class TransformCbufScaling : public TransformCbuf
 				{
 				public:
-					using TransformCbuf::TransformCbuf;
+					TransformCbufScaling(Graphics& gfx, float scale = 1.04)
+						:
+						TransformCbuf(gfx),
+						buf(MakeLayout())
+					{
+						buf["scale"] = scale;
+					}
+					void Accept(TechniqueProbe& probe) override
+					{
+						probe.VisitBuffer(buf);
+					}
 					void Bind(Graphics& gfx) noexcept override
 					{
-						const auto scale = DirectX::XMMatrixScaling(1.04f, 1.04f, 1.04f);
+						const float scale = buf["scale"];
+						const auto scaleMatrix = DirectX::XMMatrixScaling(scale, scale, scale);
 						auto xf = GetTransforms(gfx);
-						xf.modelView = xf.modelView * scale;
-						xf.modelViewProj = xf.modelViewProj * scale;
+						xf.modelView = xf.modelView * scaleMatrix;
+						xf.modelViewProj = xf.modelViewProj * scaleMatrix;
 						UpdateBindImpl(gfx, xf);
 					}
+				private:
+					static Dcb::RawLayout MakeLayout()
+					{
+						Dcb::RawLayout layout;
+						layout.Add<Dcb::Float>("scale");
+						return layout;
+					}
+				private:
+					Dcb::Buffer buf;
 				};
-
-				draw.AddBindable(std::make_shared<TransformCbufScaling>(gfx, 0u));
+				draw.AddBindable(std::make_shared<TransformCbufScaling>(gfx));
 
 				draw.AddBindable(Rasterizer::Resolve(gfx, false));
 
@@ -122,54 +141,6 @@ TestCube::TestCube(Graphics& gfx, float size)
 		AddTechnique(outline);
 	}
 
-	
-
-	/*using namespace Bind;
-	namespace dx = DirectX;
-
-	auto model = Cube::MakeIndependentTextured();
-	model.Transform(dx::XMMatrixScaling(size, size, size));
-	model.SetNormalsIndependentFlat();
-	const auto geometryTag = "$cube." + std::to_string(size);
-	AddBind(VertexBuffer::Resolve(gfx, geometryTag, model.vertices));
-	AddBind(IndexBuffer::Resolve(gfx, geometryTag, model.indices));
-
-	AddBind(Texture::Resolve(gfx, "Images\\brickwall.jpg"));
-	AddBind(Sampler::Resolve(gfx));
-
-	auto pvs = VertexShader::Resolve(gfx, "PhongVS.cso");
-	auto pvsbc = pvs->GetBytecode();
-	AddBind(std::move(pvs));
-
-	AddBind(PixelShader::Resolve(gfx, "PhongPS.cso"));
-
-	AddBind(PixelConstantBuffer<PSMaterialConstant>::Resolve(gfx, pmc, 1u));
-
-	AddBind(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
-
-	AddBind(Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
-
-	auto tcbdb = std::make_shared<TransformCbufPS>(gfx, *this, 0u, 2u);
-	AddBind(tcbdb);
-
-	AddBind(std::make_shared<Stencil>(gfx,Stencil::Mode::Write));
-
-
-	outlineEffect.push_back(VertexBuffer::Resolve(gfx, geometryTag, model.vertices));
-	outlineEffect.push_back(IndexBuffer::Resolve(gfx, geometryTag, model.indices));
-	pvs = VertexShader::Resolve(gfx, "SolidVS.cso");
-	pvsbc = pvs->GetBytecode();
-	outlineEffect.push_back(std::move(pvs));
-	outlineEffect.push_back(PixelShader::Resolve(gfx, "SolidPS.cso"));
-	struct SolidColorBuffer
-	{
-		DirectX::XMFLOAT4 color = { 1.0f,0.4f,0.4f,1.0f };
-	} scb;
-	outlineEffect.push_back(PixelConstantBuffer<SolidColorBuffer>::Resolve(gfx, scb, 1u));
-	outlineEffect.push_back(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
-	outlineEffect.push_back(Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST));
-	outlineEffect.push_back(std::move(tcbdb));
-	outlineEffect.push_back(std::make_shared<Stencil>(gfx,Stencil::Mode::Mask));*/
 }
 
 void TestCube::SetPos(DirectX::XMFLOAT3 pos) noexcept
@@ -197,9 +168,6 @@ DirectX::XMMATRIX TestCube::GetTransformXM() const noexcept
 
 void TestCube::SpawnControlWindow(Graphics& gfx, const char* name) noexcept
 {
-	static Probe probe;
-
-	Accept(probe);
 
 	if (ImGui::Begin(name))
 	{
@@ -212,20 +180,45 @@ void TestCube::SpawnControlWindow(Graphics& gfx, const char* name) noexcept
 		ImGui::SliderAngle("Pitch", &pitch, -180.0f, 180.0f);
 		ImGui::SliderAngle("Yaw", &yaw, -180.0f, 180.0f);
 
-
-
-
-
-		/*ImGui::Text("Shading");
-		bool changed0 = ImGui::SliderFloat("Spec. Int.", &pmc.specularIntensity, 0.0f, 1.0f);
-		bool changed1 = ImGui::SliderFloat("Spec. Power", &pmc.specularPower, 0.0f, 100.0f);
-		bool checkState = pmc.normalMappingEnabled == TRUE;
-		bool changed2 = ImGui::Checkbox("Enable Normal Map", &checkState);
-		pmc.normalMappingEnabled = checkState ? TRUE : FALSE;
-		if (changed0 || changed1 || changed2)
+		class Probe : public TechniqueProbe
 		{
-			QueryBindable<Bind::PixelConstantBuffer<PSMaterialConstant>>()->Update(gfx, pmc);
-		}*/
+		public:
+			void OnSetTechnique() override
+			{
+				using namespace std::string_literals;
+				ImGui::TextColored({ 0.4f,1.0f,0.6f,1.0f }, pTech->GetName().c_str());
+				bool active = pTech->IsActive();
+				ImGui::Checkbox(("Tech Active##"s + pTech->GetName()).c_str(), &active);
+				pTech->SetActiveState(active);
+			}
+			bool VisitBuffer(Dcb::Buffer& buf) override
+			{
+				namespace dx = DirectX;
+				float dirty = false;
+				const auto dcheck = [&dirty](bool changed) {dirty = dirty || changed; };
+
+				if (auto v = buf["scale"]; v.Exists())
+				{
+					dcheck(ImGui::SliderFloat("Scale", &v, 1.0f, 2.0f, "%.3f", 3.5f));
+				}
+				if (auto v = buf["color"]; v.Exists())
+				{
+					dcheck(ImGui::ColorPicker4("Color", reinterpret_cast<float*>(&static_cast<dx::XMFLOAT4&>(v))));
+				}
+				if (auto v = buf["specularIntensity"]; v.Exists())
+				{
+					dcheck(ImGui::SliderFloat("Spec. Intens.", &v, 0.0f, 1.0f));
+				}
+				if (auto v = buf["specularPower"]; v.Exists())
+				{
+					dcheck(ImGui::SliderFloat("Glossiness", &v, 1.0f, 100.0f, "%.1f", 1.5f));
+				}
+				return dirty;
+			}
+		};
+
+		static Probe probe;
+		Accept(probe);
 	}
 	ImGui::End();
 }

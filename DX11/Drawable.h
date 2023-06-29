@@ -3,7 +3,9 @@
 #include <DirectXMath.h>
 #include "ConditionalNoexcept.h"
 #include "Technique.h"
-#include "Probe.h"
+#include "TechniqueProbe.h"
+
+class TechniqueProbe;
 
 namespace Bind
 {
@@ -22,13 +24,7 @@ public:
 	void AddTechnique(Technique tech_in) noexcept;
 	virtual DirectX::XMMATRIX GetTransformXM() const noexcept = 0;
 	void Submit(class FrameCommander& frame) const noexcept;
-	void Accept(Probe& probe)
-	{
-		for (auto& t : techniques)
-		{
-			t.Accept(probe);
-		}
-	}
+	void Accept(TechniqueProbe& probe);
 	void Bind(Graphics& gfx) const noexcept;
 	UINT GetIndexCount() const noxnd;
 	virtual ~Drawable();

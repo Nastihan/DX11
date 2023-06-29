@@ -20,6 +20,15 @@ void Drawable::AddTechnique(Technique tech_in) noexcept
 	techniques.push_back(std::move(tech_in));
 }
 
+
+void Drawable::Accept(TechniqueProbe& probe)
+{
+	for (auto& t : techniques)
+	{
+		t.Accept(probe);
+	}
+}
+
 void Drawable::Bind(Graphics& gfx) const noexcept
 {
 	pTopology->Bind(gfx);

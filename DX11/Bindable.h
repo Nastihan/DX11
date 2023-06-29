@@ -3,8 +3,7 @@
 //#include "Probe.h"
 
 class Drawable;
-class Probe;
-
+class TechniqueProbe;
 namespace Bind
 {
 	class Bindable
@@ -18,7 +17,7 @@ namespace Bind
 			assert(false);
 			return "";
 		}
-		virtual void Accept(class Probe& probe) 
+		virtual void Accept(TechniqueProbe& probe) 
 		{
 			// pretty much most of the bindable do not do anything when they accept a probe
 		}

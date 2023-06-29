@@ -431,8 +431,8 @@
     <ClInclude Include="PerfLog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Probe.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="TechniqueProbe.h">
+      <Filter>Header Files\Jobber</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
