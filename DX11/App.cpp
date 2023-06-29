@@ -23,8 +23,8 @@ App::App(const std::string& commandLine)
 	light(wnd.Gfx())
 {
 	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 200.0f));
-	cube1.SetPos(DirectX::XMFLOAT3{5.0f, 3.3f, 0.0f});
-	//cube2.SetPos(DirectX::XMFLOAT3{5.0f, 4.0f, 0.0f});
+	cube1.SetPos(DirectX::XMFLOAT3{2.0f, 1.5f, 1.0f});
+	cube2.SetPos(DirectX::XMFLOAT3{5.0f, 4.0f, 0.0f});
 }
 
 void App::DoFrame()
@@ -36,6 +36,7 @@ void App::DoFrame()
 
 
 	cube1.Submit(fc);
+	cube2.Submit(fc);
 	light.Submit(fc);
 
 	//sponza.Draw(wnd.Gfx());
@@ -104,7 +105,9 @@ void App::DoFrame()
 	light.SpawnControlWindow();
 	ShowHelperWindow();
 	ShowFPSWindow();
-	cube1.SpawnControlWindow(wnd.Gfx(), "cube");
+	cube1.SpawnControlWindow(wnd.Gfx(), "cube1");
+	cube2.SpawnControlWindow(wnd.Gfx(), "cube2");
+
 
 	//sponza.ShowWindow(wnd.Gfx());
 	// present
