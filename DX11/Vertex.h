@@ -5,7 +5,7 @@
 #include "Color.h"
 #include "ConditionalNoexcept.h"
 
-namespace DX11
+namespace Dvtx
 {
 	class VertexLayout
 	{

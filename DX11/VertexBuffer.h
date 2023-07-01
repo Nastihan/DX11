@@ -8,12 +8,12 @@ namespace Bind
 	class VertexBuffer : public Bindable
 	{
 	public:
-		VertexBuffer(Graphics& gfx, const std::string& tag, const DX11::VertexBuffer& vbuf);
-		VertexBuffer(Graphics& gfx, const DX11::VertexBuffer& vbuf);
-		const DX11::VertexLayout& GetLayout() const noexcept;
+		VertexBuffer(Graphics& gfx, const std::string& tag, const Dvtx::VertexBuffer& vbuf);
+		VertexBuffer(Graphics& gfx, const Dvtx::VertexBuffer& vbuf);
+		const Dvtx::VertexLayout& GetLayout() const noexcept;
 		void Bind(Graphics& gfx) noexcept override;
 		static std::shared_ptr<VertexBuffer> Resolve(Graphics& gfx, const std::string& tag,
-			const DX11::VertexBuffer& vbuf);
+			const Dvtx::VertexBuffer& vbuf);
 		template<typename...Ignore>
 		static std::string GenerateUID(const std::string& tag, Ignore&&...ignore)
 		{
@@ -26,6 +26,6 @@ namespace Bind
 		std::string tag;
 		UINT stride;
 		Microsoft::WRL::ComPtr<ID3D11Buffer> pVertexBuffer;
-		DX11::VertexLayout layout;
+		Dvtx::VertexLayout layout;
 	};
 }

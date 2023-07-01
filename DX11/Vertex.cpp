@@ -1,6 +1,6 @@
 #include "Vertex.h"
 
-namespace DX11
+namespace Dvtx
 {
 	// VertexLayout
 	const VertexLayout::Element& VertexLayout::ResolveByIndex(size_t i) const noxnd
@@ -88,7 +88,7 @@ namespace DX11
 	{
 		return type;
 	}
-	const char* DX11::VertexLayout::Element::GetCode() const noexcept
+	const char* Dvtx::VertexLayout::Element::GetCode() const noexcept
 	{
 		switch (type)
 		{

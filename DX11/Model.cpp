@@ -361,7 +361,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 {
 
 	/*using namespace std::string_literals;
-	using DX11::VertexLayout;
+	using Dvtx::VertexLayout;
 	namespace dx = DirectX;
 	using namespace Bind;
 
@@ -430,7 +430,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 
 	if (hasDiffuseMap && hasNormalMap && hasSpecularMap)
 	{
-		DX11::VertexBuffer vbuf(std::move(
+		Dvtx::VertexBuffer vbuf(std::move(
 			VertexLayout{}
 			.Append(VertexLayout::Position3D)
 			.Append(VertexLayout::Normal)
@@ -493,7 +493,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 	}
 	else if (hasDiffuseMap && hasNormalMap)
 	{
-		DX11::VertexBuffer vbuf(std::move(
+		Dvtx::VertexBuffer vbuf(std::move(
 			VertexLayout{}
 			.Append(VertexLayout::Position3D)
 			.Append(VertexLayout::Normal)
@@ -550,7 +550,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 	}
 	else if (hasDiffuseMap && !hasNormalMap && hasSpecularMap)
 	{
-		DX11::VertexBuffer vbuf(std::move(
+		Dvtx::VertexBuffer vbuf(std::move(
 			VertexLayout{}
 			.Append(VertexLayout::Position3D)
 			.Append(VertexLayout::Normal)
@@ -603,7 +603,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 		}
 	else if (hasDiffuseMap)
 	{
-		DX11::VertexBuffer vbuf(std::move(
+		Dvtx::VertexBuffer vbuf(std::move(
 			VertexLayout{}
 			.Append(VertexLayout::Position3D)
 			.Append(VertexLayout::Normal)
@@ -655,7 +655,7 @@ std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const 
 	}
 	else if (!hasDiffuseMap && !hasNormalMap && !hasSpecularMap)
 	{
-		DX11::VertexBuffer vbuf(std::move(
+		Dvtx::VertexBuffer vbuf(std::move(
 			VertexLayout{}
 			.Append(VertexLayout::Position3D)
 			.Append(VertexLayout::Normal)

@@ -8,15 +8,15 @@ namespace Bind
 	{
 	public:
 		InputLayout(Graphics& gfx,
-			DX11::VertexLayout layout,
+			Dvtx::VertexLayout layout,
 			ID3DBlob* pVertexShaderBytecode);
 		void Bind(Graphics& gfx) noexcept override;
 		static std::shared_ptr<InputLayout> Resolve(Graphics& gfx,
-			const DX11::VertexLayout& layout, ID3DBlob* pVertexShaderBytecode);
-		static std::string GenerateUID(const DX11::VertexLayout& layout, ID3DBlob* pVertexShaderBytecode = nullptr);
+			const Dvtx::VertexLayout& layout, ID3DBlob* pVertexShaderBytecode);
+		static std::string GenerateUID(const Dvtx::VertexLayout& layout, ID3DBlob* pVertexShaderBytecode = nullptr);
 		std::string GetUID() const noexcept override;
 	protected:
-		DX11::VertexLayout layout;
+		Dvtx::VertexLayout layout;
 		Microsoft::WRL::ComPtr<ID3D11InputLayout> pInputLayout;
 	};
 }

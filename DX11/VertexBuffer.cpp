@@ -3,11 +3,11 @@
 
 namespace Bind
 {
-	VertexBuffer::VertexBuffer(Graphics& gfx, const DX11::VertexBuffer& vbuf)
+	VertexBuffer::VertexBuffer(Graphics& gfx, const Dvtx::VertexBuffer& vbuf)
 		:
 		VertexBuffer(gfx, "?", vbuf)
 	{}
-	VertexBuffer::VertexBuffer(Graphics& gfx, const std::string& tag, const DX11::VertexBuffer& vbuf)
+	VertexBuffer::VertexBuffer(Graphics& gfx, const std::string& tag, const Dvtx::VertexBuffer& vbuf)
 		:
 		stride((UINT)vbuf.GetLayout().Size()),
 		tag(tag)
@@ -32,7 +32,7 @@ namespace Bind
 		GetContext(gfx)->IASetVertexBuffers(0u, 1u, pVertexBuffer.GetAddressOf(), &stride, &offset);
 	}
 	std::shared_ptr<VertexBuffer> VertexBuffer::Resolve(Graphics& gfx, const std::string& tag,
-		const DX11::VertexBuffer& vbuf)
+		const Dvtx::VertexBuffer& vbuf)
 	{
 		assert(tag != "?");
 		return Codex::Resolve<VertexBuffer>(gfx, tag, vbuf);

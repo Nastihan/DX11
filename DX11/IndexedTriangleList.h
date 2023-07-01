@@ -7,7 +7,7 @@ class IndexedTriangleList
 {
 public:
 	IndexedTriangleList() = default;
-	IndexedTriangleList(DX11::VertexBuffer verts_in, std::vector<unsigned short> indices_in)
+	IndexedTriangleList(Dvtx::VertexBuffer verts_in, std::vector<unsigned short> indices_in)
 		:
 		vertices(std::move(verts_in)),
 		indices(std::move(indices_in))
@@ -17,7 +17,7 @@ public:
 	}
 	void Transform(DirectX::FXMMATRIX matrix)
 	{
-		using Elements = DX11::VertexLayout::ElementType;
+		using Elements = Dvtx::VertexLayout::ElementType;
 		for (int i = 0; i < vertices.Size(); i++)
 		{
 			auto& pos = vertices[i].Attr<Elements::Position3D>();
@@ -30,7 +30,7 @@ public:
 	void SetNormalsIndependentFlat() noxnd
 	{
 		using namespace DirectX;
-		using Type = DX11::VertexLayout::ElementType;
+		using Type = Dvtx::VertexLayout::ElementType;
 		for (size_t i = 0; i < indices.size(); i += 3)
 		{
 			auto v0 = vertices[indices[i]];
@@ -49,6 +49,6 @@ public:
 	}
 
 public:
-	DX11::VertexBuffer vertices;
+	Dvtx::VertexBuffer vertices;
 	std::vector<unsigned short> indices;
 };
