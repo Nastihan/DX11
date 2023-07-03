@@ -12,6 +12,8 @@
 #include "imgui/imgui.h"
 #include "DynamicConstant.h"
 
+class Material;
+
 class ModelException : public NastihanException
 {
 public:
@@ -26,6 +28,7 @@ private:
 class Mesh : public Drawable
 {
 public:
+	Mesh(Graphics& gfx, const Material& mat, const aiMesh& mesh) noxnd;
 	using Drawable::Drawable;
 	DirectX::XMMATRIX GetTransformXM() const noexcept override;
 	void Submit(FrameCommander& frame, DirectX::FXMMATRIX accumulatedTranform) const noxnd;

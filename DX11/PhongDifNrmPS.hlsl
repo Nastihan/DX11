@@ -5,10 +5,11 @@
 
 cbuffer ObjectCBuf
 {
-    float specularIntensity;
-    float specularPower;
-    bool normalMapEnabled;
-    float padding[1];
+    float3 specularColor;
+    float specularWeight;
+    float specularGloss;
+    bool useNormalMap;
+    float normalMapWeight;
 };
 struct PS_Input
 {
@@ -31,9 +32,9 @@ float4 main(PS_Input input) : SV_Target
     // normalize the mesh normal
     input.viewNormal = normalize(input.viewNormal);
     // replace normal with mapped if normal mapping enabled
-    if (normalMapEnabled)
+    if (useNormalMap)
     {
-        input.viewNormal = MapNormal(normalize(input.viewTan), normalize(input.viewBitan), input.viewNormal, input.tc, nmap, splr);
+        input.viewNormal = -MapNormal(normalize(input.viewTan), normalize(input.viewBitan), input.viewNormal, input.tc, nmap, splr);
     }
 	// fragment to light vector data
     const LightVectorData lv = CalculateLightVectorData(viewLightPos, input.viewFragPos);
@@ -43,8 +44,8 @@ float4 main(PS_Input input) : SV_Target
     const float3 diffuse = Diffuse(diffuseColor, diffuseIntensity, att, lv.dirToL, input.viewNormal);
     // specular
     const float3 specular = Speculate(
-        diffuseColor, diffuseIntensity, input.viewNormal,
-        lv.vToL, input.viewFragPos, att, specularPower
+        diffuseColor * diffuseIntensity * specularColor, specularWeight, input.viewNormal,
+        lv.vToL, input.viewFragPos, att, specularGloss
     );
 	// final color
     return float4(saturate((diffuse + ambient) * tex.Sample(splr, input.tc).rgb + specular), 1.0f);

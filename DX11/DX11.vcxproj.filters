@@ -216,6 +216,9 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
+    <ClCompile Include="Material.cpp">
+      <Filter>Source Files\Model</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Window.h">
@@ -443,6 +446,9 @@
     <ClInclude Include="Testing.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Material.h">
+      <Filter>Header Files\Model</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="PhongVS.hlsl">
@@ -460,10 +466,10 @@
     <FxCompile Include="PhongSpecularNormalMapPS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
-    <FxCompile Include="PhongNormalMapPS.hlsl">
+    <FxCompile Include="PhongDifNrmPS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
-    <FxCompile Include="PhongNormalMapVS.hlsl">
+    <FxCompile Include="PhongDifNrmVS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
     <FxCompile Include="PhongNoTexPS.hlsl">

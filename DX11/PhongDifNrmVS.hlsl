@@ -4,9 +4,10 @@ struct VS_Input
 {
     float3 pos : POSITION;
     float3 n : NORMAL;
+    float2 tc : TEXCOORD;
     float3 tan : TANGENT;
     float3 bitan : BITANGENT;
-    float2 tc : TEXCOORD;
+
 };
 
 struct VS_Output

@@ -3,6 +3,7 @@
 #include "IndexBuffer.h"
 #include "BindableCommon.h"
 #include "BindableCodex.h"
+#include "Material.h"
 
 using namespace Bind;
 
@@ -11,6 +12,18 @@ void Drawable::Submit(FrameCommander& frame) const noexcept
 	for (const auto& tech : techniques)
 	{
 		tech.Submit(frame, *this);
+	}
+}
+
+Drawable::Drawable(Graphics& gfx, const aiMesh& mesh, const Material& material) noexcept
+{
+	pVertices = material.MakeVertexBindable(gfx,mesh);
+	pIndices = material.MakeIndexBindable(gfx, mesh);
+	pTopology = Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+	for (auto& t : material.GetTechniques())
+	{
+		AddTechnique(std::move(t));
 	}
 }
 
