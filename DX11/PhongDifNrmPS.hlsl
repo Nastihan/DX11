@@ -34,7 +34,7 @@ float4 main(PS_Input input) : SV_Target
     // replace normal with mapped if normal mapping enabled
     if (useNormalMap)
     {
-        input.viewNormal = -MapNormal(normalize(input.viewTan), normalize(input.viewBitan), input.viewNormal, input.tc, nmap, splr);
+        input.viewNormal = MapNormal(normalize(input.viewTan), normalize(input.viewBitan), input.viewNormal, input.tc, nmap, splr);
     }
 	// fragment to light vector data
     const LightVectorData lv = CalculateLightVectorData(viewLightPos, input.viewFragPos);

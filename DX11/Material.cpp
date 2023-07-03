@@ -121,6 +121,79 @@ modelPath(path.string())
 	}
 	// outline technique
 	{
+		Technique outline{"Outline"};
+		// mask
+		Step mask{ 1 };
+		{
+			auto pvs = VertexShader::Resolve(gfx, "SolidVS.cso");
+			auto pvsbc = pvs->GetBytecode();
+			mask.AddBindable(std::move(pvs));
+
+			mask.AddBindable(InputLayout::Resolve(gfx, vtxLayout, pvsbc));
+
+			mask.AddBindable(std::make_shared<TransformCbuf>(gfx));
+
+			outline.AddStep(std::move(mask));
+		}
+		Step drawOutline{ 2 };
+		{
+			auto pvs = VertexShader::Resolve(gfx, "SolidVS.cso");
+			auto pvsbc = pvs->GetBytecode();
+			drawOutline.AddBindable(std::move(pvs));
+
+			drawOutline.AddBindable(PixelShader::Resolve(gfx, "SolidPS.cso"));
+
+			struct PScbuf 
+			{
+				DirectX::XMFLOAT4 color { 0.2f,0.3f,0.6f,1.0f };
+			} pCbuf;
+
+			drawOutline.AddBindable(PixelConstantBuffer<PScbuf>::Resolve(gfx, pCbuf, 1u));
+
+			drawOutline.AddBindable(InputLayout::Resolve(gfx, vtxLayout, pvsbc));
+
+			class TransformCbufScaling : public TransformCbuf
+			{
+			public:
+				TransformCbufScaling(Graphics& gfx, float scale = 1.04)
+					:
+					TransformCbuf(gfx),
+					buf(MakeLayout())
+				{
+					buf["scale"] = scale;
+				}
+				void Accept(TechniqueProbe& probe) override
+				{
+					probe.VisitBuffer(buf);
+				}
+				void Bind(Graphics& gfx) noexcept override
+				{
+					const float scale = buf["scale"];
+					const auto scaleMatrix = DirectX::XMMatrixScaling(scale, scale, scale);
+					auto xf = GetTransforms(gfx);
+					xf.modelView = xf.modelView * scaleMatrix;
+					xf.modelViewProj = xf.modelViewProj * scaleMatrix;
+					UpdateBindImpl(gfx, xf);
+				}
+				std::unique_ptr<CloningBindable> Clone() const noexcept override
+				{
+					return std::make_unique<TransformCbufScaling>(*this);
+				}
+			private:
+				static Dcb::RawLayout MakeLayout()
+				{
+					Dcb::RawLayout layout;
+					layout.Add<Dcb::Float>("scale");
+					return layout;
+				}
+			private:
+				Dcb::Buffer buf;
+			};
+			drawOutline.AddBindable(std::make_shared<TransformCbufScaling>(gfx));
+			outline.AddStep(std::move(drawOutline));
+		}
+		techniques.push_back(outline);
+
 	}
 }
 Dvtx::VertexBuffer Material::ExtractVertices(const aiMesh& mesh) const noexcept
