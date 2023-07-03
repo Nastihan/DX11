@@ -34,7 +34,8 @@ private:
 	FrameCommander fc;
 
 	std::shared_ptr<Mesh> pLoaded;
-	TestCube cube1{ wnd.Gfx(),3.6f };
-	TestCube cube2{ wnd.Gfx(),4.2f };
+
+	//TestCube cube1{ wnd.Gfx(),3.6f };
+	//TestCube cube2{ wnd.Gfx(),4.2f };
 	//Model sponza{ wnd.Gfx(),"Models\\Sponza\\sponza.obj",1/20.0f };
 };

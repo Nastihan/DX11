@@ -29,11 +29,11 @@ TestCube::TestCube(Graphics& gfx, float size)
 			first.AddBindable(Texture::Resolve(gfx, "Images\\brickwall.jpg"));
 			first.AddBindable(Sampler::Resolve(gfx));
 
-			auto pvs = VertexShader::Resolve(gfx, "PhongVS.cso");
-			auto pvsbc = pvs->GetBytecode();
-			first.AddBindable(std::move(pvs));
+			//auto pvs = VertexShader::Resolve(gfx, "Phong_VS.cso");
+			//auto pvsbc = pvs->GetBytecode();
+			//first.AddBindable(std::move(pvs));
 
-			first.AddBindable(PixelShader::Resolve(gfx, "PhongPS.cso"));
+			//first.AddBindable(PixelShader::Resolve(gfx, "Phong_PS.cso"));
 
 			Dcb::RawLayout layout;
 			layout.Add<Dcb::Float>("specularIntensity");
@@ -44,7 +44,7 @@ TestCube::TestCube(Graphics& gfx, float size)
 			buf["specularPower"] = 20.0f;
 			first.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEX>(gfx, buf, 1u));
 
-			first.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
+			//first.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
 
 			auto tcb = std::make_shared<TransformCbuf>(gfx, 0u);
 			first.AddBindable(tcb);

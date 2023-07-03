@@ -81,10 +81,10 @@ modelPath(path.string())
 		{
 			step.AddBindable(std::make_shared<TransformCbuf>(gfx, 0u));
 			step.AddBindable(Blender::Resolve(gfx, false));
-			auto pvs = VertexShader::Resolve(gfx, shaderCode + "VS.cso");
+			auto pvs = VertexShader::Resolve(gfx, shaderCode + "_VS.cso");
 			auto pvsbc = pvs->GetBytecode();
 			step.AddBindable(std::move(pvs));
-			step.AddBindable(PixelShader::Resolve(gfx, shaderCode + "PS.cso"));
+			step.AddBindable(PixelShader::Resolve(gfx, shaderCode + "_PS.cso"));
 			step.AddBindable(InputLayout::Resolve(gfx, vtxLayout, pvsbc));
 			if (hasTexture)
 			{
@@ -125,7 +125,7 @@ modelPath(path.string())
 		// mask
 		Step mask{ 1 };
 		{
-			auto pvs = VertexShader::Resolve(gfx, "SolidVS.cso");
+			auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
 			auto pvsbc = pvs->GetBytecode();
 			mask.AddBindable(std::move(pvs));
 
@@ -137,11 +137,11 @@ modelPath(path.string())
 		}
 		Step drawOutline{ 2 };
 		{
-			auto pvs = VertexShader::Resolve(gfx, "SolidVS.cso");
+			auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
 			auto pvsbc = pvs->GetBytecode();
 			drawOutline.AddBindable(std::move(pvs));
 
-			drawOutline.AddBindable(PixelShader::Resolve(gfx, "SolidPS.cso"));
+			drawOutline.AddBindable(PixelShader::Resolve(gfx, "Solid_PS.cso"));
 
 			Dcb::RawLayout lay;
 			lay.Add<Dcb::Float3>("materialColor");
@@ -198,6 +198,32 @@ modelPath(path.string())
 Dvtx::VertexBuffer Material::ExtractVertices(const aiMesh& mesh) const noexcept
 {
 	return { vtxLayout,mesh };
+}
+std::vector<unsigned short> Material::ExtractIndices(const aiMesh& mesh) const noexcept
+{
+	std::vector<unsigned short> indices;
+	indices.reserve(mesh.mNumFaces * 3);
+	for (unsigned int i = 0; i < mesh.mNumFaces; i++)
+	{
+		const auto& face = mesh.mFaces[i];
+		assert(face.mNumIndices == 3);
+		indices.push_back(face.mIndices[0]);
+		indices.push_back(face.mIndices[1]);
+		indices.push_back(face.mIndices[2]);
+	}
+	return indices;
+}
+std::shared_ptr<Bind::VertexBuffer> Material::MakeVertexBindable(Graphics& gfx, const aiMesh& mesh) const noxnd
+{
+	return Bind::VertexBuffer::Resolve(gfx, MakeMeshTag(mesh), ExtractVertices(mesh));
+}
+std::shared_ptr<Bind::IndexBuffer> Material::MakeIndexBindable(Graphics& gfx, const aiMesh& mesh) const noxnd
+{
+	return Bind::IndexBuffer::Resolve(gfx, MakeMeshTag(mesh), ExtractIndices(mesh));
+}
+std::string Material::MakeMeshTag(const aiMesh& mesh) const noexcept
+{
+	return modelPath + "%" + mesh.mName.C_Str();
 }
 std::vector<Technique> Material::GetTechniques() const noexcept
 {
