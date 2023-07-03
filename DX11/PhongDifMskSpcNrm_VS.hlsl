@@ -1,2 +1,1 @@
-#define MASK
-#include "PhongDifSpcNrm_PS.hlsl"
+#include "PhongDifNrm_VS.hlsl"

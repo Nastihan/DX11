@@ -30,7 +30,7 @@ static const float specularPowerFactor = 100.0f;
 float4 main(PS_Input input) : SV_Target
 {
     
-    #ifdef MASK
+#ifdef MASK
     // alpha testing
     float alpha = tex.Sample(splr, input.tc).a;
     clip(alpha > 0.1 ? 1.0 : -1.0);
@@ -39,7 +39,7 @@ float4 main(PS_Input input) : SV_Target
     {
         input.viewNormal = -input.viewNormal;
     }
-    #endif
+#endif
     
     input.viewNormal = normalize(input.viewNormal);
     if (normalMapEnabled)
@@ -70,12 +70,12 @@ float4 main(PS_Input input) : SV_Target
     // attenuation
     const float att = Attenuate(attConst, attLin, attQuad, lv.distToL);
 	// diffuse intensity
-    const float3 diffuse = Diffuse(diffuseColor, diffuseIntensity, att, lv.dirToL , input.viewNormal);
+    const float3 diffuse = Diffuse(diffuseColor, diffuseIntensity, att, lv.dirToL, input.viewNormal);
     // specular reflected
     const float3 specularReflected = Speculate(
         specularReflectionColor, 1.0f, input.viewNormal,
         lv.vToL, input.viewFragPos, att, specularPower
-    ); 
+    );
     // final color
     return float4(saturate((diffuse + ambient) * tex.Sample(splr, input.tc).rgb + specularReflected), tex.Sample(splr, input.tc).a);
 }

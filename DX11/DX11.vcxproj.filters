@@ -451,40 +451,49 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="PhongVS.hlsl">
+    <FxCompile Include="Phong_PS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
-    <FxCompile Include="SolidVS.hlsl">
-      <Filter>Shader\Solid</Filter>
-    </FxCompile>
-    <FxCompile Include="SolidPS.hlsl">
-      <Filter>Shader\Solid</Filter>
-    </FxCompile>
-    <FxCompile Include="PhongPS.hlsl">
+    <FxCompile Include="Phong_VS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
-    <FxCompile Include="PhongSpecularNormalMapPS.hlsl">
+    <FxCompile Include="PhongDif_PS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
-    <FxCompile Include="PhongDifNrmPS.hlsl">
+    <FxCompile Include="PhongDif_VS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
-    <FxCompile Include="PhongDifNrmVS.hlsl">
+    <FxCompile Include="PhongDifMskSpcNrm_PS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
-    <FxCompile Include="PhongNoTexPS.hlsl">
+    <FxCompile Include="PhongDifMskSpcNrm_VS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
-    <FxCompile Include="PhongNoTexVS.hlsl">
+    <FxCompile Include="PhongDifNrm_PS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
-    <FxCompile Include="PhongNormalMapObjectPS.hlsl">
+    <FxCompile Include="PhongDifNrm_VS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
-    <FxCompile Include="PhongSpecularPS.hlsl">
+    <FxCompile Include="PhongDifSpc_PS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
-    <FxCompile Include="PhongSpecularNormalMaskPS.hlsl">
+    <FxCompile Include="PhongDifSpc_VS.hlsl">
+      <Filter>Shader\Phong</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongDifSpcNrm_PS.hlsl">
+      <Filter>Shader\Phong</Filter>
+    </FxCompile>
+    <FxCompile Include="PhongDifSpcNrm_VS.hlsl">
+      <Filter>Shader\Phong</Filter>
+    </FxCompile>
+    <FxCompile Include="Solid_PS.hlsl">
+      <Filter>Shader\Phong</Filter>
+    </FxCompile>
+    <FxCompile Include="Solid_VS.hlsl">
+      <Filter>Shader\Phong</Filter>
+    </FxCompile>
+    <FxCompile Include="xPhongDifNro.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
   </ItemGroup>
