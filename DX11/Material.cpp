@@ -143,12 +143,11 @@ modelPath(path.string())
 
 			drawOutline.AddBindable(PixelShader::Resolve(gfx, "SolidPS.cso"));
 
-			struct PScbuf 
-			{
-				DirectX::XMFLOAT4 color { 0.2f,0.3f,0.6f,1.0f };
-			} pCbuf;
-
-			drawOutline.AddBindable(PixelConstantBuffer<PScbuf>::Resolve(gfx, pCbuf, 1u));
+			Dcb::RawLayout layout{};
+			layout.Add<Dcb::Float4>("color");
+			Dcb::Buffer buf{std::move(layout)};
+			buf["color"] = DirectX::XMFLOAT4{ 1.0f,0.4f,0.4f,1.0f };
+			drawOutline.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEX>(gfx, buf, 1u));
 
 			drawOutline.AddBindable(InputLayout::Resolve(gfx, vtxLayout, pvsbc));
 
