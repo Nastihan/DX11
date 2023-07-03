@@ -143,10 +143,10 @@ modelPath(path.string())
 
 			drawOutline.AddBindable(PixelShader::Resolve(gfx, "SolidPS.cso"));
 
-			Dcb::RawLayout layout{};
-			layout.Add<Dcb::Float4>("color");
-			Dcb::Buffer buf{std::move(layout)};
-			buf["color"] = DirectX::XMFLOAT4{ 1.0f,0.4f,0.4f,1.0f };
+			Dcb::RawLayout lay;
+			lay.Add<Dcb::Float3>("materialColor");
+			Dcb::Buffer buf{std::move(lay)};
+			buf["materialColor"] = DirectX::XMFLOAT3{ 0.2f,0.4f,0.4f };
 			drawOutline.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEX>(gfx, buf, 1u));
 
 			drawOutline.AddBindable(InputLayout::Resolve(gfx, vtxLayout, pvsbc));
