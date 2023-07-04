@@ -54,7 +54,8 @@ Graphics::Graphics(HWND hWnd)
 	Microsoft::WRL::ComPtr<IDXGIAdapter> pAdapter;
 	pFactory->EnumAdapters(1u, &pAdapter);
 	pFactory->Release();
-
+	//pAdapter.Get()
+	//D3D_DRIVER_TYPE_UNKNOWN
 	GFX_THROW_INFO(D3D11CreateDeviceAndSwapChain(
 		pAdapter.Get(),
 		D3D_DRIVER_TYPE_UNKNOWN,

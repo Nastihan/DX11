@@ -4,12 +4,12 @@
 
 cbuffer ObjectCBuf
 {
-    bool normalMapEnabled;
-    bool specularMapEnabled;
-    bool hasGloss;
-    float specularPowerConst;
+    bool useGlossAlpha;
     float3 specularColor;
-    float specularMapWeight;
+    float specularWeight;
+    float specularGloss;
+    bool useNormalMap;
+    float normalMapWeight;
 };
 struct PS_Input
 {
@@ -29,7 +29,8 @@ SamplerState splr;
 static const float specularPowerFactor = 100.0f;
 float4 main(PS_Input input) : SV_Target
 {
-    
+    float4 dtex = tex.Sample(splr, input.tc);
+
 #ifdef MASK
     // alpha testing
     float alpha = tex.Sample(splr, input.tc).a;
@@ -42,7 +43,7 @@ float4 main(PS_Input input) : SV_Target
 #endif
     
     input.viewNormal = normalize(input.viewNormal);
-    if (normalMapEnabled)
+    if (useNormalMap)
     {
         input.viewNormal = MapNormal(normalize(input.viewTan), normalize(input.viewBitan), input.viewNormal, input.tc, nmap, splr);
     }
@@ -52,19 +53,13 @@ float4 main(PS_Input input) : SV_Target
 
     // specular parameter determination (mapped or uniform)
     float3 specularReflectionColor;
-    float specularPower = specularPowerConst;
-    if (specularMapEnabled)
+    float specularPower = specularGloss;
+    const float4 specularSample = spec.Sample(splr, input.tc);
+    specularReflectionColor = specularSample.rgb;
+    
+    if (useGlossAlpha)
     {
-        const float4 specularSample = spec.Sample(splr, input.tc);
-        specularReflectionColor = specularSample.rgb * specularMapWeight;
-        if (hasGloss)
-        {
-            specularPower = pow(2.0f, specularSample.a * 13.0f);
-        }
-    }
-    else
-    {
-        specularReflectionColor = specularColor;
+        specularPower = pow(2.0f, specularSample.a * 13.0f);
     }
     
     // attenuation
@@ -73,9 +68,9 @@ float4 main(PS_Input input) : SV_Target
     const float3 diffuse = Diffuse(diffuseColor, diffuseIntensity, att, lv.dirToL, input.viewNormal);
     // specular reflected
     const float3 specularReflected = Speculate(
-        specularReflectionColor, 1.0f, input.viewNormal,
+      diffuseColor * diffuseIntensity * specularReflectionColor, specularWeight, input.viewNormal,
         lv.vToL, input.viewFragPos, att, specularPower
     );
     // final color
-    return float4(saturate((diffuse + ambient) * tex.Sample(splr, input.tc).rgb + specularReflected), tex.Sample(splr, input.tc).a);
+    return float4(saturate((diffuse + ambient) * dtex.rgb + specularReflected), 1.0f);
 }

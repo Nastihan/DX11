@@ -5,9 +5,10 @@
 
 cbuffer ObjectCBuf
 {
-    float4 materialColor;
-    float4 specularColor;
-    float specularPower;
+    float3 materialColor;
+    float3 specularColor;
+    float specularWeight;
+    float specularGloss;
 };
 
 struct PS_Input
@@ -29,9 +30,9 @@ float4 main(PS_Input input) : SV_Target
     const float3 diffuse = Diffuse(diffuseColor, diffuseIntensity, att, lv.dirToL, input.viewNormal);
     // specular
     const float3 specular = Speculate(
-        specularColor.rgb, 1.0f, input.viewNormal,
-        lv.vToL, input.viewFragPos, att, specularPower
+        diffuseColor * diffuseIntensity * specularColor, specularWeight, input.viewNormal,
+        lv.vToL, input.viewFragPos, att, specularGloss
     );
 	// final color
-    return float4(saturate((diffuse + ambient) * materialColor.rgb + specular), 1.0f);
+    return float4(saturate((diffuse + ambient) * materialColor + specular), 1.0f);
 }

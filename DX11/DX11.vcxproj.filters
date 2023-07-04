@@ -511,14 +511,14 @@
     <FxCompile Include="PhongDifSpcNrm_VS.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
-    <FxCompile Include="Solid_PS.hlsl">
-      <Filter>Shader\Phong</Filter>
-    </FxCompile>
-    <FxCompile Include="Solid_VS.hlsl">
-      <Filter>Shader\Phong</Filter>
-    </FxCompile>
     <FxCompile Include="xPhongDifNro.hlsl">
       <Filter>Shader\Phong</Filter>
+    </FxCompile>
+    <FxCompile Include="Solid_PS.hlsl">
+      <Filter>Shader\Solid</Filter>
+    </FxCompile>
+    <FxCompile Include="Solid_VS.hlsl">
+      <Filter>Shader\Solid</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

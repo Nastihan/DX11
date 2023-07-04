@@ -4,9 +4,10 @@
 
 cbuffer ObjectCBuf
 {
-    float specularPower;
-    bool hasGloss;
-    float specularMapWeight;
+    bool useGlossAlpha;
+    float3 specularColor;
+    float specularWeight;
+    float specularGloss;
 };
 
 struct PS_Input
@@ -30,10 +31,10 @@ float4 main(PS_Input input) : SV_Target
 	// fragment to light vector data
     const LightVectorData lv = CalculateLightVectorData(viewLightPos, input.viewFragPos);
     // specular parameters
-    float specularPowerLoaded = specularPower;
+    float specularPowerLoaded = specularGloss;
     const float4 specularSample = spec.Sample(splr, input.tc);
-    const float3 specularReflectionColor = specularSample.rgb * specularMapWeight;
-    if (hasGloss)
+    const float3 specularReflectionColor = specularSample.rgb ;
+    if (specularGloss)
     {
         specularPowerLoaded = pow(2.0f, specularSample.a * 13.0f);
     }
@@ -43,7 +44,7 @@ float4 main(PS_Input input) : SV_Target
     const float3 diffuse = Diffuse(diffuseColor, diffuseIntensity, att, lv.dirToL, input.viewNormal);
     // specular reflected
     const float3 specularReflected = Speculate(
-        specularReflectionColor, 1.0f, input.viewNormal,
+        diffuseColor, specularWeight, input.viewNormal,
         lv.vToL, input.viewFragPos, att, specularPowerLoaded
     );
 	// final color = attenuate diffuse & ambient by diffuse texture color and add specular reflected
