@@ -86,7 +86,6 @@ void Node::Accept(ModelProbe& probe)
 			cp->Accept(probe);
 		}
 		probe.PopTreeNode(*this);
-
 	}
 }
 
