@@ -123,7 +123,7 @@ modelPath(path.string())
 	}
 	// outline technique
 	{
-		Technique outline{"Outline"};
+		Technique outline{"Outline", false};
 		// mask
 		Step mask{ 1 };
 		{
