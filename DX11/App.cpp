@@ -8,11 +8,10 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 #include "Vertex.h"
-#include "TestPlane.h"
-#include "NormalMapTwerker.h"
 #include "NastihanUtil.h"
 #include "Material.h"
-
+#include "Mesh.h"
+#include "DynamicConstant.h"
 
 
 App::App(const std::string& commandLine)

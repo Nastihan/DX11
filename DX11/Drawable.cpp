@@ -15,7 +15,7 @@ void Drawable::Submit(FrameCommander& frame) const noexcept
 	}
 }
 
-Drawable::Drawable(Graphics& gfx, const aiMesh& mesh, const Material& material) noexcept
+Drawable::Drawable(Graphics& gfx, const Material& material,const aiMesh& mesh) noexcept
 {
 	pVertices = material.MakeVertexBindable(gfx,mesh);
 	pIndices = material.MakeIndexBindable(gfx, mesh);

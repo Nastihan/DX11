@@ -26,7 +26,7 @@ SolidSphere::SolidSphere(Graphics& gfx, float radius)
 		only.AddBindable(std::move(pvs));
 
 		only.AddBindable(PixelShader::Resolve(gfx, "Solid_PS.cso"));
-
+		 
 		struct PSColorConstant
 		{
 			dx::XMFLOAT3 color = { 1.0f,1.0f,1.0f };

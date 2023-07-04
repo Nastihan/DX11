@@ -1,9 +1,11 @@
 #include "TexturePreprocessor.h"
 #include <filesystem>
 #include <sstream>
-#include "Model.h"
+#include <assimp/Importer.hpp>
+#include <assimp/scene.h>
+#include <assimp/postprocess.h>
 #include "NastihanMath.h"
-
+#include "ModelException.h"
 
 template<typename F>
 inline void TexturePreprocessor::TransformSurface(Surface& surf, F&& func)
