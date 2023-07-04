@@ -11,6 +11,7 @@ class ModelWindow;
 struct aiMesh;
 struct aiMaterial;
 struct aiNode;
+class ModelProbe;
 
 class Model
 {
@@ -19,6 +20,8 @@ public:
 	void Submit(FrameCommander& frame) const noxnd;
 	//void ShowWindow(Graphics& gfx, const char* windowName = nullptr) noexcept;
 	void SetRootTransform(DirectX::FXMMATRIX tf) noexcept;
+	void Accept(ModelProbe& probe);
+	
 	~Model() noexcept;
 private:
 	static std::unique_ptr<Mesh> ParseMesh(Graphics& gfx, const aiMesh& mesh, const aiMaterial* const* pMaterials, const std::filesystem::path& path, float scale);

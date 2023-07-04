@@ -4,6 +4,7 @@
 class Model;
 class Mesh;
 class FrameCommander;
+class ModelProbe;
 
 class Node
 {
@@ -13,6 +14,9 @@ public:
 	void Submit(FrameCommander& frame, DirectX::FXMMATRIX accumulatedTransform) const noxnd;
 	void SetAppliedTransform(DirectX::FXMMATRIX transform) noexcept;
 	const DirectX::XMFLOAT4X4& GetAppliedTransform() const noexcept;
+	void Accept(ModelProbe& probe);
+	const std::string& GetName() const;
+
 	int GetId() const noexcept;
 	//void ShowTree(Node*& pSelectedNode) const noexcept;
 private:

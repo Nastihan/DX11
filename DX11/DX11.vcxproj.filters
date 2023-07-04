@@ -473,6 +473,9 @@
     <ClInclude Include="Node.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
+    <ClInclude Include="ModelProbe.h">
+      <Filter>Header Files\Jobber</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Phong_PS.hlsl">

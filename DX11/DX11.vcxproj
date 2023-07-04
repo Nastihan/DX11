@@ -256,6 +256,7 @@
     <ClInclude Include="Material.h" />
     <ClInclude Include="Model.h" />
     <ClInclude Include="ModelException.h" />
+    <ClInclude Include="ModelProbe.h" />
     <ClInclude Include="ModelWindow.h" />
     <ClInclude Include="Node.h" />
     <ClInclude Include="PerfLog.h" />

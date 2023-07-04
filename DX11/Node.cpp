@@ -1,8 +1,11 @@
 #include "Node.h"
 #include "Mesh.h"
 #include "imgui/imgui.h"
+#include "ModelProbe.h"
 
 namespace dx = DirectX;
+
+class ModelProbe;
 
 Node::Node(int id, const std::string& name, std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform_in) noxnd
 	:
@@ -72,6 +75,24 @@ void Node::SetAppliedTransform(DirectX::FXMMATRIX transform) noexcept
 const DirectX::XMFLOAT4X4& Node::GetAppliedTransform() const noexcept
 {
 	return appliedTransform;
+}
+
+void Node::Accept(ModelProbe& probe)
+{
+	if (probe.RenderNodeTree(*this))
+	{
+		for (auto& cp : childPtrs)
+		{
+			cp->Accept(probe);
+		}
+		probe.PopTreeNode(*this);
+
+	}
+}
+
+const std::string& Node::GetName() const
+{
+	return name;
 }
 
 int Node::GetId() const noexcept

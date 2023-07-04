@@ -12,7 +12,8 @@
 #include "Material.h"
 #include "Mesh.h"
 #include "DynamicConstant.h"
-
+#include "Node.h"
+#include "ModelProbe.h"
 
 App::App(const std::string& commandLine)
 	:
@@ -161,6 +162,35 @@ void App::DoFrame()
 	
 
 
+	class MP : public ModelProbe
+	{
+	public:
+		void SpawWindow( Model& model)
+		{
+
+			ImGui::Begin("Model");
+			{
+				ImGui::Columns(1, nullptr);
+				model.Accept(*this);
+
+			}
+			ImGui::End();
+		}
+		bool RenderNodeTree(Node& node) override
+		{
+			auto expand = ImGui::TreeNode(node.GetName().c_str());
+			return expand;
+		}
+		void PopTreeNode(Node& node) override
+		{
+			ImGui::TreePop();
+		}
+
+	};
+
+	static MP mProbe;
+	mProbe.SpawWindow(sponza);
+	
 	// imgui windows
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
