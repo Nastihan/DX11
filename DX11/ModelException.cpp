@@ -18,7 +18,7 @@ const char* ModelException::what() const noexcept
 
 const char* ModelException::GetType() const noexcept
 {
-	return "Chili Model Exception";
+	return "Nastihan Model Exception";
 }
 
 const std::string& ModelException::GetNote() const noexcept

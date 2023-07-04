@@ -19,7 +19,7 @@ Drawable::Drawable(Graphics& gfx, const Material& material,const aiMesh& mesh) n
 {
 	pVertices = material.MakeVertexBindable(gfx,mesh);
 	pIndices = material.MakeIndexBindable(gfx, mesh);
-	pTopology = Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	pTopology = Topology::Resolve(gfx);
 
 	for (auto& t : material.GetTechniques())
 	{

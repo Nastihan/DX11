@@ -5,11 +5,11 @@
 #include "Camera.h"
 #include "PointLight.h"
 #include <set>
-#include "Mesh.h"
 #include "TestPlane.h"
 #include "TestCube.h"
 #include "ScriptCommander.h"
 #include "FrameCommander.h"
+#include "Model.h"
 
 class App
 {
@@ -37,5 +37,6 @@ private:
 
 	//TestCube cube1{ wnd.Gfx(),3.6f };
 	//TestCube cube2{ wnd.Gfx(),4.2f };
+	Model goblin{ wnd.Gfx(),"Models\\gobber\\GoblinX.obj",6.0f };
 	//Model sponza{ wnd.Gfx(),"Models\\Sponza\\sponza.obj",1/20.0f };
 };

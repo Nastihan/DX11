@@ -53,7 +53,8 @@ void App::DoFrame()
 	//cube2.Submit(fc);
 	light.Submit(fc);
 
-	pLoaded->Submit(fc, DirectX::XMMatrixIdentity());
+	goblin.Submit(fc);
+	//pLoaded->Submit(fc, DirectX::XMMatrixIdentity());
 	//sponza.Draw(wnd.Gfx());
 
 	fc.Execute(wnd.Gfx());
