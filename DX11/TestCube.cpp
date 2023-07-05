@@ -29,22 +29,25 @@ TestCube::TestCube(Graphics& gfx, float size)
 			first.AddBindable(Texture::Resolve(gfx, "Images\\brickwall.jpg"));
 			first.AddBindable(Sampler::Resolve(gfx));
 
-			auto pvs = VertexShader::Resolve(gfx, "Phong_VS.cso");
+			auto pvs = VertexShader::Resolve(gfx, "PhongDif_VS.cso");
 			auto pvsbc = pvs->GetBytecode();
 			first.AddBindable(std::move(pvs));
 
-			first.AddBindable(PixelShader::Resolve(gfx, "Phong_PS.cso"));
+
+
+			first.AddBindable(PixelShader::Resolve(gfx, "PhongDif_PS.cso"));
 
 			Dcb::RawLayout layout;
-			layout.Add<Dcb::Float>("specularIntensity");
-			layout.Add<Dcb::Float>("specularPower");
-			layout.Add<Dcb::Bool>("normalMappingEnabled");
+			layout.Add<Dcb::Float3>("specularColor");
+			layout.Add<Dcb::Float>("specularWeight");
+			layout.Add<Dcb::Float>("specularGloss");
 			Dcb::Buffer buf(std::move(layout));
-			buf["specularIntensity"] = 0.1f;
-			buf["specularPower"] = 20.0f;
+			buf["specularColor"] = DirectX::XMFLOAT3 {0.18f, 0.18f, 0.18f };
+			buf["specularWeight"] = 1.0f;
+			buf["specularGloss"] = 8.0f;
 			first.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEx>(gfx, buf, 1u));
 
-			//first.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
+			first.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
 
 			auto tcb = std::make_shared<TransformCbuf>(gfx, 0u);
 			first.AddBindable(tcb);
@@ -100,7 +103,7 @@ TestCube::TestCube(Graphics& gfx, float size)
 				class TransformCbufScaling : public TransformCbuf
 				{
 				public:
-					TransformCbufScaling(Graphics& gfx, float scale = 1.04)
+					TransformCbufScaling(Graphics& gfx, float scale = 2.04)
 						:
 						TransformCbuf(gfx),
 						buf(MakeLayout())
