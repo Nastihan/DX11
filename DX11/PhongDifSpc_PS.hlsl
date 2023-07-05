@@ -5,6 +5,7 @@
 cbuffer ObjectCBuf
 {
     bool useGlossAlpha;
+    bool useSpecularMap;
     float3 specularColor;
     float specularWeight;
     float specularGloss;
@@ -33,8 +34,16 @@ float4 main(PS_Input input) : SV_Target
     // specular parameters
     float specularPowerLoaded = specularGloss;
     const float4 specularSample = spec.Sample(splr, input.tc);
-    const float3 specularReflectionColor = specularSample.rgb ;
-    if (specularGloss)
+    float3 specularReflectionColor;
+    if (useSpecularMap)
+    {
+        specularReflectionColor = specularSample.rgb;
+    }
+    else
+    {
+        specularReflectionColor = specularColor;
+    }
+    if (useGlossAlpha)
     {
         specularPowerLoaded = pow(2.0f, specularSample.a * 13.0f);
     }

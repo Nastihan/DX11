@@ -15,13 +15,13 @@ void Drawable::Submit(FrameCommander& frame) const noexcept
 	}
 }
 
-Drawable::Drawable(Graphics& gfx, const Material& material,const aiMesh& mesh) noexcept
+Drawable::Drawable(Graphics& gfx, const Material& mat, const aiMesh& mesh, float scale) noexcept
 {
-	pVertices = material.MakeVertexBindable(gfx,mesh);
-	pIndices = material.MakeIndexBindable(gfx, mesh);
+	pVertices = mat.MakeVertexBindable(gfx, mesh, scale);
+	pIndices = mat.MakeIndexBindable(gfx, mesh);
 	pTopology = Topology::Resolve(gfx);
 
-	for (auto& t : material.GetTechniques())
+	for (auto& t : mat.GetTechniques())
 	{
 		AddTechnique(std::move(t));
 	}

@@ -60,6 +60,7 @@ modelPath(path.string())
 				hasGlossAlpha = tex->HasAlpha();
 				step.AddBindable(std::move(tex));
 				pscLayout.Add<Dcb::Bool>("useGlossAlpha");
+				pscLayout.Add<Dcb::Bool>("useSpecularMap");
 			}
 			pscLayout.Add<Dcb::Float3>("specularColor");
 			pscLayout.Add<Dcb::Float>("specularWeight");
@@ -101,6 +102,7 @@ modelPath(path.string())
 				r = reinterpret_cast<DirectX::XMFLOAT3&>(color);
 			}
 			buf["useGlossAlpha"].SetIfExists(hasGlossAlpha);
+			buf["useSpecularMap"].SetIfExists(true);
 			if (auto r = buf["specularColor"]; r.Exists())
 			{
 				aiColor3D color = { 0.18f,0.18f,0.18f };
@@ -116,7 +118,7 @@ modelPath(path.string())
 			}
 			buf["useNormalMap"].SetIfExists(true);
 			buf["normalMapWeight"].SetIfExists(1.0f);
-			step.AddBindable(std::make_unique<Bind::CachingPixelConstantBufferEX>(gfx, std::move(buf), 1u));
+			step.AddBindable(std::make_unique<Bind::CachingPixelConstantBufferEx>(gfx, std::move(buf), 1u));
 		}
 		phong.AddStep(std::move(step));
 		techniques.push_back(std::move(phong));
@@ -139,7 +141,7 @@ modelPath(path.string())
 		}
 		Step drawOutline{ 2 };
 		{
-			auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
+			auto pvs = VertexShader::Resolve(gfx, "Offset_VS.cso");
 			auto pvsbc = pvs->GetBytecode();
 			drawOutline.AddBindable(std::move(pvs));
 
@@ -149,7 +151,13 @@ modelPath(path.string())
 			lay.Add<Dcb::Float3>("materialColor");
 			Dcb::Buffer buf{std::move(lay)};
 			buf["materialColor"] = DirectX::XMFLOAT3{ 0.2f,0.4f,0.4f };
-			drawOutline.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEX>(gfx, buf, 1u));
+			drawOutline.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEx>(gfx, buf, 1u));
+
+			//Dcb::RawLayout lay;
+			//lay.Add<Dcb::Float>( "offset" );
+			//auto buf = Dcb::Buffer( std::move( lay ) );
+			//buf["offset"] = 0.5f;                  
+			//draw.AddBindable( std::make_shared<Bind::CachingVertexConstantBufferEx>( gfx,buf,1u ) );
 
 			drawOutline.AddBindable(InputLayout::Resolve(gfx, vtxLayout, pvsbc));
 
@@ -215,9 +223,20 @@ std::vector<unsigned short> Material::ExtractIndices(const aiMesh& mesh) const n
 	}
 	return indices;
 }
-std::shared_ptr<Bind::VertexBuffer> Material::MakeVertexBindable(Graphics& gfx, const aiMesh& mesh) const noxnd
+std::shared_ptr<Bind::VertexBuffer> Material::MakeVertexBindable(Graphics& gfx, const aiMesh& mesh, float scale) const noxnd
 {
-	return Bind::VertexBuffer::Resolve(gfx, MakeMeshTag(mesh), ExtractVertices(mesh));
+	auto vtc = ExtractVertices(mesh);
+	if (scale != 1.0f)
+	{
+		for (auto i = 0u; i < vtc.Size(); i++)
+		{
+			DirectX::XMFLOAT3& pos = vtc[i].Attr<Dvtx::VertexLayout::ElementType::Position3D>();
+			pos.x *= scale;
+			pos.y *= scale;
+			pos.z *= scale;
+		}
+	}
+	return Bind::VertexBuffer::Resolve(gfx, MakeMeshTag(mesh), std::move(vtc));
 }
 std::shared_ptr<Bind::IndexBuffer> Material::MakeIndexBindable(Graphics& gfx, const aiMesh& mesh) const noxnd
 {

@@ -14,7 +14,12 @@ public:
 	void Submit(FrameCommander& frame, DirectX::FXMMATRIX accumulatedTransform) const noxnd;
 	void SetAppliedTransform(DirectX::FXMMATRIX transform) noexcept;
 	const DirectX::XMFLOAT4X4& GetAppliedTransform() const noexcept;
+	bool HasChildren() const noexcept
+	{
+		return childPtrs.size() > 0;
+	}
 	void Accept(ModelProbe& probe);
+	void Accept(class TechniqueProbe& probe);
 	const std::string& GetName() const;
 
 	int GetId() const noexcept;

@@ -2,6 +2,6 @@
 class ModelProbe
 {
 public:
-	virtual bool RenderNodeTree(class Node& node) = 0;
-	virtual void PopTreeNode(class Node& node) = 0;
+	virtual bool PushNode(class Node& node) = 0;
+	virtual void PopNode(class Node& node) = 0;
 };

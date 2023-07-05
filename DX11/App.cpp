@@ -14,6 +14,7 @@
 #include "DynamicConstant.h"
 #include "Node.h"
 #include "ModelProbe.h"
+#include "NastihanXM.h"
 
 App::App(const std::string& commandLine)
 	:
@@ -23,7 +24,7 @@ App::App(const std::string& commandLine)
 	light(wnd.Gfx())
 {
 	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 200.0f));
-	//cube1.SetPos(DirectX::XMFLOAT3{2.0f, 1.5f, 1.0f});
+	cube1.SetPos(DirectX::XMFLOAT3{2.0f, 1.5f, 1.0f});
 	//cube2.SetPos(DirectX::XMFLOAT3{5.0f, 4.0f, 0.0f});
 
 	
@@ -37,15 +38,13 @@ void App::DoFrame()
 	wnd.Gfx().SetCamera(cam.GetMatrix());
 	light.Bind(wnd.Gfx(),cam.GetMatrix());
 
-
-	//cube1.Submit(fc);
-	//cube2.Submit(fc);
 	light.Submit(fc);
+	cube1.Submit(fc);
 
 	//goblin.Submit(fc);
 	
 	sponza.Submit(fc);
-
+	//cube2.Submit(fc);
 	fc.Execute(wnd.Gfx());
 
 
@@ -105,7 +104,7 @@ void App::DoFrame()
 	}
 
 	// Mesh techniques window
-	class Probe : public TechniqueProbe
+	class TP : public TechniqueProbe
 	{
 	public:
 		void OnSetTechnique() override
@@ -148,6 +147,10 @@ void App::DoFrame()
 			{
 				dcheck(ImGui::SliderFloat(tag("Spec. Weight"), &v, 0.0f, 2.0f));
 			}
+			if (auto v = buf["useSpecularMap"]; v.Exists())
+			{
+				dcheck(ImGui::Checkbox(tag("Spec. Map Enable"), &v));
+			}
 			if (auto v = buf["useNormalMap"]; v.Exists())
 			{
 				dcheck(ImGui::Checkbox(tag("Normal Map Enable"), &v));
@@ -158,45 +161,121 @@ void App::DoFrame()
 			}
 			return dirty;
 		}
-	} probe;
+	};
 	
-
-
-	class MP : public ModelProbe
+	class MP : ModelProbe
 	{
 	public:
-		void SpawWindow( Model& model)
+		void SpawnWindow(Model& model)
 		{
-
 			ImGui::Begin("Model");
-			{
-				ImGui::Columns(1, nullptr);
-				model.Accept(*this);
+			ImGui::Columns(2, nullptr, true);
+			model.Accept(*this);
 
+			ImGui::NextColumn();
+			if (pSelectedNode != nullptr)
+			{
+				bool dirty = false;
+				const auto dcheck = [&dirty](bool changed) {dirty = dirty || changed; };
+				auto& tf = ResolveTransform();
+				ImGui::TextColored({ 0.4f,1.0f,0.6f,1.0f }, "Translation");
+				dcheck(ImGui::SliderFloat("X", &tf.x, -60.f, 60.f));
+				dcheck(ImGui::SliderFloat("Y", &tf.y, -60.f, 60.f));
+				dcheck(ImGui::SliderFloat("Z", &tf.z, -60.f, 60.f));
+				ImGui::TextColored({ 0.4f,1.0f,0.6f,1.0f }, "Orientation");
+				dcheck(ImGui::SliderAngle("X-rotation", &tf.xRot, -180.0f, 180.0f));
+				dcheck(ImGui::SliderAngle("Y-rotation", &tf.yRot, -180.0f, 180.0f));
+				dcheck(ImGui::SliderAngle("Z-rotation", &tf.zRot, -180.0f, 180.0f));
+				if (dirty)
+				{
+					pSelectedNode->SetAppliedTransform(
+						DirectX::XMMatrixRotationX(tf.xRot) *
+						DirectX::XMMatrixRotationY(tf.yRot) *
+						DirectX::XMMatrixRotationZ(tf.zRot) *
+						DirectX::XMMatrixTranslation(tf.x, tf.y, tf.z)
+					);
+				}
+			}
+			if (pSelectedNode != nullptr)
+			{
+				TP probe;
+				pSelectedNode->Accept(probe);
 			}
 			ImGui::End();
 		}
-		bool RenderNodeTree(Node& node) override
+	protected:
+		bool PushNode(Node& node) override
 		{
-			auto expand = ImGui::TreeNode(node.GetName().c_str());
-			return expand;
+			// if there is no selected node, set selectedId to an impossible value
+			const int selectedId = (pSelectedNode == nullptr) ? -1 : pSelectedNode->GetId();
+			// build up flags for current node
+			const auto node_flags = ImGuiTreeNodeFlags_OpenOnArrow
+				| ((node.GetId() == selectedId) ? ImGuiTreeNodeFlags_Selected : 0)
+				| (node.HasChildren() ? 0 : ImGuiTreeNodeFlags_Leaf);
+			// render this node
+			const auto expanded = ImGui::TreeNodeEx(
+				(void*)(intptr_t)node.GetId(),
+				node_flags, node.GetName().c_str()
+			);
+			// processing for selecting node
+			if (ImGui::IsItemClicked())
+			{
+				pSelectedNode = &node;
+			}
+			// signal if children should also be recursed
+			return expanded;
 		}
-		void PopTreeNode(Node& node) override
+		void PopNode(Node& node) override
 		{
 			ImGui::TreePop();
 		}
-
+	private:
+		Node* pSelectedNode = nullptr;
+		struct TransformParameters
+		{
+			float xRot = 0.0f;
+			float yRot = 0.0f;
+			float zRot = 0.0f;
+			float x = 0.0f;
+			float y = 0.0f;
+			float z = 0.0f;
+		};
+		std::unordered_map<int, TransformParameters> transformParams;
+	private:
+		TransformParameters& ResolveTransform() noexcept
+		{
+			const auto id = pSelectedNode->GetId();
+			auto i = transformParams.find(id);
+			if (i == transformParams.end())
+			{
+				return LoadTransform(id);
+			}
+			return i->second;
+		}
+		TransformParameters& LoadTransform(int id) noexcept
+		{
+			const auto& applied = pSelectedNode->GetAppliedTransform();
+			const auto angles = ExtractEulerAngles(applied);
+			const auto translation = ExtractTranslation(applied);
+			TransformParameters tp;
+			tp.zRot = angles.z;
+			tp.xRot = angles.x;
+			tp.yRot = angles.y;
+			tp.x = translation.x;
+			tp.y = translation.y;
+			tp.z = translation.z;
+			return transformParams.insert({ id,{ tp } }).first->second;
+		}
 	};
+	static MP modelProbe;
 
-	static MP mProbe;
-	mProbe.SpawWindow(sponza);
-	
 	// imgui windows
+	modelProbe.SpawnWindow(sponza);
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
 	ShowHelperWindow();
 	ShowFPSWindow();
-	//cube1.SpawnControlWindow(wnd.Gfx(), "cube1");
+	cube1.SpawnControlWindow(wnd.Gfx(), "cube1");
 	//cube2.SpawnControlWindow(wnd.Gfx(), "cube2");
 
 

@@ -29,11 +29,11 @@ TestCube::TestCube(Graphics& gfx, float size)
 			first.AddBindable(Texture::Resolve(gfx, "Images\\brickwall.jpg"));
 			first.AddBindable(Sampler::Resolve(gfx));
 
-			//auto pvs = VertexShader::Resolve(gfx, "Phong_VS.cso");
-			//auto pvsbc = pvs->GetBytecode();
-			//first.AddBindable(std::move(pvs));
+			auto pvs = VertexShader::Resolve(gfx, "Phong_VS.cso");
+			auto pvsbc = pvs->GetBytecode();
+			first.AddBindable(std::move(pvs));
 
-			//first.AddBindable(PixelShader::Resolve(gfx, "Phong_PS.cso"));
+			first.AddBindable(PixelShader::Resolve(gfx, "Phong_PS.cso"));
 
 			Dcb::RawLayout layout;
 			layout.Add<Dcb::Float>("specularIntensity");
@@ -42,7 +42,7 @@ TestCube::TestCube(Graphics& gfx, float size)
 			Dcb::Buffer buf(std::move(layout));
 			buf["specularIntensity"] = 0.1f;
 			buf["specularPower"] = 20.0f;
-			first.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEX>(gfx, buf, 1u));
+			first.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEx>(gfx, buf, 1u));
 
 			//first.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
 
@@ -66,7 +66,7 @@ TestCube::TestCube(Graphics& gfx, float size)
 				mask.AddBindable(Texture::Resolve(gfx, "Images\\brickwall.jpg"));
 				mask.AddBindable(Sampler::Resolve(gfx));
 
-				auto pvs = VertexShader::Resolve(gfx, "PhongVS.cso");
+				auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
 				auto pvsbc = pvs->GetBytecode();
 				mask.AddBindable(std::move(pvs));
 
@@ -83,17 +83,17 @@ TestCube::TestCube(Graphics& gfx, float size)
 
 			Step draw{ 2 };
 			{
-				auto pvs = VertexShader::Resolve(gfx, "SolidVS.cso");
+				auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
 				auto pvsbc = pvs->GetBytecode();
 				draw.AddBindable(std::move(pvs));
 
-				draw.AddBindable(PixelShader::Resolve(gfx, "SolidPS.cso"));
+				draw.AddBindable(PixelShader::Resolve(gfx, "Solid_PS.cso"));
 
 				Dcb::RawLayout lay;
 				lay.Add<Dcb::Float4>("color");
 				auto buf = Dcb::Buffer(std::move(lay));
 				buf["color"] = DirectX::XMFLOAT4{ 1.0f,0.4f,0.4f,1.0f };
-				draw.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEX>(gfx, buf, 1u));
+				draw.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEx>(gfx, buf, 1u));
 
 				draw.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
 
