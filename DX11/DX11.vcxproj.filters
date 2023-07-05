@@ -225,9 +225,6 @@
     <ClCompile Include="Model.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
-    <ClCompile Include="ModelWindow.cpp">
-      <Filter>Source Files\Model</Filter>
-    </ClCompile>
     <ClCompile Include="Node.cpp">
       <Filter>Source Files\Model</Filter>
     </ClCompile>
@@ -465,9 +462,6 @@
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="Model.h">
-      <Filter>Header Files\Model</Filter>
-    </ClInclude>
-    <ClInclude Include="ModelWindow.h">
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="Node.h">

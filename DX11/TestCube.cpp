@@ -42,9 +42,9 @@ TestCube::TestCube(Graphics& gfx, float size)
 			layout.Add<Dcb::Float>("specularWeight");
 			layout.Add<Dcb::Float>("specularGloss");
 			Dcb::Buffer buf(std::move(layout));
-			buf["specularColor"] = DirectX::XMFLOAT3 {0.18f, 0.18f, 0.18f };
-			buf["specularWeight"] = 1.0f;
-			buf["specularGloss"] = 8.0f;
+			buf["specularColor"] = DirectX::XMFLOAT3 {1.0f, 1.0f, 1.0f };
+			buf["specularWeight"] = 0.1f;
+			buf["specularGloss"] = 18.0f;
 			first.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEx>(gfx, buf, 1u));
 
 			first.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
@@ -62,65 +62,84 @@ TestCube::TestCube(Graphics& gfx, float size)
 	}
 	// outlining
 	{
-		Technique outline{"Outline",true};
+		Technique outline("Outline");
 		{
-			Step mask{ 1 };
-			{
-				mask.AddBindable(Texture::Resolve(gfx, "Images\\brickwall.jpg"));
-				mask.AddBindable(Sampler::Resolve(gfx));
+			Step mask(1);
 
-				auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
-				auto pvsbc = pvs->GetBytecode();
-				mask.AddBindable(std::move(pvs));
+			auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
+			auto pvsbc = pvs->GetBytecode();
+			mask.AddBindable(std::move(pvs));
 
-				mask.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
+			// TODO: better sub-layout generation tech for future consideration maybe
+			mask.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
 
-				auto tcb = std::make_shared<TransformCbuf>(gfx, 0u);
-				mask.AddBindable(tcb);
+			mask.AddBindable(std::make_shared<TransformCbuf>(gfx));
 
-				mask.AddBindable(Rasterizer::Resolve(gfx, false));
+			// TODO: might need to specify rasterizer when doubled-sided models start being used
 
-				mask.AddBindable(Blender::Resolve(gfx, false));
-			}
-			outline.AddStep(mask);
-
-			Step draw{ 2 };
-			{
-				auto pvs = VertexShader::Resolve(gfx, "Offset_VS.cso");
-				auto pvsbc = pvs->GetBytecode();
-				draw.AddBindable(std::move(pvs));
-
-				draw.AddBindable(PixelShader::Resolve(gfx, "Solid_PS.cso"));
-
-				{
-					Dcb::RawLayout lay;
-					lay.Add<Dcb::Float3>("materialColor");
-					auto buf = Dcb::Buffer(std::move(lay));
-					buf["materialColor"] = DirectX::XMFLOAT3{ 1.0f,0.4f,0.4f };
-					draw.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEx>(gfx, buf, 1u));
-				}
-
-				{
-					Dcb::RawLayout lay;
-					lay.Add<Dcb::Float>("offset");
-					auto buf = Dcb::Buffer(std::move(lay));
-					buf["offset"] = 0.1f;
-					draw.AddBindable(std::make_shared<Bind::CachingVertexConstantBufferEx>(gfx, buf, 1u));
-				}
-
-				draw.AddBindable(std::make_shared<TransformCbuf>(gfx));
-
-				draw.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
-
-				
-
-				//draw.AddBindable(Rasterizer::Resolve(gfx, false));
-
-				//draw.AddBindable(Blender::Resolve(gfx, false));
-			}
-			outline.AddStep(draw);
+			outline.AddStep(std::move(mask));
 		}
-		AddTechnique(outline);
+		{
+			Step draw(2);
+
+			// these can be pass-constant (tricky due to layout issues)
+			auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
+			auto pvsbc = pvs->GetBytecode();
+			draw.AddBindable(std::move(pvs));
+
+			// this can be pass-constant
+			draw.AddBindable(PixelShader::Resolve(gfx, "Solid_PS.cso"));
+
+			Dcb::RawLayout lay;
+			lay.Add<Dcb::Float4>("color");
+			auto buf = Dcb::Buffer(std::move(lay));
+			buf["color"] = DirectX::XMFLOAT4{ 1.0f,0.4f,0.4f,1.0f };
+			draw.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEx>(gfx, buf, 1u));
+
+			// TODO: better sub-layout generation tech for future consideration maybe
+			draw.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
+
+			// quick and dirty... nicer solution maybe takes a lamba... we'll see :)
+			class TransformCbufScaling : public TransformCbuf
+			{
+			public:
+				TransformCbufScaling(Graphics& gfx, float scale = 1.04)
+					:
+					TransformCbuf(gfx),
+					buf(MakeLayout())
+				{
+					buf["scale"] = scale;
+				}
+				void Accept(TechniqueProbe& probe) override
+				{
+					probe.VisitBuffer(buf);
+				}
+				void Bind(Graphics& gfx) noexcept override
+				{
+					const float scale = buf["scale"];
+					const auto scaleMatrix = DirectX::XMMatrixScaling(scale, scale, scale);
+					auto xf = GetTransforms(gfx);
+					xf.modelView = xf.modelView * scaleMatrix;
+					xf.modelViewProj = xf.modelViewProj * scaleMatrix;
+					UpdateBindImpl(gfx, xf);
+				}
+			private:
+				static Dcb::RawLayout MakeLayout()
+				{
+					Dcb::RawLayout layout;
+					layout.Add<Dcb::Float>("scale");
+					return layout;
+				}
+			private:
+				Dcb::Buffer buf;
+			};
+			draw.AddBindable(std::make_shared<TransformCbufScaling>(gfx));
+
+			// TODO: might need to specify rasterizer when doubled-sided models start being used
+
+			outline.AddStep(std::move(draw));
+		}
+		AddTechnique(std::move(outline));
 	}
 
 }

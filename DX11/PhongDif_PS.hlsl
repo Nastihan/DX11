@@ -12,7 +12,6 @@ cbuffer ObjectCBuf
 
 struct PS_input
 {
-
     float3 viewFragPos : POSITION;
     float3 viewNormal : NORMAL;
     float4 pos : SV_Position;

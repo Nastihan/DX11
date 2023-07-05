@@ -24,8 +24,8 @@ App::App(const std::string& commandLine)
 	light(wnd.Gfx())
 {
 	wnd.Gfx().SetProjection(DirectX::XMMatrixPerspectiveLH(1.0f, 9.0f / 16.0f, 0.5f, 200.0f));
-	cube1.SetPos(DirectX::XMFLOAT3{2.0f, 1.5f, 1.0f});
-	//cube2.SetPos(DirectX::XMFLOAT3{5.0f, 4.0f, 0.0f});
+	cube1.SetPos(DirectX::XMFLOAT3{2.0f, 2.0f, 1.0f});
+	cube2.SetPos(DirectX::XMFLOAT3{0.0f, 4.0f, 0.0f});
 
 	
 
@@ -44,7 +44,8 @@ void App::DoFrame()
 	//goblin.Submit(fc);
 	
 	sponza.Submit(fc);
-	//cube2.Submit(fc);
+	cube2.Submit(fc);
+
 	fc.Execute(wnd.Gfx());
 
 
@@ -224,6 +225,27 @@ void App::DoFrame()
 			// processing for selecting node
 			if (ImGui::IsItemClicked())
 			{
+				// used to change the highlighted node on selection change
+				struct Probe : public TechniqueProbe
+				{
+					virtual void OnSetTechnique()
+					{
+						if (pTech->GetName() == "Outline")
+						{
+							pTech->SetActiveState(highlighted);
+						}
+					}
+					bool highlighted = false;
+				} probe;
+
+				// remove highlight on prev-selected node
+				if (pSelectedNode != nullptr)
+				{
+					pSelectedNode->Accept(probe);
+				}
+				// add highlight to newly-selected node
+				probe.highlighted = true;
+				node.Accept(probe);
 				pSelectedNode = &node;
 			}
 			// signal if children should also be recursed
@@ -274,16 +296,13 @@ void App::DoFrame()
 	static MP modelProbe;
 
 	// imgui windows
-	//modelProbe.SpawnWindow(sponza);
+	modelProbe.SpawnWindow(sponza);
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
 	ShowHelperWindow();
 	ShowFPSWindow();
 	cube1.SpawnControlWindow(wnd.Gfx(), "cube1");
-	//cube2.SpawnControlWindow(wnd.Gfx(), "cube2");
-
-
-	//sponza.ShowWindow(wnd.Gfx());
+	cube2.SpawnControlWindow(wnd.Gfx(), "cube2");
 	// present
 	wnd.Gfx().EndFrame();
 	fc.Reset();

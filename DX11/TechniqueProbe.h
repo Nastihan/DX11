@@ -27,8 +27,10 @@ public:
 protected:
 	virtual void OnSetTechnique() {}
 	virtual void OnSetStep() {}
-	virtual bool OnVisitBuffer(class Dcb::Buffer&) = 0;
-protected:
+	virtual bool OnVisitBuffer(class Dcb::Buffer&)
+	{
+		return false;
+	}protected:
 	class Technique* pTech = nullptr;
 	class Step* pStep = nullptr;
 	size_t techIdx = std::numeric_limits<size_t>::max();
