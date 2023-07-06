@@ -18,8 +18,7 @@ namespace Bind
 
 class Graphics
 {
-	friend Bind::Bindable;
-
+	friend class GraphicsResource;
 public:
 
 	class Exception : public NastihanException
@@ -61,7 +60,7 @@ public:
 		std::string reason;
 	};
 
-	Graphics(HWND hWnd);
+	Graphics(HWND hWnd,int width, int height);
 	Graphics(const Graphics&) = delete;
 	Graphics& operator=(const Graphics&) = delete;
 	~Graphics();

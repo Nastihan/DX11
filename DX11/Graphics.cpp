@@ -13,12 +13,12 @@
 
 // dxguid.lib;dxgi.lib;d3d11.lib;winpixeventruntime.lib
 // $(CoreLibraryDependencies); % (AdditionalDependencies); dxgi.lib; gdiplus.lib
-Graphics::Graphics(HWND hWnd)
+Graphics::Graphics(HWND hWnd, int width, int height)
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
 	// Display mode of the backbuffer
-	swapChainDesc.BufferDesc.Height = 1600;
-	swapChainDesc.BufferDesc.Height = 900;
+	swapChainDesc.BufferDesc.Width = (UINT)width;
+	swapChainDesc.BufferDesc.Height = (UINT)height;
 	swapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
 	swapChainDesc.BufferDesc.RefreshRate.Denominator = 0;
 	swapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -79,8 +79,8 @@ Graphics::Graphics(HWND hWnd)
 	// create depth stensil texture
 	Microsoft::WRL::ComPtr<ID3D11Texture2D> pDepthStencil;
 	D3D11_TEXTURE2D_DESC descDepth = {};
-	descDepth.Width = 1600u;
-	descDepth.Height = 900u;
+	descDepth.Width = (UINT)width;
+	descDepth.Height = (UINT)height;
 	descDepth.MipLevels = 1u;
 	descDepth.ArraySize = 1u;
 	descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -104,8 +104,8 @@ Graphics::Graphics(HWND hWnd)
 
 	// configure viewport
 	D3D11_VIEWPORT vp;
-	vp.Width = 1600.0f;
-	vp.Height = 900.0f;
+	vp.Width = (float)width;
+	vp.Height = (float)height;
 	vp.MinDepth = 0.0f;
 	vp.MaxDepth = 1.0f;
 	vp.TopLeftX = 0.0f;

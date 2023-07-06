@@ -1,12 +1,13 @@
 #pragma once
 #include "Graphics.h"
 #include <memory>
+#include "GraphicsResource.h"
 
 class Drawable;
 class TechniqueProbe;
 namespace Bind
 {
-	class Bindable
+	class Bindable : public GraphicsResource
 	{
 	public:
 		virtual void Bind(Graphics& gfx) noexcept = 0;
@@ -22,10 +23,6 @@ namespace Bind
 			// pretty much most of the bindable do not do anything when they accept a probe
 		}
 		virtual ~Bindable() = default;
-	protected:
-		static ID3D11Device* GetDevice(Graphics& gfx) noexcept;
-		static ID3D11DeviceContext* GetContext(Graphics& gfx) noexcept;
-		static DxgiInfoManager& GetInfoManager(Graphics& gfx);
 	};
 
 	class CloningBindable : public Bindable
