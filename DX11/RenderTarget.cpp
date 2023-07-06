@@ -43,17 +43,17 @@ RenderTarget::RenderTarget(Graphics& gfx, UINT width, UINT Height)
 	));
 }
 
-void RenderTarget::BindAsTexture(Graphics& gfx,UINT slot)
+void RenderTarget::BindAsTexture(Graphics& gfx,UINT slot) const noexcept
 {
 	GetContext(gfx)->PSSetShaderResources(slot, 1, pTextureView.GetAddressOf());
 }
 
-void RenderTarget::BindAsTarget(Graphics& gfx)
+void RenderTarget::BindAsTarget(Graphics& gfx) const noexcept
 {
 	GetContext(gfx)->OMSetRenderTargets(1, pTargetView.GetAddressOf(), nullptr);
 }
 
-void RenderTarget::BindAsTarget(Graphics& gfx, DepthStencil& ds)
+void RenderTarget::BindAsTarget(Graphics& gfx,const DepthStencil& ds) const noexcept
 {
 	GetContext(gfx)->OMSetRenderTargets(1, pTargetView.GetAddressOf(), ds.pDepthStencilView.Get());
 }

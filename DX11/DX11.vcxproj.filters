@@ -61,6 +61,9 @@
     <Filter Include="Source Files\Model">
       <UniqueIdentifier>{3bbac319-4145-4e51-a74e-db291480993a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Fullscreen Filters">
+      <UniqueIdentifier>{c5d41529-b7c2-4c0b-8119-88f728a5ce7a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WInMain.cpp">
@@ -228,10 +231,10 @@
     <ClCompile Include="GraphicsResource.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RenderTarget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="DepthStencil.cpp">
+      <Filter>Source Files\Bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderTarget.cpp">
       <Filter>Source Files\Bindable</Filter>
     </ClCompile>
   </ItemGroup>
@@ -534,6 +537,12 @@
     </FxCompile>
     <FxCompile Include="Offset_VS.hlsl">
       <Filter>Shader\Phong</Filter>
+    </FxCompile>
+    <FxCompile Include="Fullscreen_VS.hlsl">
+      <Filter>Shader\Fullscreen Filters</Filter>
+    </FxCompile>
+    <FxCompile Include="Negative_PS.hlsl">
+      <Filter>Shader\Fullscreen Filters</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
