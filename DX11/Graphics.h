@@ -11,6 +11,8 @@
 #include <random>
 #include "ConditionalNoexcept.h"
 
+class DepthStencil;
+
 namespace Bind
 {
 	class Bindable;
@@ -66,6 +68,8 @@ public:
 	~Graphics();
 	void BeginFrame();
 	void EndFrame();
+	void BindSwapBuffer() noexcept;
+	void BindSwapBuffer(const DepthStencil& ds) noexcept;
 	void DrawIndexed(UINT count) noexcept(!IS_DEBUG);
 	void SetCamera(DirectX::FXMMATRIX cam) noexcept;
 	DirectX::XMMATRIX GetCamera() const noexcept;
@@ -74,7 +78,11 @@ public:
 	void EnableImgui() noexcept;
 	void DisableImgui() noexcept;
 	bool IsImguiEnabled() const noexcept;
+	UINT GetWidth() const noexcept;
+	UINT GetHeight() const noexcept;
 private:
+	UINT width;
+	UINT height;
 	DirectX::XMMATRIX camera;
 	DirectX::XMMATRIX projection;
 	bool imguiEnabled = true;

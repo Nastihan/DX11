@@ -31,7 +31,7 @@ private:
 	NastihanTimer timer;
 	Camera cam;
 	PointLight light;
-	FrameCommander fc;
+	FrameCommander fc{ wnd.Gfx() };
 
 
 	TestCube cube1{ wnd.Gfx(),3.6f };

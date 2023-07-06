@@ -5,10 +5,15 @@
 #include "Job.h"
 #include "Pass.h"
 #include "PerfLog.h"
+#include "DepthStencil.h"
 
 class FrameCommander
 {
 public:
+	FrameCommander(Graphics& gfx)
+		:
+		ds(gfx, gfx.GetWidth(), gfx.GetHeight())
+	{}
 	void Accept(Job job, size_t target) noexcept
 	{
 		passes[target].Accept(job);
@@ -19,6 +24,12 @@ public:
 		// normally this would be a loop with each pass defining it setup / etc.
 		// and later on it would be a complex graph with parallel execution contingent
 		// on input / output requirements
+
+		// clear z buffer
+		ds.Clear(gfx);
+		// setup render target and z buffer for all calls
+		gfx.BindSwapBuffer(ds);
+
 
 		// main phong lighting pass
 		Stencil::Resolve(gfx, Stencil::Mode::Off)->Bind(gfx);
@@ -39,5 +50,6 @@ public:
 		}
 	}
 private:
+	DepthStencil ds;
 	std::array<Pass, 3> passes;
 };

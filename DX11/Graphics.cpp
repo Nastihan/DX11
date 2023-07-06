@@ -7,6 +7,7 @@
 #include "ImGui/imgui_impl_dx11.h"
 #include "ImGui/imgui_impl_win32.h"
 #include <dxgi.h>
+#include "DepthStencil.h"
 
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib,"D3DCompiler.lib")
@@ -14,6 +15,7 @@
 // dxguid.lib;dxgi.lib;d3d11.lib;winpixeventruntime.lib
 // $(CoreLibraryDependencies); % (AdditionalDependencies); dxgi.lib; gdiplus.lib
 Graphics::Graphics(HWND hWnd, int width, int height)
+	:width(width),height(height)
 {
 	DXGI_SWAP_CHAIN_DESC swapChainDesc = {};
 	// Display mode of the backbuffer
@@ -75,32 +77,7 @@ Graphics::Graphics(HWND hWnd, int width, int height)
 	GFX_THROW_INFO(swapChain->GetBuffer(0, __uuidof(ID3D11Resource), &pBackBuffer));
 	GFX_THROW_INFO(device->CreateRenderTargetView(pBackBuffer.Get(), nullptr, &targetView));
 	
-	
-	// create depth stensil texture
-	Microsoft::WRL::ComPtr<ID3D11Texture2D> pDepthStencil;
-	D3D11_TEXTURE2D_DESC descDepth = {};
-	descDepth.Width = (UINT)width;
-	descDepth.Height = (UINT)height;
-	descDepth.MipLevels = 1u;
-	descDepth.ArraySize = 1u;
-	descDepth.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	descDepth.SampleDesc.Count = 1u;
-	descDepth.SampleDesc.Quality = 0u;
-	descDepth.Usage = D3D11_USAGE_DEFAULT;
-	descDepth.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-	GFX_THROW_INFO(device->CreateTexture2D(&descDepth, nullptr, &pDepthStencil));
 
-	// create view of depth stensil texture
-	D3D11_DEPTH_STENCIL_VIEW_DESC descDSV = {};
-	descDSV.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-	descDSV.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
-	descDSV.Texture2D.MipSlice = 0u;
-	GFX_THROW_INFO(device->CreateDepthStencilView(
-		pDepthStencil.Get(), &descDSV, &pDSV
-	));
-
-	// bind depth stensil view to OM
-	context->OMSetRenderTargets(1u, targetView.GetAddressOf(), pDSV.Get());
 
 	// configure viewport
 	D3D11_VIEWPORT vp;
@@ -163,6 +140,16 @@ bool Graphics::IsImguiEnabled() const noexcept
 	return imguiEnabled;
 }
 
+UINT Graphics::GetWidth() const noexcept
+{
+	return width;
+}
+
+UINT Graphics::GetHeight() const noexcept
+{
+	return height;
+}
+
 
 void Graphics::BeginFrame()
 {
@@ -177,7 +164,16 @@ void Graphics::BeginFrame()
 	// clear 
 	const float colorsArray[] = { 0.0f,0.0f,0.07f,1.0f };
 	context->ClearRenderTargetView(targetView.Get(), colorsArray);
-	context->ClearDepthStencilView(pDSV.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0u);
+}
+
+void Graphics::BindSwapBuffer() noexcept
+{
+	context->OMSetRenderTargets(1u, targetView.GetAddressOf(), nullptr);
+}
+
+void Graphics::BindSwapBuffer(const DepthStencil& ds) noexcept
+{
+	context->OMSetRenderTargets(1u, targetView.GetAddressOf(), ds.pDepthStencilView.Get());
 }
 
 void Graphics::EndFrame()
