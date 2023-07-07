@@ -37,8 +37,7 @@ public:
 		pInputLayout = Bind::InputLayout::Resolve(gfx, lay, pVS->GetBytecode());
 
 		// fullscreen quad PS shader
-		pPS = Bind::PixelShader::Resolve(gfx, "Negative_PS.cso");
-
+		pPS = Bind::PixelShader::Resolve(gfx, "Blur_PS.cso");
 	}
 	void Accept(Job job, size_t target) noexcept
 	{

@@ -544,6 +544,9 @@
     <FxCompile Include="Negative_PS.hlsl">
       <Filter>Shader\Fullscreen Filters</Filter>
     </FxCompile>
+    <FxCompile Include="Blur_PS.hlsl">
+      <Filter>Shader\Fullscreen Filters</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="DXGetErrorDescription.inl">
