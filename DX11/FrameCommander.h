@@ -25,19 +25,17 @@ public:
 		buf.EmplaceBack(DirectX::XMFLOAT2{-1.0, -1.0});
 		buf.EmplaceBack(DirectX::XMFLOAT2{1.0, -1.0});
 		pVertexBuffer = Bind::VertexBuffer::Resolve(gfx,"$Full", std::move(buf));
-		
 		// fullscreen quad index buffer
 		std::vector<unsigned short> indices = { 0,1,2,1,3,2 };
 		pIndexBuffer = Bind::IndexBuffer::Resolve(gfx, "$Full", std::move(indices));
-		
 		// fullscreen quad VS shader
 		pVS = Bind::VertexShader::Resolve(gfx, "Fullscreen_VS.cso");
-	
 		// fullscreen quad input layout
 		pInputLayout = Bind::InputLayout::Resolve(gfx, lay, pVS->GetBytecode());
-
 		// fullscreen quad PS shader
 		pPS = Bind::PixelShader::Resolve(gfx, "Blur_PS.cso");
+		// fullscreen quad sampler
+		pSampler = Bind::Sampler::Resolve(gfx, false, true);
 	}
 	void Accept(Job job, size_t target) noexcept
 	{
@@ -76,6 +74,7 @@ public:
 		pInputLayout->Bind(gfx);
 		pVS->Bind(gfx);
 		pPS->Bind(gfx);
+		pSampler->Bind(gfx);
 		gfx.DrawIndexed(pIndexBuffer->GetCount());
 		
 	}
@@ -96,5 +95,6 @@ private:
 	std::shared_ptr<Bind::InputLayout> pInputLayout;
 	std::shared_ptr < Bind::VertexShader> pVS;
 	std::shared_ptr<Bind::PixelShader> pPS;
+	std::shared_ptr<Bind::Sampler> pSampler;
 
 };
