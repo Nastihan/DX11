@@ -7,7 +7,8 @@ struct PS_Input
 Texture2D tex;
 SamplerState splr;
 
-static const int kernelRadius = 3;
+static const int kernelRadius = 5;
+static const int divisor = (kernelRadius * 2 + 1) * (kernelRadius * 2 + 1);
 
 float4 main(PS_Input input) : SV_TARGET
 {
@@ -24,13 +25,13 @@ float4 main(PS_Input input) : SV_TARGET
     {
         for (int x = -kernelRadius; x <= kernelRadius; x++)
         {
-            float2 tc = float2 (input.uv.x + (pixelStepX * x), input.uv.y + (pixelStepY * y));
+            const float2 tc = input.uv + float2(pixelStepX * x, pixelStepY * y);
             float4 result = tex.Sample(splr, tc).rgba;
             
             acc += result;
         }
     }
     
-    return acc / 49;
+    return acc / divisor;
     
 }
