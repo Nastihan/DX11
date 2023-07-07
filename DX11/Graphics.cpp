@@ -162,7 +162,7 @@ void Graphics::BeginFrame()
 	}
 
 	// clear 
-	const float colorsArray[] = { 0.0f,0.0f,0.07f,1.0f };
+	const float colorsArray[] = { 0.0f,0.0f,0.07f,0.0f };
 	context->ClearRenderTargetView(targetView.Get(), colorsArray);
 }
 

@@ -141,7 +141,7 @@ modelPath(path.string())
 		}
 		Step drawOutline{ 2 };
 		{
-			auto pvs = VertexShader::Resolve(gfx, "Offset_VS.cso");
+			auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
 			auto pvsbc = pvs->GetBytecode();
 			drawOutline.AddBindable(std::move(pvs));
 
@@ -153,14 +153,6 @@ modelPath(path.string())
 				auto buf = Dcb::Buffer(std::move(lay));
 				buf["materialColor"] = DirectX::XMFLOAT3{ 1.0f,0.4f,0.4f };
 				drawOutline.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEx>(gfx, buf, 1u));
-			}
-
-			{
-				Dcb::RawLayout lay;
-				lay.Add<Dcb::Float>("offset");
-				auto buf = Dcb::Buffer(std::move(lay));
-				buf["offset"] = 0.1f;
-				drawOutline.AddBindable(std::make_shared<Bind::CachingVertexConstantBufferEx>(gfx, buf, 1u));
 			}
 
 			drawOutline.AddBindable(InputLayout::Resolve(gfx, vtxLayout, pvsbc));

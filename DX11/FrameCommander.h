@@ -36,6 +36,10 @@ public:
 		pPS = Bind::PixelShader::Resolve(gfx, "Blur_PS.cso");
 		// fullscreen quad sampler
 		pSampler = Bind::Sampler::Resolve(gfx, false, true);
+		// fullscreen quad stencil
+		pStencil = Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Mask);
+		// fullscreen quad blender
+		pBlender = Bind::Blender::Resolve(gfx, true);
 	}
 	void Accept(Job job, size_t target) noexcept
 	{
@@ -49,25 +53,27 @@ public:
 		// on input / output requirements
 
 		// clear z buffer
+		rt.Clear(gfx);
 		ds.Clear(gfx);
 		// setup render target and z buffer for all calls
-		rt.BindAsTarget(gfx,ds);
-	
-
+		gfx.BindSwapBuffer(ds);
 		// main phong lighting pass
+		Blender::Resolve(gfx, false)->Bind(gfx);
 		Stencil::Resolve(gfx, Stencil::Mode::Off)->Bind(gfx);
 		passes[0].Execute(gfx);
 		// outline masking pass
 		Stencil::Resolve(gfx, Stencil::Mode::Write)->Bind(gfx);
 		NullPixelShader::Resolve(gfx)->Bind(gfx);
 		passes[1].Execute(gfx);
-		//// outline drawing pass
-		Stencil::Resolve(gfx, Stencil::Mode::Mask)->Bind(gfx);
+		// outline drawing pass
+		rt.BindAsTarget(gfx);
+		Stencil::Resolve(gfx, Stencil::Mode::Off)->Bind(gfx);
 		passes[2].Execute(gfx);
 
 		// full screen effect
-		gfx.BindSwapBuffer();
+		gfx.BindSwapBuffer(ds);
 		rt.BindAsTexture(gfx, 0);
+
 
 		pVertexBuffer->Bind(gfx);
 		pIndexBuffer->Bind(gfx);
@@ -75,6 +81,8 @@ public:
 		pVS->Bind(gfx);
 		pPS->Bind(gfx);
 		pSampler->Bind(gfx);
+		pStencil->Bind(gfx);
+		pBlender->Bind(gfx);
 		gfx.DrawIndexed(pIndexBuffer->GetCount());
 		
 	}
@@ -96,5 +104,6 @@ private:
 	std::shared_ptr < Bind::VertexShader> pVS;
 	std::shared_ptr<Bind::PixelShader> pPS;
 	std::shared_ptr<Bind::Sampler> pSampler;
-
+	std::shared_ptr<Bind::Stencil> pStencil;
+	std::shared_ptr<Bind::Blender> pBlender;
 };
