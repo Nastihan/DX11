@@ -24,18 +24,17 @@ public:
 		buf.EmplaceBack(DirectX::XMFLOAT2{1.0, 1.0});
 		buf.EmplaceBack(DirectX::XMFLOAT2{-1.0, -1.0});
 		buf.EmplaceBack(DirectX::XMFLOAT2{1.0, -1.0});
-		pVertexBuffer = Bind::VertexBuffer::Resolve(gfx,"FULLSCREEN", std::move(buf));
+		pVertexBuffer = Bind::VertexBuffer::Resolve(gfx,"$Full", std::move(buf));
 		
 		// fullscreen quad index buffer
-		std::vector <unsigned short> indices{0, 1, 2, 1, 3, 2};
-		pIndexBuffer = Bind::IndexBuffer::Resolve(gfx, "FULLSCREEN", indices);
+		std::vector<unsigned short> indices = { 0,1,2,1,3,2 };
+		pIndexBuffer = Bind::IndexBuffer::Resolve(gfx, "$Full", std::move(indices));
 		
 		// fullscreen quad VS shader
 		pVS = Bind::VertexShader::Resolve(gfx, "Fullscreen_VS.cso");
-		auto bc = pVS->GetBytecode();
-
+	
 		// fullscreen quad input layout
-		pInputLayout = Bind::InputLayout::Resolve(gfx, lay, bc);
+		pInputLayout = Bind::InputLayout::Resolve(gfx, lay, pVS->GetBytecode());
 
 		// fullscreen quad PS shader
 		pPS = Bind::PixelShader::Resolve(gfx, "Negative_PS.cso");
@@ -56,8 +55,7 @@ public:
 		ds.Clear(gfx);
 		// setup render target and z buffer for all calls
 		rt.BindAsTarget(gfx,ds);
-		//gfx.BindSwapBuffer(ds);
-
+	
 
 		// main phong lighting pass
 		Stencil::Resolve(gfx, Stencil::Mode::Off)->Bind(gfx);
@@ -71,7 +69,7 @@ public:
 		passes[2].Execute(gfx);
 
 		// full screen effect
-		gfx.BindSwapBuffer(ds);
+		gfx.BindSwapBuffer();
 		rt.BindAsTexture(gfx, 0);
 
 		pVertexBuffer->Bind(gfx);
