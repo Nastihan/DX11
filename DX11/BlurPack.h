@@ -30,10 +30,8 @@ public:
 	{
 		ccb.Update(gfx, { FALSE });
 	}
-	void ShowWindow(Graphics& gfx)
+	void RenderWidgets(Graphics& gfx)
 	{
-		ImGui::Begin("Blur");
-
 		bool filterChanged = false;
 		{
 			const char* items[] = { "Gauss","Box" };
@@ -78,7 +76,6 @@ public:
 				SetKernelBox(gfx, radius);
 			}
 		}
-		ImGui::End();
 	}
 
 	void SetKernelGauss(Graphics& gfx, int radius, float sigma) noxnd
