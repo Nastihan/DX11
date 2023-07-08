@@ -79,15 +79,7 @@ Graphics::Graphics(HWND hWnd, int width, int height)
 	
 
 
-	// configure viewport
-	D3D11_VIEWPORT vp;
-	vp.Width = (float)width;
-	vp.Height = (float)height;
-	vp.MinDepth = 0.0f;
-	vp.MaxDepth = 1.0f;
-	vp.TopLeftX = 0.0f;
-	vp.TopLeftY = 0.0f;
-	context->RSSetViewports(1u, &vp);
+	
 
 	//
 	ImGui_ImplDX11_Init(device.Get(), context.Get());
@@ -169,11 +161,31 @@ void Graphics::BeginFrame()
 void Graphics::BindSwapBuffer() noexcept
 {
 	context->OMSetRenderTargets(1u, targetView.GetAddressOf(), nullptr);
+
+	// configure viewport
+	D3D11_VIEWPORT vp;
+	vp.Width = (float)width;
+	vp.Height = (float)height;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+	vp.TopLeftX = 0.0f;
+	vp.TopLeftY = 0.0f;
+	context->RSSetViewports(1u, &vp);
 }
 
 void Graphics::BindSwapBuffer(const DepthStencil& ds) noexcept
 {
 	context->OMSetRenderTargets(1u, targetView.GetAddressOf(), ds.pDepthStencilView.Get());
+
+	// configure viewport
+	D3D11_VIEWPORT vp;
+	vp.Width = (float)width;
+	vp.Height = (float)height;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+	vp.TopLeftX = 0.0f;
+	vp.TopLeftY = 0.0f;
+	context->RSSetViewports(1u, &vp);
 }
 
 void Graphics::EndFrame()

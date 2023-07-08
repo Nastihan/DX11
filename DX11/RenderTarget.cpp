@@ -3,13 +3,16 @@
 #include "DepthStencil.h"
 #include <array>
 
-RenderTarget::RenderTarget(Graphics& gfx, UINT width, UINT Height)
+RenderTarget::RenderTarget(Graphics& gfx, UINT width, UINT height)
+	:
+	width(width),
+	height(height)
 {
 	INFOMAN(gfx);
 
 	D3D11_TEXTURE2D_DESC tDesc{};
 	tDesc.Width = width;
-	tDesc.Height = Height;
+	tDesc.Height = height;
 	tDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	tDesc.MipLevels = 1;
 	tDesc.ArraySize = 1;
@@ -52,11 +55,31 @@ void RenderTarget::BindAsTexture(Graphics& gfx,UINT slot) const noexcept
 void RenderTarget::BindAsTarget(Graphics& gfx) const noexcept
 {
 	GetContext(gfx)->OMSetRenderTargets(1, pTargetView.GetAddressOf(), nullptr);
+
+	// configure viewport
+	D3D11_VIEWPORT vp;
+	vp.Width = (float)width;
+	vp.Height = (float)height;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+	vp.TopLeftX = 0.0f;
+	vp.TopLeftY = 0.0f;
+	GetContext(gfx)->RSSetViewports(1u, &vp);
 }
 
 void RenderTarget::BindAsTarget(Graphics& gfx,const DepthStencil& ds) const noexcept
 {
 	GetContext(gfx)->OMSetRenderTargets(1, pTargetView.GetAddressOf(), ds.pDepthStencilView.Get());
+
+	// configure viewport
+	D3D11_VIEWPORT vp;
+	vp.Width = (float)width;
+	vp.Height = (float)height;
+	vp.MinDepth = 0.0f;
+	vp.MaxDepth = 1.0f;
+	vp.TopLeftX = 0.0f;
+	vp.TopLeftY = 0.0f;
+	GetContext(gfx)->RSSetViewports(1u, &vp);
 }
 
 void RenderTarget::Clear(Graphics& gfx, const std::array<float, 4>& color) const noexcept
