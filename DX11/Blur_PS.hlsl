@@ -1,3 +1,4 @@
+
 struct PS_Input
 {
     float4 pos : SV_Position;
@@ -7,28 +8,41 @@ struct PS_Input
 Texture2D tex;
 SamplerState splr;
 
-static const int kernelRadius = 13;
-static const int divisor = (kernelRadius * 2 + 1) * (kernelRadius * 2 + 1);
+cbuffer Kernel
+{
+    uint nTaps;
+    float coefficients[15];
+}
 
-float4 main(PS_Input input) : SV_TARGET
-{        
-    
+cbuffer Control
+{
+    bool horizontal;
+}
+
+float4 main(PS_Input input) : SV_Target
+{
     uint width, height;
-    tex.GetDimensions(width,height);
-    
-    float pixelStepX = 1.0f / width;
-    float pixelStepY = 1.0f / height;
-    float accAlpha = 0.0f;
-    float3 maxColor = float3(0.0f, 0.0f, 0.0f);    
-    for (int y = -kernelRadius; y <= kernelRadius; y++)
+    tex.GetDimensions(width, height);
+    float dx, dy;
+    if (horizontal)
     {
-        for (int x = -kernelRadius; x <= kernelRadius; x++)
-        {
-            const float2 tc = input.uv + float2(pixelStepX * x, pixelStepY * y);
-            const float4 s = tex.Sample(splr, tc).rgba;
-            accAlpha += s.a;
-            maxColor = max(s.rgb, maxColor);
-        }
+        dx = 1.0f / width;
+        dy = 0.0f;
     }
-    return float4(maxColor, accAlpha / divisor);
+    else
+    {
+        dx = 0.0f;
+        dy = 1.0f / height;
+    }
+    const int r = nTaps / 2;
+
+    float4 acc = { 0.0f, 0.0f, 0.0f, 0.0f };
+    for (int i = -r; i <= r; i++)
+    {
+        const float2 tc = input.uv + float2(dx * i, dy * i);
+        const float4 s = tex.Sample(splr, tc).rgba;
+        const float coef = coefficients[i + r];
+        acc += s * coef;
+    }
+    return acc;
 }

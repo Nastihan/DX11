@@ -488,6 +488,9 @@
     <ClInclude Include="DepthStencil.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
+    <ClInclude Include="BlurPack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Phong_PS.hlsl">
@@ -545,6 +548,9 @@
       <Filter>Shader\Fullscreen Filters</Filter>
     </FxCompile>
     <FxCompile Include="Blur_PS.hlsl">
+      <Filter>Shader\Fullscreen Filters</Filter>
+    </FxCompile>
+    <FxCompile Include="BlurOutline_PS.hlsl">
       <Filter>Shader\Fullscreen Filters</Filter>
     </FxCompile>
   </ItemGroup>
