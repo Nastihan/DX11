@@ -296,6 +296,7 @@ void App::DoFrame()
 	modelProbe.SpawnWindow(sponza);
 	cam.SpawnControlWindow();
 	light.SpawnControlWindow();
+	fc.ShowWindows(wnd.Gfx());
 	ShowHelperWindow();
 	ShowFPSWindow();
 	cube1.SpawnControlWindow(wnd.Gfx(), "cube1");

@@ -86,6 +86,11 @@ public:
 		blur.SetVertical(gfx);
 		gfx.DrawIndexed(pIndexBuffer->GetCount());
 
+
+	}
+	void ShowWindows(Graphics& gfx)
+	{
+		blur.ShowWindow(gfx);
 	}
 	void Reset() noexcept
 	{
