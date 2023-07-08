@@ -17,7 +17,7 @@ public:
 		ds(gfx, gfx.GetWidth(), gfx.GetHeight()),
 		rt1(gfx,gfx.GetWidth(),gfx.GetHeight()),
 		rt2(gfx,gfx.GetWidth(),gfx.GetHeight()),
-		blur(gfx)
+		blur(gfx, 7, 2.6f, "BlurOutline_PS.cso")
 	{
 		// fullscreen quad vertexbuffer 
 		Dvtx::VertexLayout lay{};
@@ -36,6 +36,8 @@ public:
 		pVS = Bind::VertexShader::Resolve(gfx, "Fullscreen_VS.cso");
 		pInputLayout = Bind::InputLayout::Resolve(gfx, lay, pVS->GetBytecode());
 		pSampler = Bind::Sampler::Resolve(gfx, false, true);
+		pBlender = Bind::Blender::Resolve(gfx, true);
+
 	}
 	void Accept(Job job, size_t target) noexcept
 	{
@@ -52,25 +54,22 @@ public:
 		rt1.Clear(gfx);
 		ds.Clear(gfx);
 		// setup render target and z buffer for all calls
-		rt1.BindAsTarget(gfx,ds);
-
+		gfx.BindSwapBuffer(ds);
 		// main phong lighting pass
 		Blender::Resolve(gfx, false)->Bind(gfx);
 		Stencil::Resolve(gfx, Stencil::Mode::Off)->Bind(gfx);
 		passes[0].Execute(gfx);
 		// outline masking pass
-		//Stencil::Resolve(gfx, Stencil::Mode::Write)->Bind(gfx);
-		//NullPixelShader::Resolve(gfx)->Bind(gfx);
-		//passes[1].Execute(gfx);
-		//// outline drawing pass
-		//rt1.BindAsTarget(gfx);
-		//Stencil::Resolve(gfx, Stencil::Mode::Off)->Bind(gfx);
-		//passes[2].Execute(gfx);
-
+		Stencil::Resolve(gfx, Stencil::Mode::Write)->Bind(gfx);
+		NullPixelShader::Resolve(gfx)->Bind(gfx);
+		passes[1].Execute(gfx);
+		// outline drawing pass
+		rt1.BindAsTarget(gfx);
+		Stencil::Resolve(gfx, Stencil::Mode::Off)->Bind(gfx);
+		passes[2].Execute(gfx);
 		// full separated gaussian blur screen effect h pass
 		rt2.BindAsTarget(gfx);
 		rt1.BindAsTexture(gfx, 0);
-
 		blur.SetHorizontal(gfx);
 		blur.Bind(gfx);
 		pVertexBuffer->Bind(gfx);
@@ -79,10 +78,11 @@ public:
 		pVS->Bind(gfx);
 		pSampler->Bind(gfx);
 		gfx.DrawIndexed(pIndexBuffer->GetCount());
-
 		// v pass
 		gfx.BindSwapBuffer(ds);
 		rt2.BindAsTexture(gfx, 0);
+		pBlender->Bind(gfx);
+		Stencil::Resolve(gfx, Stencil::Mode::Mask)->Bind(gfx);
 		blur.SetVertical(gfx);
 		gfx.DrawIndexed(pIndexBuffer->GetCount());
 
@@ -112,4 +112,5 @@ private:
 	std::shared_ptr<Bind::InputLayout> pInputLayout;
 	std::shared_ptr < Bind::VertexShader> pVS;
 	std::shared_ptr<Bind::Sampler> pSampler;
+	std::shared_ptr<Bind::Blender> pBlender;
 };
