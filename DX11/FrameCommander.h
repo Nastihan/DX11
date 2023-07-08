@@ -31,14 +31,11 @@ public:
 		// fullscreen quad index buffer
 		std::vector<unsigned short> indices = { 0,1,2,1,3,2 };
 		pIndexBuffer = Bind::IndexBuffer::Resolve(gfx, "$Full", std::move(indices));
-		// fullscreen quad VS shader
+
+		// fullscreen quad stuff
 		pVS = Bind::VertexShader::Resolve(gfx, "Fullscreen_VS.cso");
-		// fullscreen quad input layout
 		pInputLayout = Bind::InputLayout::Resolve(gfx, lay, pVS->GetBytecode());
-		// fullscreen quad sampler
 		pSampler = Bind::Sampler::Resolve(gfx, false, true);
-		// fullscreen quad stencil
-		pStencil = Bind::Stencil::Resolve(gfx, Bind::Stencil::Mode::Mask);
 	}
 	void Accept(Job job, size_t target) noexcept
 	{
@@ -53,7 +50,6 @@ public:
 
 		// clear buffer
 		rt1.Clear(gfx);
-		rt2.Clear(gfx);
 		ds.Clear(gfx);
 		// setup render target and z buffer for all calls
 		rt1.BindAsTarget(gfx,ds);
@@ -71,7 +67,7 @@ public:
 		//Stencil::Resolve(gfx, Stencil::Mode::Off)->Bind(gfx);
 		//passes[2].Execute(gfx);
 
-		// full screen effect
+		// full separated gaussian blur screen effect h pass
 		rt2.BindAsTarget(gfx);
 		rt1.BindAsTexture(gfx, 0);
 
@@ -82,19 +78,12 @@ public:
 		pInputLayout->Bind(gfx);
 		pVS->Bind(gfx);
 		pSampler->Bind(gfx);
-		pStencil->Bind(gfx);
 		gfx.DrawIndexed(pIndexBuffer->GetCount());
 
+		// v pass
 		gfx.BindSwapBuffer(ds);
 		rt2.BindAsTexture(gfx, 0);
 		blur.SetVertical(gfx);
-		blur.Bind(gfx);
-		pVertexBuffer->Bind(gfx);
-		pIndexBuffer->Bind(gfx);
-		pInputLayout->Bind(gfx);
-		pVS->Bind(gfx);
-		pSampler->Bind(gfx);
-		pStencil->Bind(gfx);
 		gfx.DrawIndexed(pIndexBuffer->GetCount());
 
 	}
@@ -118,5 +107,4 @@ private:
 	std::shared_ptr<Bind::InputLayout> pInputLayout;
 	std::shared_ptr < Bind::VertexShader> pVS;
 	std::shared_ptr<Bind::Sampler> pSampler;
-	std::shared_ptr<Bind::Stencil> pStencil;
 };
