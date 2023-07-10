@@ -45,10 +45,19 @@ Graphics::Graphics(HWND hWnd, int width, int height) : width(width), height(heig
 
 	HRESULT hr;
 
+	// change the adapter used by DirectX 11 application to utilize graphics card instead of the integrated GPU ------------------- still working in a hybrid mode!!!!!!!!!!!!
+	IDXGIFactory* pFactory = nullptr;
+	CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)&pFactory);
+	Microsoft::WRL::ComPtr<IDXGIAdapter> pAdapter;
+	pFactory->EnumAdapters(1u, &pAdapter);
+	pFactory->Release();
+	//pAdapter.Get()
+	//D3D_DRIVER_TYPE_UNKNOWN
+
 	// create device and front/back buffers, and swap chain and rendering context
 	GFX_THROW_INFO(D3D11CreateDeviceAndSwapChain(
-		nullptr,
-		D3D_DRIVER_TYPE_HARDWARE,
+		pAdapter.Get(),
+		D3D_DRIVER_TYPE_UNKNOWN,
 		nullptr,
 		swapCreateFlags,
 		nullptr,
