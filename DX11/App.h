@@ -21,6 +21,8 @@ private:
 	void DoFrame(float dt);
 	void HandleInput(float dt);
 	void ShowImguiDemoWindow();
+	void ShowFPSWindow();
+
 private:
 	std::string commandLine;
 	bool showDemoWindow = false;
@@ -35,4 +37,5 @@ private:
 	TestCube cube{ wnd.Gfx(),4.0f };
 	TestCube cube2{ wnd.Gfx(),4.0f };
 	Model sponza{ wnd.Gfx(),"Models\\sponza\\sponza.obj",1.0f / 20.0f };
+
 };
