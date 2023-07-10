@@ -4,12 +4,12 @@
 
 ID3D11DeviceContext* GraphicsResource::GetContext(Graphics& gfx) noexcept
 {
-	return gfx.context.Get();
+	return gfx.pContext.Get();
 }
 
 ID3D11Device* GraphicsResource::GetDevice(Graphics& gfx) noexcept
 {
-	return gfx.device.Get();
+	return gfx.pDevice.Get();
 }
 
 DxgiInfoManager& GraphicsResource::GetInfoManager(Graphics& gfx)

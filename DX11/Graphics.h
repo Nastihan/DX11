@@ -1,9 +1,10 @@
 #pragma once
+
 #include "NastihanWin.h"
 #include "NastihanException.h"
 #include <d3d11.h>
-#include <vector>
 #include <wrl.h>
+#include <vector>
 #include "DxgiInfoManager.h"
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
@@ -11,18 +12,17 @@
 #include <random>
 #include "ConditionalNoexcept.h"
 
-class DepthStencil;
-
 namespace Bind
 {
 	class Bindable;
+	class RenderTarget;
 }
 
 class Graphics
 {
 	friend class GraphicsResource;
-public:
 
+public:
 	class Exception : public NastihanException
 	{
 		using NastihanException::NastihanException;
@@ -37,11 +37,9 @@ public:
 		std::string GetErrorString() const noexcept;
 		std::string GetErrorDescription() const noexcept;
 		std::string GetErrorInfo() const noexcept;
-
 	private:
 		HRESULT hr;
 		std::string info;
-
 	};
 	class InfoException : public Exception
 	{
@@ -61,38 +59,35 @@ public:
 	private:
 		std::string reason;
 	};
-
-	Graphics(HWND hWnd,int width, int height);
+public:
+	Graphics(HWND hWnd, int width, int height);
 	Graphics(const Graphics&) = delete;
 	Graphics& operator=(const Graphics&) = delete;
 	~Graphics();
-	void BeginFrame();
 	void EndFrame();
-	void BindSwapBuffer() noexcept;
-	void BindSwapBuffer(const DepthStencil& ds) noexcept;
-	void DrawIndexed(UINT count) noexcept(!IS_DEBUG);
-	void SetCamera(DirectX::FXMMATRIX cam) noexcept;
-	DirectX::XMMATRIX GetCamera() const noexcept;
+	void BeginFrame(float red, float green, float blue) noexcept;
+	void DrawIndexed(UINT count) noxnd;
 	void SetProjection(DirectX::FXMMATRIX proj) noexcept;
 	DirectX::XMMATRIX GetProjection() const noexcept;
+	void SetCamera(DirectX::FXMMATRIX cam) noexcept;
+	DirectX::XMMATRIX GetCamera() const noexcept;
 	void EnableImgui() noexcept;
 	void DisableImgui() noexcept;
 	bool IsImguiEnabled() const noexcept;
 	UINT GetWidth() const noexcept;
 	UINT GetHeight() const noexcept;
+	std::shared_ptr<Bind::RenderTarget> GetTarget();
 private:
 	UINT width;
 	UINT height;
-	DirectX::XMMATRIX camera;
 	DirectX::XMMATRIX projection;
+	DirectX::XMMATRIX camera;
 	bool imguiEnabled = true;
-	
 #ifndef NDEBUG
 	DxgiInfoManager infoManager;
 #endif
-	Microsoft::WRL::ComPtr<ID3D11Device> device;
-	Microsoft::WRL::ComPtr<IDXGISwapChain> swapChain;
-	Microsoft::WRL::ComPtr<ID3D11DeviceContext> context ;
-	Microsoft::WRL::ComPtr<ID3D11RenderTargetView> targetView;
-	Microsoft::WRL::ComPtr<ID3D11DepthStencilView> pDSV;
+	Microsoft::WRL::ComPtr<ID3D11Device> pDevice;
+	Microsoft::WRL::ComPtr<IDXGISwapChain> pSwap;
+	Microsoft::WRL::ComPtr<ID3D11DeviceContext> pContext;
+	std::shared_ptr<Bind::RenderTarget> pTarget;
 };

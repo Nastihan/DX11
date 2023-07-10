@@ -1,41 +1,38 @@
 #pragma once
+
 #include "Window.h"
 #include "NastihanTimer.h"
-#include "ImGuiManager.h"
+#include "ImguiManager.h"
 #include "Camera.h"
 #include "PointLight.h"
-#include <set>
-#include "TestPlane.h"
 #include "TestCube.h"
-#include "ScriptCommander.h"
-#include "FrameCommander.h"
+#include "Mesh.h"
 #include "Model.h"
+#include "ScriptCommander.h"
+#include "BlurOutlineRenderGraph.h"
 
 class App
 {
 public:
 	App(const std::string& commandLine = "");
-	~App();
 	int Go();
+	~App();
 private:
-	void DoFrame();
-	void ShowHelperWindow();
-	void ShowFPSWindow();
+	void DoFrame(float dt);
+	void HandleInput(float dt);
+	void ShowImguiDemoWindow();
 private:
 	std::string commandLine;
-	float speedFactor = 1.0f;
-	bool showDemoWindow = true;
+	bool showDemoWindow = false;
 	ImGuiManager imgui;
 	Window wnd;
 	ScriptCommander scriptCommander;
+	Rgph::BlurOutlineRenderGraph rg{ wnd.Gfx() };
 	NastihanTimer timer;
+	float speed_factor = 1.0f;
 	Camera cam;
 	PointLight light;
-	FrameCommander fc{ wnd.Gfx() };
-
-
-	TestCube cube1{ wnd.Gfx(),3.6f };
-	TestCube cube2{ wnd.Gfx(),4.2f };
-	//Model goblin{ wnd.Gfx(),"Models\\gobber\\GoblinX.obj",6.0f };
-	Model sponza{ wnd.Gfx(),"Models\\Sponza\\sponza.obj",1/20.0f };
+	TestCube cube{ wnd.Gfx(),4.0f };
+	TestCube cube2{ wnd.Gfx(),4.0f };
+	Model sponza{ wnd.Gfx(),"Models\\sponza\\sponza.obj",1.0f / 20.0f };
 };

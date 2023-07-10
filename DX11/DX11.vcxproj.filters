@@ -49,12 +49,6 @@
     <Filter Include="Shader\ShaderIncludes">
       <UniqueIdentifier>{28114c33-c3f6-4dd9-8f78-3d744955f6a5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Jobber">
-      <UniqueIdentifier>{84a4387b-4c1c-45e0-aff3-0a2fdda6f3cc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Jobber">
-      <UniqueIdentifier>{d07ee3c9-aacf-41ca-b17b-b543436dd077}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Model">
       <UniqueIdentifier>{e396af9d-156e-4ee6-ac85-32f862960d54}</UniqueIdentifier>
     </Filter>
@@ -63,6 +57,27 @@
     </Filter>
     <Filter Include="Shader\Fullscreen Filters">
       <UniqueIdentifier>{c5d41529-b7c2-4c0b-8119-88f728a5ce7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\RenderGraph">
+      <UniqueIdentifier>{84a4387b-4c1c-45e0-aff3-0a2fdda6f3cc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\RenderGraph\Graphlib">
+      <UniqueIdentifier>{9f7ed5da-0a03-414e-bc13-d97c78d72336}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\RenderGraph\Passlib">
+      <UniqueIdentifier>{208b27d3-a1a3-4ce5-ab06-45fb0b129565}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\RenderGraph\Passlib\Base">
+      <UniqueIdentifier>{073d4dd1-b55d-441d-9354-48e86f35db5c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RenderGraph">
+      <UniqueIdentifier>{d07ee3c9-aacf-41ca-b17b-b543436dd077}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RenderGraph\Passlib">
+      <UniqueIdentifier>{35c7d537-960e-45a7-b941-ee282ccbb5ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\RenderGraph\Graphlib">
+      <UniqueIdentifier>{fe495dc8-1dd9-4668-9e31-35b068808cc6}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -171,9 +186,6 @@
     <ClCompile Include="TestPlane.cpp">
       <Filter>Source Files\Drawable</Filter>
     </ClCompile>
-    <ClCompile Include="TransformCbufPS.cpp">
-      <Filter>Source Files\Bindable</Filter>
-    </ClCompile>
     <ClCompile Include="NastihanXM.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -202,13 +214,13 @@
       <Filter>Source Files\Drawable</Filter>
     </ClCompile>
     <ClCompile Include="Technique.cpp">
-      <Filter>Source Files\Jobber</Filter>
+      <Filter>Source Files\RenderGraph</Filter>
     </ClCompile>
     <ClCompile Include="Step.cpp">
-      <Filter>Source Files\Jobber</Filter>
+      <Filter>Source Files\RenderGraph</Filter>
     </ClCompile>
     <ClCompile Include="Job.cpp">
-      <Filter>Source Files\Jobber</Filter>
+      <Filter>Source Files\RenderGraph</Filter>
     </ClCompile>
     <ClCompile Include="NullPixelShader.cpp">
       <Filter>Source Files</Filter>
@@ -236,6 +248,51 @@
     </ClCompile>
     <ClCompile Include="RenderTarget.cpp">
       <Filter>Source Files\Bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="Pass.cpp">
+      <Filter>Source Files\RenderGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="BlurOutlineRenderGraph.cpp">
+      <Filter>Source Files\RenderGraph\Graphlib</Filter>
+    </ClCompile>
+    <ClCompile Include="ScaleOutlineRenderGraph.cpp">
+      <Filter>Source Files\RenderGraph\Graphlib</Filter>
+    </ClCompile>
+    <ClCompile Include="Source.cpp">
+      <Filter>Source Files\RenderGraph\Passlib</Filter>
+    </ClCompile>
+    <ClCompile Include="BindingPass.cpp">
+      <Filter>Source Files\RenderGraph\Passlib</Filter>
+    </ClCompile>
+    <ClCompile Include="BufferClearPass.cpp">
+      <Filter>Source Files\RenderGraph\Passlib</Filter>
+    </ClCompile>
+    <ClCompile Include="FullscreenPass.cpp">
+      <Filter>Source Files\RenderGraph\Passlib</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderGraphCompileException.cpp">
+      <Filter>Source Files\RenderGraph\Passlib</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderQueuePass.cpp">
+      <Filter>Source Files\RenderGraph\Passlib</Filter>
+    </ClCompile>
+    <ClCompile Include="Sink.cpp">
+      <Filter>Source Files\RenderGraph\Passlib</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderGraph.cpp">
+      <Filter>Source Files\RenderGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="StepLinkingProbe.cpp">
+      <Filter>Source Files\RenderGraph</Filter>
+    </ClCompile>
+    <ClCompile Include="TransformCbufScaling.cpp">
+      <Filter>Source Files\Bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="HorizontalBlurPass.cpp">
+      <Filter>Source Files\RenderGraph\Passlib</Filter>
+    </ClCompile>
+    <ClCompile Include="VerticalBlurPass.cpp">
+      <Filter>Source Files\RenderGraph\Passlib</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -392,9 +449,6 @@
     <ClInclude Include="TestPlane.h">
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
-    <ClInclude Include="TransformCbufPS.h">
-      <Filter>Header Files\Bindable</Filter>
-    </ClInclude>
     <ClInclude Include="NormalMapTwerker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -432,19 +486,13 @@
       <Filter>Header Files\Drawable</Filter>
     </ClInclude>
     <ClInclude Include="Technique.h">
-      <Filter>Header Files\Jobber</Filter>
+      <Filter>Header Files\RenderGraph</Filter>
     </ClInclude>
     <ClInclude Include="Step.h">
-      <Filter>Header Files\Jobber</Filter>
+      <Filter>Header Files\RenderGraph</Filter>
     </ClInclude>
     <ClInclude Include="Job.h">
-      <Filter>Header Files\Jobber</Filter>
-    </ClInclude>
-    <ClInclude Include="Pass.h">
-      <Filter>Header Files\Jobber</Filter>
-    </ClInclude>
-    <ClInclude Include="FrameCommander.h">
-      <Filter>Header Files\Jobber</Filter>
+      <Filter>Header Files\RenderGraph</Filter>
     </ClInclude>
     <ClInclude Include="NullPixelShader.h">
       <Filter>Header Files\Bindable</Filter>
@@ -453,7 +501,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="TechniqueProbe.h">
-      <Filter>Header Files\Jobber</Filter>
+      <Filter>Header Files\RenderGraph</Filter>
     </ClInclude>
     <ClInclude Include="Vertex.h">
       <Filter>Header Files</Filter>
@@ -477,7 +525,7 @@
       <Filter>Header Files\Model</Filter>
     </ClInclude>
     <ClInclude Include="ModelProbe.h">
-      <Filter>Header Files\Jobber</Filter>
+      <Filter>Header Files\RenderGraph</Filter>
     </ClInclude>
     <ClInclude Include="RenderTarget.h">
       <Filter>Header Files\Bindable</Filter>
@@ -488,7 +536,67 @@
     <ClInclude Include="DepthStencil.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
-    <ClInclude Include="BlurPack.h">
+    <ClInclude Include="Pass.h">
+      <Filter>Header Files\RenderGraph\Passlib\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="rg\BindingPass.h">
+      <Filter>Header Files\RenderGraph\Passlib\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="rg\RenderGraph.h">
+      <Filter>Header Files\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurOutlineRenderGraph.h">
+      <Filter>Header Files\RenderGraph\Graphlib</Filter>
+    </ClInclude>
+    <ClInclude Include="ScaleOutlineRenderGraph.h">
+      <Filter>Header Files\RenderGraph\Graphlib</Filter>
+    </ClInclude>
+    <ClInclude Include="FullscreenPass.h">
+      <Filter>Header Files\RenderGraph\Passlib\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderQueuePass.h">
+      <Filter>Header Files\RenderGraph\Passlib\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Sink.h">
+      <Filter>Header Files\RenderGraph\Passlib\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="Source.h">
+      <Filter>Header Files\RenderGraph\Passlib\Base</Filter>
+    </ClInclude>
+    <ClInclude Include="VerticalBlurPass.h">
+      <Filter>Header Files\RenderGraph\Passlib</Filter>
+    </ClInclude>
+    <ClInclude Include="BlurOutlineDrawingPass.h">
+      <Filter>Header Files\RenderGraph\Passlib</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferClearPass.h">
+      <Filter>Header Files\RenderGraph\Passlib</Filter>
+    </ClInclude>
+    <ClInclude Include="HorizontalBlurPass.h">
+      <Filter>Header Files\RenderGraph\Passlib</Filter>
+    </ClInclude>
+    <ClInclude Include="LambertianPass.h">
+      <Filter>Header Files\RenderGraph\Passlib</Filter>
+    </ClInclude>
+    <ClInclude Include="OutlineDrawingPass.h">
+      <Filter>Header Files\RenderGraph\Passlib</Filter>
+    </ClInclude>
+    <ClInclude Include="OutlineMaskGenerationPass.h">
+      <Filter>Header Files\RenderGraph\Passlib</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderGraphCompileException.h">
+      <Filter>Header Files\RenderGraph\Passlib</Filter>
+    </ClInclude>
+    <ClInclude Include="StepLinkingProbe.h">
+      <Filter>Header Files\RenderGraph</Filter>
+    </ClInclude>
+    <ClInclude Include="BufferResource.h">
+      <Filter>Header Files\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformCbufScaling.h">
+      <Filter>Header Files\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="TestModelProbe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

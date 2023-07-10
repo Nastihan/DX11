@@ -1,6 +1,7 @@
 #pragma once
 #include "Bindable.h"
 #include "BindableCodex.h"
+#include "GraphicsThrowMacros.h"
 
 namespace Bind
 {
@@ -13,9 +14,7 @@ namespace Bind
 			Write,
 			Mask
 		};
-		Stencil(Graphics& gfx, Mode mode)
-			:
-			mode(mode)
+		Stencil(Graphics& gfx, Mode mode) : mode(mode)
 		{
 			D3D11_DEPTH_STENCIL_DESC dsDesc = CD3D11_DEPTH_STENCIL_DESC{ CD3D11_DEFAULT{} };
 
@@ -40,9 +39,10 @@ namespace Bind
 
 			GetDevice(gfx)->CreateDepthStencilState(&dsDesc, &pStencil);
 		}
-		void Bind(Graphics& gfx) noexcept override
+		void Bind(Graphics& gfx) noxnd override
 		{
-			GetContext(gfx)->OMSetDepthStencilState(pStencil.Get(), 0xFF);
+			INFOMAN_NOHR(gfx);
+			GFX_THROW_INFO_ONLY(GetContext(gfx)->OMSetDepthStencilState(pStencil.Get(), 0xFF));
 		}
 		static std::shared_ptr<Stencil> Resolve(Graphics& gfx, Mode mode)
 		{

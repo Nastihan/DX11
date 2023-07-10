@@ -14,17 +14,11 @@ namespace Bind
 			INFOMAN(gfx);
 
 			D3D11_MAPPED_SUBRESOURCE msr;
-			GFX_THROW_INFO(GetContext(gfx)->Map(
-				pConstantBuffer.Get(), 0u,
-				D3D11_MAP_WRITE_DISCARD, 0u,
-				&msr
-			));
+			GFX_THROW_INFO(GetContext(gfx)->Map(pConstantBuffer.Get(), 0u, D3D11_MAP_WRITE_DISCARD, 0u, &msr));
 			memcpy(msr.pData, &consts, sizeof(consts));
 			GetContext(gfx)->Unmap(pConstantBuffer.Get(), 0u);
 		}
-		ConstantBuffer(Graphics& gfx, const C& consts, UINT slot = 0u)
-			:
-			slot(slot)
+		ConstantBuffer(Graphics& gfx, const C& consts, UINT slot = 0u) : slot(slot)
 		{
 			INFOMAN(gfx);
 
@@ -40,9 +34,7 @@ namespace Bind
 			csd.pSysMem = &consts;
 			GFX_THROW_INFO(GetDevice(gfx)->CreateBuffer(&cbd, &csd, &pConstantBuffer));
 		}
-		ConstantBuffer(Graphics& gfx, UINT slot = 0u)
-			:
-			slot(slot)
+		ConstantBuffer(Graphics& gfx, UINT slot = 0u) : slot(slot)
 		{
 			INFOMAN(gfx);
 
@@ -65,18 +57,20 @@ namespace Bind
 	{
 		using ConstantBuffer<C>::pConstantBuffer;
 		using ConstantBuffer<C>::slot;
+		using ConstantBuffer<C>::GetInfoManager;
 		using Bindable::GetContext;
 	public:
 		using ConstantBuffer<C>::ConstantBuffer;
-		void Bind(Graphics& gfx) noexcept override
+		void Bind(Graphics& gfx) noxnd override
 		{
-			GetContext(gfx)->VSSetConstantBuffers(slot, 1u, pConstantBuffer.GetAddressOf());
+			INFOMAN_NOHR(gfx);
+			GFX_THROW_INFO_ONLY(GetContext(gfx)->VSSetConstantBuffers(slot, 1u, pConstantBuffer.GetAddressOf()));
 		}
-		static std::shared_ptr<Bindable> Resolve(Graphics& gfx, const C& consts, UINT slot = 0)
+		static std::shared_ptr<VertexConstantBuffer> Resolve(Graphics& gfx, const C& consts, UINT slot = 0)
 		{
 			return Codex::Resolve<VertexConstantBuffer>(gfx, consts, slot);
 		}
-		static std::shared_ptr<Bindable> Resolve(Graphics& gfx, UINT slot = 0)
+		static std::shared_ptr<VertexConstantBuffer> Resolve(Graphics& gfx, UINT slot = 0)
 		{
 			return Codex::Resolve<VertexConstantBuffer>(gfx, slot);
 		}
@@ -100,18 +94,20 @@ namespace Bind
 	{
 		using ConstantBuffer<C>::pConstantBuffer;
 		using ConstantBuffer<C>::slot;
+		using ConstantBuffer<C>::GetInfoManager;
 		using Bindable::GetContext;
 	public:
 		using ConstantBuffer<C>::ConstantBuffer;
-		void Bind(Graphics& gfx) noexcept override
+		void Bind(Graphics& gfx) noxnd override
 		{
-			GetContext(gfx)->PSSetConstantBuffers(slot, 1u, pConstantBuffer.GetAddressOf());
+			INFOMAN_NOHR(gfx);
+			GFX_THROW_INFO_ONLY(GetContext(gfx)->PSSetConstantBuffers(slot, 1u, pConstantBuffer.GetAddressOf()));
 		}
-		static std::shared_ptr<Bindable> Resolve(Graphics& gfx, const C& consts, UINT slot = 0)
+		static std::shared_ptr<PixelConstantBuffer> Resolve(Graphics& gfx, const C& consts, UINT slot = 0)
 		{
 			return Codex::Resolve<PixelConstantBuffer>(gfx, consts, slot);
 		}
-		static std::shared_ptr<Bindable> Resolve(Graphics& gfx, UINT slot = 0)
+		static std::shared_ptr<PixelConstantBuffer> Resolve(Graphics& gfx, UINT slot = 0)
 		{
 			return Codex::Resolve<PixelConstantBuffer>(gfx, slot);
 		}

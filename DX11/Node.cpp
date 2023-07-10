@@ -1,14 +1,11 @@
 #include "Node.h"
 #include "Mesh.h"
-#include "imgui/imgui.h"
 #include "ModelProbe.h"
+#include "imgui/imgui.h"
 
 namespace dx = DirectX;
 
-class ModelProbe;
-
-Node::Node(int id, const std::string& name, std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform_in) noxnd
-	:
+Node::Node(int id, const std::string& name, std::vector<Mesh*> meshPtrs, const DirectX::XMMATRIX& transform_in) noxnd :
 id(id),
 meshPtrs(std::move(meshPtrs)),
 name(name)
@@ -17,19 +14,16 @@ name(name)
 	dx::XMStoreFloat4x4(&appliedTransform, dx::XMMatrixIdentity());
 }
 
-void Node::Submit(FrameCommander& frame, DirectX::FXMMATRIX accumulatedTransform) const noxnd
+void Node::Submit(DirectX::FXMMATRIX accumulatedTransform) const noxnd
 {
-	const auto built =
-		dx::XMLoadFloat4x4(&appliedTransform) *
-		dx::XMLoadFloat4x4(&transform) *
-		accumulatedTransform;
+	const auto built = dx::XMLoadFloat4x4(&appliedTransform) * dx::XMLoadFloat4x4(&transform) * accumulatedTransform;
 	for (const auto pm : meshPtrs)
 	{
-		pm->Submit(frame, built);
+		pm->Submit(built);
 	}
 	for (const auto& pc : childPtrs)
 	{
-		pc->Submit(frame, built);
+		pc->Submit(built);
 	}
 }
 
@@ -49,6 +43,11 @@ const DirectX::XMFLOAT4X4& Node::GetAppliedTransform() const noexcept
 	return appliedTransform;
 }
 
+int Node::GetId() const noexcept
+{
+	return id;
+}
+
 void Node::Accept(ModelProbe& probe)
 {
 	if (probe.PushNode(*this))
@@ -61,21 +60,10 @@ void Node::Accept(ModelProbe& probe)
 	}
 }
 
-
 void Node::Accept(TechniqueProbe& probe)
 {
 	for (auto& mp : meshPtrs)
 	{
 		mp->Accept(probe);
 	}
-}
-
-const std::string& Node::GetName() const
-{
-	return name;
-}
-
-int Node::GetId() const noexcept
-{
-	return id;
 }

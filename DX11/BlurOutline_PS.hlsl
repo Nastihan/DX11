@@ -20,7 +20,7 @@ cbuffer Control
 
 float4 main(PS_Input input) : SV_TARGET
 {
-    uint width, height;
+    float width, height;
     tex.GetDimensions(width, height);
     float dx, dy;
     if (horizontal)

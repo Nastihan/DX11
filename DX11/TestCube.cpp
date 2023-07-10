@@ -1,94 +1,79 @@
+
 #include "TestCube.h"
 #include "Cube.h"
 #include "BindableCommon.h"
-#include "TransformCbufPS.h"
-#include "imgui/imgui.h"
-#include "Stencil.h"
-#include "DynamicConstant.h"
 #include "ConstantBuffersEx.h"
+#include "imgui/imgui.h"
+#include "DynamicConstant.h"
 #include "TechniqueProbe.h"
+#include "TransformCbufScaling.h"
 
 TestCube::TestCube(Graphics& gfx, float size)
 {
+	using namespace Bind;
+	namespace dx = DirectX;
+
 	auto model = Cube::MakeIndependentTextured();
-	model.Transform(DirectX::XMMatrixScaling(size, size, size));
+	model.Transform(dx::XMMatrixScaling(size, size, size));
 	model.SetNormalsIndependentFlat();
 	const auto geometryTag = "$cube." + std::to_string(size);
-
-	using namespace Bind;
-	pTopology = Topology::Resolve(gfx, D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	pIndices = IndexBuffer::Resolve(gfx, geometryTag, model.indices);
 	pVertices = VertexBuffer::Resolve(gfx, geometryTag, model.vertices);
+	pIndices = IndexBuffer::Resolve(gfx, geometryTag, model.indices);
+	pTopology = Topology::Resolve(gfx, D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// lambertian
+	auto tcb = std::make_shared<TransformCbuf>(gfx);
+
 	{
-		Technique lambertian{"Lambertian"};
+		Technique shade("Shade");
 		{
-			Step first{ 0 };
+			Step only("lambertian");
 
-			first.AddBindable(Texture::Resolve(gfx, "Images\\brickwall.jpg"));
-			first.AddBindable(Sampler::Resolve(gfx));
+			only.AddBindable(Texture::Resolve(gfx, "Images\\brickwall.jpg"));
+			only.AddBindable(Sampler::Resolve(gfx));
 
 			auto pvs = VertexShader::Resolve(gfx, "PhongDif_VS.cso");
 			auto pvsbc = pvs->GetBytecode();
-			first.AddBindable(std::move(pvs));
+			only.AddBindable(std::move(pvs));
 
+			only.AddBindable(PixelShader::Resolve(gfx, "PhongDif_PS.cso"));
 
-
-			first.AddBindable(PixelShader::Resolve(gfx, "PhongDif_PS.cso"));
-
-			Dcb::RawLayout layout;
-			layout.Add<Dcb::Float3>("specularColor");
-			layout.Add<Dcb::Float>("specularWeight");
-			layout.Add<Dcb::Float>("specularGloss");
-			Dcb::Buffer buf(std::move(layout));
-			buf["specularColor"] = DirectX::XMFLOAT3 {1.0f, 1.0f, 1.0f };
+			Dcb::RawLayout lay;
+			lay.Add<Dcb::Float3>("specularColor");
+			lay.Add<Dcb::Float>("specularWeight");
+			lay.Add<Dcb::Float>("specularGloss");
+			auto buf = Dcb::Buffer(std::move(lay));
+			buf["specularColor"] = dx::XMFLOAT3{ 1.0f,1.0f,1.0f };
 			buf["specularWeight"] = 0.1f;
-			buf["specularGloss"] = 18.0f;
-			first.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEx>(gfx, buf, 1u));
+			buf["specularGloss"] = 20.0f;
+			only.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEx>(gfx, buf, 1u));
 
-			first.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
+			only.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
 
-			auto tcb = std::make_shared<TransformCbuf>(gfx, 0u);
-			first.AddBindable(tcb);
+			only.AddBindable(Rasterizer::Resolve(gfx, false));
 
-			first.AddBindable(Rasterizer::Resolve(gfx, false));
+			only.AddBindable(tcb);
 
-			first.AddBindable(Blender::Resolve(gfx, false));
-
-			lambertian.AddStep(std::move(first));
+			shade.AddStep(std::move(only));
 		}
-		AddTechnique(lambertian);
+		AddTechnique(std::move(shade));
 	}
-	// outlining
+
 	{
 		Technique outline("Outline");
 		{
-			Step mask(1);
-
-			auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
-			auto pvsbc = pvs->GetBytecode();
-			mask.AddBindable(std::move(pvs));
+			Step mask("outlineMask");
 
 			// TODO: better sub-layout generation tech for future consideration maybe
-			mask.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
+			mask.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), VertexShader::Resolve(gfx, "Solid_VS.cso")->GetBytecode()));
 
-			mask.AddBindable(std::make_shared<TransformCbuf>(gfx));
+			mask.AddBindable(std::move(tcb));
 
 			// TODO: might need to specify rasterizer when doubled-sided models start being used
 
 			outline.AddStep(std::move(mask));
 		}
 		{
-			Step draw(2);
-
-			// these can be pass-constant (tricky due to layout issues)
-			auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
-			auto pvsbc = pvs->GetBytecode();
-			draw.AddBindable(std::move(pvs));
-
-			// this can be pass-constant
-			draw.AddBindable(PixelShader::Resolve(gfx, "Solid_PS.cso"));
+			Step draw("outlineDraw");
 
 			Dcb::RawLayout lay;
 			lay.Add<Dcb::Float4>("color");
@@ -97,10 +82,9 @@ TestCube::TestCube(Graphics& gfx, float size)
 			draw.AddBindable(std::make_shared<Bind::CachingPixelConstantBufferEx>(gfx, buf, 1u));
 
 			// TODO: better sub-layout generation tech for future consideration maybe
-			draw.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
+			draw.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), VertexShader::Resolve(gfx, "Solid_VS.cso")->GetBytecode()));
 
 			draw.AddBindable(std::make_shared<TransformCbuf>(gfx));
-
 
 			// TODO: might need to specify rasterizer when doubled-sided models start being used
 
@@ -108,7 +92,6 @@ TestCube::TestCube(Graphics& gfx, float size)
 		}
 		AddTechnique(std::move(outline));
 	}
-
 }
 
 void TestCube::SetPos(DirectX::XMFLOAT3 pos) noexcept
@@ -125,18 +108,11 @@ void TestCube::SetRotation(float roll, float pitch, float yaw) noexcept
 
 DirectX::XMMATRIX TestCube::GetTransformXM() const noexcept
 {
-	auto xf = DirectX::XMMatrixRotationRollPitchYaw(roll, pitch, yaw) *
-		DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
-	if (outlining)
-	{
-		xf = DirectX::XMMatrixScaling(1.03f, 1.03f, 1.03f) * xf;
-	}
-	return xf;
+	return DirectX::XMMatrixRotationRollPitchYaw(roll, pitch, yaw) * DirectX::XMMatrixTranslation(pos.x, pos.y, pos.z);
 }
 
 void TestCube::SpawnControlWindow(Graphics& gfx, const char* name) noexcept
 {
-
 	if (ImGui::Begin(name))
 	{
 		ImGui::Text("Position");
@@ -189,7 +165,7 @@ void TestCube::SpawnControlWindow(Graphics& gfx, const char* name) noexcept
 				}
 				return dirty;
 			}
-		} probe;
+		}probe;
 
 		Accept(probe);
 	}

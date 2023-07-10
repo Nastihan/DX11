@@ -1,3 +1,4 @@
+
 #include "Model.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -6,14 +7,11 @@
 #include "Node.h"
 #include "Mesh.h"
 #include "Material.h"
-#include "NastihanMath.h"
 #include "NastihanXM.h"
 
 namespace dx = DirectX;
 
-Model::Model(Graphics& gfx, const std::string& pathString, const float scale)
-	//:
-	//pWindow(std::make_unique<ModelWindow>())
+Model::Model(Graphics& gfx, const std::string& pathString, const float scale) // : pWindow( std::make_unique<ModelWindow>() )
 {
 	Assimp::Importer imp;
 	const auto pScene = imp.ReadFile(pathString.c_str(),
@@ -47,19 +45,10 @@ Model::Model(Graphics& gfx, const std::string& pathString, const float scale)
 	pRoot = ParseNode(nextId, *pScene->mRootNode, scale);
 }
 
-void Model::Submit(FrameCommander& frame) const noxnd
+void Model::Submit() const noxnd
 {
-	// I'm still not happy about updating parameters (i.e. mutating a bindable GPU state
-	// which is part of a mesh which is part of a node which is part of the model that is
-	// const in this call) Can probably do this elsewhere
-	//pWindow->ApplyParameters();
-	pRoot->Submit(frame, dx::XMMatrixIdentity());
+	pRoot->Submit(dx::XMMatrixIdentity());
 }
-
-//void Model::ShowWindow(Graphics& gfx, const char* windowName) noexcept
-//{
-//	pWindow->Show(gfx, windowName, *pRoot);
-//}
 
 void Model::SetRootTransform(DirectX::FXMMATRIX tf) noexcept
 {
@@ -71,20 +60,20 @@ void Model::Accept(ModelProbe& probe)
 	pRoot->Accept(probe);
 }
 
-Model::~Model() noexcept
-{}
+void Model::LinkTechniques(Rgph::RenderGraph& rg)
+{
+	for (auto& pMesh : meshPtrs)
+	{
+		pMesh->LinkTechniques(rg);
+	}
+}
 
-//std::unique_ptr<Mesh> Model::ParseMesh(Graphics& gfx, const aiMesh& mesh, const aiMaterial* const* pMaterials, const std::filesystem::path& path, float scale)
-//{
-//	return {};
-//}
+Model::~Model() noexcept {}
 
 std::unique_ptr<Node> Model::ParseNode(int& nextId, const aiNode& node, float scale) noexcept
 {
 	namespace dx = DirectX;
-	const auto transform = ScaleTranslation(dx::XMMatrixTranspose(dx::XMLoadFloat4x4(
-		reinterpret_cast<const dx::XMFLOAT4X4*>(&node.mTransformation)
-	)), scale);
+	const auto transform = ScaleTranslation(dx::XMMatrixTranspose(dx::XMLoadFloat4x4(reinterpret_cast<const dx::XMFLOAT4X4*>(&node.mTransformation))), scale);
 
 	std::vector<Mesh*> curMeshPtrs;
 	curMeshPtrs.reserve(node.mNumMeshes);

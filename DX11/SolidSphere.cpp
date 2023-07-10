@@ -3,6 +3,7 @@
 #include "GraphicsThrowMacros.h"
 #include "Vertex.h"
 #include "Sphere.h"
+#include "Stencil.h"
 
 
 SolidSphere::SolidSphere(Graphics& gfx, float radius)
@@ -19,14 +20,14 @@ SolidSphere::SolidSphere(Graphics& gfx, float radius)
 
 	{
 		Technique solid;
-		Step only(0);
+		Step only("lambertian");
 
 		auto pvs = VertexShader::Resolve(gfx, "Solid_VS.cso");
 		auto pvsbc = pvs->GetBytecode();
 		only.AddBindable(std::move(pvs));
 
 		only.AddBindable(PixelShader::Resolve(gfx, "Solid_PS.cso"));
-		 
+
 		struct PSColorConstant
 		{
 			dx::XMFLOAT3 color = { 1.0f,1.0f,1.0f };
@@ -37,8 +38,6 @@ SolidSphere::SolidSphere(Graphics& gfx, float radius)
 		only.AddBindable(InputLayout::Resolve(gfx, model.vertices.GetLayout(), pvsbc));
 
 		only.AddBindable(std::make_shared<TransformCbuf>(gfx));
-
-		only.AddBindable(Blender::Resolve(gfx, false));
 
 		only.AddBindable(Rasterizer::Resolve(gfx, false));
 
