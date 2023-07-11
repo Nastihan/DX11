@@ -30,6 +30,8 @@ public:
 		bufIdx++;
 		return OnVisitBuffer(buf);
 	}
+	virtual ~TechniqueProbe() {}
+
 protected:
 	virtual void OnSetTechnique() {}
 	virtual void OnSetStep() {}

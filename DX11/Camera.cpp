@@ -2,7 +2,11 @@
 #include "imgui/imgui.h"
 #include "NastihanMath.h"
 
-Camera::Camera()
+Camera::Camera(DirectX::XMFLOAT3 homePos, float homePitch, float homeYaw) noexcept
+	:
+	homePos(homePos),
+	homePitch(homePitch),
+	homeYaw(homeYaw)
 {
 	Reset();
 }
@@ -58,7 +62,7 @@ void Camera::SpawnControlWindow() noexcept
 
 void Camera::Reset() noexcept
 {
-	pos = { 21.0f, 5.0f, 1.0f };
-	pitch = 0.0f;
-	yaw = -PI / 2.0f;
+	pos = homePos;
+	pitch = homePitch;
+	yaw = homeYaw;
 }

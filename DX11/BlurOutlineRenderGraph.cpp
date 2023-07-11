@@ -39,6 +39,7 @@ namespace Rgph
 			pass->SetSinkLinkage("depthStencil", "lambertian.depthStencil");
 			AppendPass(std::move(pass));
 		}
+		
 
 		// setup blur constant buffers
 		{
@@ -82,7 +83,7 @@ namespace Rgph
 			AppendPass(std::move(pass));
 		}
 		SetSinkTarget("backbuffer", "vertical.renderTarget");
-
+		
 		Finalize();
 	}
 

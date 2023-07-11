@@ -43,9 +43,6 @@
     <Filter Include="Shader\Phong">
       <UniqueIdentifier>{1197ffdc-d0a4-48f7-9597-e94da5374105}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader\Solid">
-      <UniqueIdentifier>{8c143298-e74b-4d01-bde8-4e0edf3e2be0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shader\ShaderIncludes">
       <UniqueIdentifier>{28114c33-c3f6-4dd9-8f78-3d744955f6a5}</UniqueIdentifier>
     </Filter>
@@ -78,6 +75,9 @@
     </Filter>
     <Filter Include="Source Files\RenderGraph\Graphlib">
       <UniqueIdentifier>{fe495dc8-1dd9-4668-9e31-35b068808cc6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Solid">
+      <UniqueIdentifier>{8c143298-e74b-4d01-bde8-4e0edf3e2be0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -374,9 +374,6 @@
     <ClInclude Include="Sphere.h">
       <Filter>Header Files\Geometry</Filter>
     </ClInclude>
-    <ClInclude Include="NastihanMath.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Cone.h">
       <Filter>Header Files\Geometry</Filter>
     </ClInclude>
@@ -599,6 +596,9 @@
     <ClInclude Include="TestModelProbe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NastihanMath.h">
+      <Filter>Header Files\Bindable</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Phong_PS.hlsl">
@@ -641,10 +641,10 @@
       <Filter>Shader\Phong</Filter>
     </FxCompile>
     <FxCompile Include="Solid_PS.hlsl">
-      <Filter>Shader\Solid</Filter>
+      <Filter>Header Files\Solid</Filter>
     </FxCompile>
     <FxCompile Include="Solid_VS.hlsl">
-      <Filter>Shader\Solid</Filter>
+      <Filter>Header Files\Solid</Filter>
     </FxCompile>
     <FxCompile Include="Offset_VS.hlsl">
       <Filter>Shader\Phong</Filter>
