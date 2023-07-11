@@ -7,7 +7,8 @@ Camera::Camera(std::string name, DirectX::XMFLOAT3 homePos, float homePitch, flo
 	name(std::move(name)),
 	homePos(homePos),
 	homePitch(homePitch),
-	homeYaw(homeYaw)
+	homeYaw(homeYaw),
+	projectionMatrix(1.0f, 9.0f / 16.0f, 0.5f, 400.0f)
 {
 	Reset();
 }
@@ -42,7 +43,7 @@ void Camera::Translate(DirectX::XMFLOAT3 translation) noexcept
 	pos.z += DirectX::XMVectorGetZ(t);
 }
 
-void Camera::SpawnControlWidgets() noexcept
+void Camera::RenderControlWidgets() noexcept
 {
 	ImGui::Text("Position");
 	ImGui::SliderFloat("X", &pos.x, -80.0f, 80.0f, "%.1f");
@@ -51,9 +52,11 @@ void Camera::SpawnControlWidgets() noexcept
 	ImGui::Text("Orientation");
 	ImGui::SliderAngle("Pitch", &pitch, 0.990f * -90.0f, 0.990f * 90.0f);
 	ImGui::SliderAngle("Yaw", &yaw, -180.0f, 180.0f);
+	projectionMatrix.RenderWidgets();
 	if (ImGui::Button("Reset"))
 	{
 		Reset();
+		projectionMatrix.Reset();
 	}
 }
 

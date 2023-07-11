@@ -1,5 +1,6 @@
 #pragma once
 #include "Graphics.h"
+#include "Projection.h"
 
 class Camera
 {
@@ -9,9 +10,14 @@ class Camera
 		void Rotate(float dx, float dy) noexcept;
 		void Translate(DirectX::XMFLOAT3 translation) noexcept;
 		const std::string& GetName() const noexcept;
-		void SpawnControlWidgets() noexcept;
+		void RenderControlWidgets() noexcept;
+		Projection& GetProjMat()
+		{
+			return projectionMatrix;
+		}
 		void Reset() noexcept;
 	private:
+		Projection projectionMatrix;
 		std::string name;
 		DirectX::XMFLOAT3 homePos;
 		float homePitch;

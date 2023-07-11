@@ -20,7 +20,7 @@ void CameraContainer::SpawnWindow()
 			ImGui::EndCombo();
 		}
 
-		GetCamera().SpawnControlWidgets();
+		GetCamera().RenderControlWidgets();
 	}
 	ImGui::End();
 }

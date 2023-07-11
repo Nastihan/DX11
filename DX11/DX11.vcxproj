@@ -316,6 +316,7 @@
     <ClInclude Include="Plane.h" />
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Prism.h" />
+    <ClInclude Include="Projection.h" />
     <ClInclude Include="RenderGraphCompileException.h" />
     <ClInclude Include="RenderQueuePass.h" />
     <ClInclude Include="RenderTarget.h" />
