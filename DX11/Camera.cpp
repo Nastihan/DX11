@@ -2,8 +2,9 @@
 #include "imgui/imgui.h"
 #include "NastihanMath.h"
 
-Camera::Camera(DirectX::XMFLOAT3 homePos, float homePitch, float homeYaw) noexcept
+Camera::Camera(DirectX::XMFLOAT3 homePos, float homePitch, float homeYaw, std::string name) noexcept
 	:
+	name(name),
 	homePos(homePos),
 	homePitch(homePitch),
 	homeYaw(homeYaw)

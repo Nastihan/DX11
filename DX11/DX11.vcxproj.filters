@@ -599,6 +599,9 @@
     <ClInclude Include="NastihanMath.h">
       <Filter>Header Files\Bindable</Filter>
     </ClInclude>
+    <ClInclude Include="CameraContainer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Phong_PS.hlsl">
