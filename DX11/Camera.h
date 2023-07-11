@@ -4,15 +4,12 @@
 class Camera
 {
 	public:
-		Camera(DirectX::XMFLOAT3 homePos = { 0.0f,0.0f,0.0f }, float homePitch = 0.0f, float homeYaw = 0.0f, std::string name = "cam") noexcept;
+		Camera(std::string name, DirectX::XMFLOAT3 homePos = { 0.0f,0.0f,0.0f }, float homePitch = 0.0f, float homeYaw = 0.0f) noexcept;
 		DirectX::XMMATRIX GetMatrix() const noexcept;
 		void Rotate(float dx, float dy) noexcept;
 		void Translate(DirectX::XMFLOAT3 translation) noexcept;
-		std::string GetName()
-		{
-			return name;
-		}
-		void SpawnControlWindow() noexcept;
+		const std::string& GetName() const noexcept;
+		void SpawnControlWidgets() noexcept;
 		void Reset() noexcept;
 	private:
 		std::string name;

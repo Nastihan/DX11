@@ -32,10 +32,7 @@ private:
 	Rgph::BlurOutlineRenderGraph rg{ wnd.Gfx() };
 	NastihanTimer timer;
 	float speed_factor = 1.0f;
-
 	CameraContainer cameras;
-
-	//Camera cam{ {-13.5f,6.0f,3.5f},0.0f,PI / 2.0f };
 	PointLight light;
 	TestCube cube{ wnd.Gfx(),4.0f };
 	TestCube cube2{ wnd.Gfx(),4.0f };

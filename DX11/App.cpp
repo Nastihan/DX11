@@ -6,6 +6,7 @@
 #include "Testing.h"
 #include "PerfLog.h"
 #include "TestModelProbe.h"
+#include "Camera.h"
 
 namespace dx = DirectX;
 
@@ -15,8 +16,8 @@ App::App(const std::string& commandLine) :
 	scriptCommander(TokenizeQuoted(commandLine)),
 	light(wnd.Gfx())
 {
-	cameras.Add(std::make_unique<Camera>(DirectX::XMFLOAT3{ -13.5f, 6.0f, 3.5f }, 0.0f, PI / 2.0f, "First"));
-	cameras.Add(std::make_unique<Camera>(DirectX::XMFLOAT3{10.0f, 2.0f, -1.0f}, -0.3f, -0.8 , "Second" ));
+	cameras.AddCamera(std::make_unique<Camera>("A", dx::XMFLOAT3{ -13.5f, 6.0f, 3.5f }, 0.0f, PI / 2.0f));
+	cameras.AddCamera(std::make_unique<Camera>("B", dx::XMFLOAT3{ -13.5f, 28.8f, -6.4f }, PI / 180.0f * 13.0f, PI / 180.0f * 61.0f));
 
 	cube.SetPos({ 2.0f,2.5f,0.0f });
 	cube2.SetPos({ 0.0f,4.0f,3.0f });
@@ -73,27 +74,27 @@ void App::HandleInput(float dt)
 	{
 		if (wnd.kbd.KeyIsPressed('W'))
 		{
-			cameras.GetActiveCam().Translate({0.0f,0.0f,dt});
+			cameras.GetCamera().Translate({0.0f,0.0f,dt});
 		}
 		if (wnd.kbd.KeyIsPressed('A'))
 		{
-			cameras.GetActiveCam().Translate({ -dt,0.0f,0.0f });
+			cameras.GetCamera().Translate({ -dt,0.0f,0.0f });
 		}
 		if (wnd.kbd.KeyIsPressed('S'))
 		{
-			cameras.GetActiveCam().Translate({ 0.0f,0.0f,-dt });
+			cameras.GetCamera().Translate({ 0.0f,0.0f,-dt });
 		}
 		if (wnd.kbd.KeyIsPressed('D'))
 		{
-			cameras.GetActiveCam().Translate({ dt,0.0f,0.0f });
+			cameras.GetCamera().Translate({ dt,0.0f,0.0f });
 		}
 		if (wnd.kbd.KeyIsPressed('R'))
 		{
-			cameras.GetActiveCam().Translate({ 0.0f,dt,0.0f });
+			cameras.GetCamera().Translate({ 0.0f,dt,0.0f });
 		}
 		if (wnd.kbd.KeyIsPressed('F'))
 		{
-			cameras.GetActiveCam().Translate({ 0.0f,-dt,0.0f });
+			cameras.GetCamera().Translate({ 0.0f,-dt,0.0f });
 		}
 	}
 
@@ -101,7 +102,7 @@ void App::HandleInput(float dt)
 	{
 		if (!wnd.CursorEnabled())
 		{
-			cameras.GetActiveCam().Rotate((float)delta->x, (float)delta->y);
+			cameras.GetCamera().Rotate((float)delta->x, (float)delta->y);
 		}
 	}
 }
@@ -109,8 +110,8 @@ void App::HandleInput(float dt)
 void App::DoFrame(float dt)
 {
 	wnd.Gfx().BeginFrame(0.07f, 0.0f, 0.12f);
-	wnd.Gfx().SetCamera(cameras.GetActiveCam().GetMatrix());
-	light.Bind(wnd.Gfx(), cameras.GetActiveCam().GetMatrix());
+	wnd.Gfx().SetCamera(cameras.GetCamera().GetMatrix());
+	light.Bind(wnd.Gfx(), cameras.GetCamera().GetMatrix());
 
 	light.Submit();
 	cube.Submit();
@@ -128,8 +129,7 @@ void App::DoFrame(float dt)
 	sponzeProbe.SpawnWindow(sponza);
 	gobberProbe.SpawnWindow(gobber);
 	nanoProbe.SpawnWindow(nano);
-	cameras.GetActiveCam().SpawnControlWindow();
-	cameras.SwitchCam();
+	cameras.SpawnWindow();
 	light.SpawnControlWindow();
 	ShowImguiDemoWindow();
 	cube.SpawnControlWindow(wnd.Gfx(), "Cube 1");

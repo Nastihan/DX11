@@ -76,7 +76,7 @@
     <Filter Include="Source Files\RenderGraph\Graphlib">
       <UniqueIdentifier>{fe495dc8-1dd9-4668-9e31-35b068808cc6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Solid">
+    <Filter Include="Shader\Solid">
       <UniqueIdentifier>{8c143298-e74b-4d01-bde8-4e0edf3e2be0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -293,6 +293,9 @@
     </ClCompile>
     <ClCompile Include="VerticalBlurPass.cpp">
       <Filter>Source Files\RenderGraph\Passlib</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraContainer.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -644,10 +647,10 @@
       <Filter>Shader\Phong</Filter>
     </FxCompile>
     <FxCompile Include="Solid_PS.hlsl">
-      <Filter>Header Files\Solid</Filter>
+      <Filter>Shader\Solid</Filter>
     </FxCompile>
     <FxCompile Include="Solid_VS.hlsl">
-      <Filter>Header Files\Solid</Filter>
+      <Filter>Shader\Solid</Filter>
     </FxCompile>
     <FxCompile Include="Offset_VS.hlsl">
       <Filter>Shader\Phong</Filter>
