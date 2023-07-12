@@ -357,6 +357,7 @@
     <ClInclude Include="Window.h" />
     <ClInclude Include="WindowMessageMap.h" />
     <ClInclude Include="WindowsThrowMacros.h" />
+    <ClInclude Include="WireframePass.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="BlurOutline_PS.hlsl">
