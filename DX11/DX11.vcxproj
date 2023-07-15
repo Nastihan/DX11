@@ -322,11 +322,11 @@
     <ClInclude Include="PointLight.h" />
     <ClInclude Include="Prism.h" />
     <ClInclude Include="Projection.h" />
+    <ClInclude Include="RenderGraph.h" />
     <ClInclude Include="RenderGraphCompileException.h" />
     <ClInclude Include="RenderQueuePass.h" />
     <ClInclude Include="RenderTarget.h" />
     <ClInclude Include="rg\BindingPass.h" />
-    <ClInclude Include="rg\RenderGraph.h" />
     <ClInclude Include="ScaleOutlineRenderGraph.h" />
     <ClInclude Include="Sink.h" />
     <ClInclude Include="Source.h" />

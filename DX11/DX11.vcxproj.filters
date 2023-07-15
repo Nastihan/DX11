@@ -551,9 +551,6 @@
     <ClInclude Include="rg\BindingPass.h">
       <Filter>Header Files\RenderGraph\Passlib\Base</Filter>
     </ClInclude>
-    <ClInclude Include="rg\RenderGraph.h">
-      <Filter>Header Files\RenderGraph</Filter>
-    </ClInclude>
     <ClInclude Include="BlurOutlineRenderGraph.h">
       <Filter>Header Files\RenderGraph\Graphlib</Filter>
     </ClInclude>
@@ -625,6 +622,9 @@
     </ClInclude>
     <ClInclude Include="WireframePass.h">
       <Filter>Header Files\RenderGraph\Passlib</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderGraph.h">
+      <Filter>Header Files\RenderGraph</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
