@@ -1,4 +1,3 @@
-
 #include "Pass.h"
 #include "RenderGraphCompileException.h"
 #include "RenderTarget.h"
@@ -10,9 +9,13 @@
 
 namespace Rgph
 {
-	Pass::Pass(std::string name) noexcept : name(std::move(name)) {}
+	Pass::Pass(std::string name) noexcept
+		:
+		name(std::move(name))
+	{}
 
-	void Pass::Reset() noxnd {}
+	void Pass::Reset() noxnd
+	{}
 
 	const std::string& Pass::GetName() const noexcept
 	{
@@ -31,7 +34,8 @@ namespace Rgph
 		}
 	}
 
-	Pass::~Pass() {}
+	Pass::~Pass()
+	{}
 
 	const std::vector<std::unique_ptr<Sink>>& Pass::GetSinks() const
 	{

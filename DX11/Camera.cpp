@@ -47,6 +47,11 @@ DirectX::XMMATRIX Camera::GetMatrix() const noexcept
 	return XMMatrixLookAtLH(camPosition, camTarget, XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f));
 }
 
+DirectX::XMMATRIX Camera::GetProjection() const noexcept
+{
+	return proj.GetMatrix();
+}
+
 void Camera::SpawnControlWidgets(Graphics& gfx) noexcept
 {
 	bool rotDirty = false;
@@ -151,14 +156,14 @@ void Camera::LinkTechniques(Rgph::RenderGraph& rg)
 	proj.LinkTechniques(rg);
 }
 
-void Camera::Submit() const
+void Camera::Submit(size_t channels) const
 {
 	if (enableCameraIndicator)
 	{
-		indicator.Submit();
+		indicator.Submit(channels);
 	}
 	if (enableFrustumIndicator)
 	{
-		proj.Submit();
+		proj.Submit(channels);
 	}
 }

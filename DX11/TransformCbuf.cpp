@@ -36,11 +36,15 @@ namespace Bind
 	TransformCbuf::Transforms TransformCbuf::GetTransforms(Graphics& gfx) noxnd
 	{
 		assert(pParent != nullptr);
-		const auto modelView = pParent->GetTransformXM() * gfx.GetCamera();
-		return
-		{
+		const auto model = pParent->GetTransformXM();
+		const auto modelView = model * gfx.GetCamera();
+		return {
+			DirectX::XMMatrixTranspose(model),
 			DirectX::XMMatrixTranspose(modelView),
-			DirectX::XMMatrixTranspose(modelView * gfx.GetProjection())
+			DirectX::XMMatrixTranspose(
+				modelView *
+				gfx.GetProjection()
+			)
 		};
 	}
 

@@ -79,6 +79,9 @@
     <Filter Include="Shader\Solid">
       <UniqueIdentifier>{8c143298-e74b-4d01-bde8-4e0edf3e2be0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shader\Shadow">
+      <UniqueIdentifier>{8ec3fa73-770b-4283-af76-f67089e89446}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="WInMain.cpp">
@@ -305,6 +308,12 @@
     </ClCompile>
     <ClCompile Include="Frustum.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowCameraCBuf.cpp">
+      <Filter>Source Files\Bindable</Filter>
+    </ClCompile>
+    <ClCompile Include="ShadowSampler.cpp">
+      <Filter>Source Files\Bindable</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -548,9 +557,6 @@
     <ClInclude Include="Pass.h">
       <Filter>Header Files\RenderGraph\Passlib\Base</Filter>
     </ClInclude>
-    <ClInclude Include="rg\BindingPass.h">
-      <Filter>Header Files\RenderGraph\Passlib\Base</Filter>
-    </ClInclude>
     <ClInclude Include="BlurOutlineRenderGraph.h">
       <Filter>Header Files\RenderGraph\Graphlib</Filter>
     </ClInclude>
@@ -626,6 +632,21 @@
     <ClInclude Include="RenderGraph.h">
       <Filter>Header Files\RenderGraph</Filter>
     </ClInclude>
+    <ClInclude Include="Channels.h">
+      <Filter>Header Files\RenderGraph\Graphlib</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowMappingPass.h">
+      <Filter>Header Files\RenderGraph\Passlib</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowCameraCBuf.h">
+      <Filter>Header Files\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadowSampler.h">
+      <Filter>Header Files\Bindable</Filter>
+    </ClInclude>
+    <ClInclude Include="BindingPass.h">
+      <Filter>Header Files\RenderGraph\Passlib\Base</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Phong_PS.hlsl">
@@ -693,6 +714,12 @@
     </FxCompile>
     <FxCompile Include="PhongDifMskSpc_VS.hlsl">
       <Filter>Shader\Phong</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowTest_VS.hlsl">
+      <Filter>Shader\Shadow</Filter>
+    </FxCompile>
+    <FxCompile Include="ShadowTest_PS.hlsl">
+      <Filter>Shader\Shadow</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
