@@ -43,9 +43,6 @@
     <Filter Include="Shader\Phong">
       <UniqueIdentifier>{1197ffdc-d0a4-48f7-9597-e94da5374105}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shader\ShaderIncludes">
-      <UniqueIdentifier>{28114c33-c3f6-4dd9-8f78-3d744955f6a5}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Model">
       <UniqueIdentifier>{e396af9d-156e-4ee6-ac85-32f862960d54}</UniqueIdentifier>
     </Filter>
@@ -81,6 +78,9 @@
     </Filter>
     <Filter Include="Shader\Shadow">
       <UniqueIdentifier>{8ec3fa73-770b-4283-af76-f67089e89446}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader\ShaderIncludes">
+      <UniqueIdentifier>{28114c33-c3f6-4dd9-8f78-3d744955f6a5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
