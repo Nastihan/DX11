@@ -19,9 +19,9 @@ struct PS_Input
     float3 viewNormal : NORMAL;
     float3 viewTan : TANGENT;
     float3 viewBitan : BITANGENT;
-    float4 pos : SV_Position;
     float2 tc : TEXCOORD;
     float4 spos : ShadowPosition;
+    float4 pos : SV_Position;
 };
 
 Texture2D tex : register(t0);

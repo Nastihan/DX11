@@ -17,9 +17,9 @@ struct PS_Input
 {
     float3 viewFragPos : POSITION;
     float3 viewNormal : NORMAL;
-    float4 pos : SV_Position;
     float2 tc : TEXCOORD;
     float4 spos : ShadowPosition;
+    float4 pos : SV_Position;
 };
 Texture2D tex : register(t0);
 Texture2D spec : register(t1);

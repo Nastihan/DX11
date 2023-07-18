@@ -20,8 +20,6 @@ struct VS_Output
     float2 tc : TEXCOORD;
     float4 shadowHomoPos : ShadowPosition;
     float4 pos : SV_Position;
-
-
 };
 
 VS_Output main(VS_Input input)
