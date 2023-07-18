@@ -694,7 +694,7 @@
     <FxCompile Include="Solid_VS.hlsl">
       <Filter>Shader\Solid</Filter>
     </FxCompile>
-    <FxCompile Include="Offset_VS.hlsl">
+    <FxCompile Include="Offset_VS_deprecated.hlsl">
       <Filter>Shader\Phong</Filter>
     </FxCompile>
     <FxCompile Include="Fullscreen_VS.hlsl">
@@ -742,6 +742,12 @@
       <Filter>Shader\ShaderIncludes</Filter>
     </None>
     <None Include="LightVectorData.hlsli">
+      <Filter>Shader\ShaderIncludes</Filter>
+    </None>
+    <None Include="VShadow.hlsli">
+      <Filter>Shader\ShaderIncludes</Filter>
+    </None>
+    <None Include="PShadow.hlsli">
       <Filter>Shader\ShaderIncludes</Filter>
     </None>
   </ItemGroup>

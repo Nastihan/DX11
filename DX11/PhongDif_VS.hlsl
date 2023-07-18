@@ -1,5 +1,5 @@
 #include "Transform.hlsli"
-
+#include "VShadow.hlsli"
 struct VS_Input
 {
     float3 pos : POSITION;
@@ -11,8 +11,9 @@ struct VS_Output
 {
     float3 viewPos : POSITION;
     float3 viewNormal : NORMAL;
-    float4 pos : SV_Position;
     float2 tc : TEXCOORD;
+    float4 shadowHomoPos : ShadowPosition;
+    float4 pos : SV_Position;
 };
 
 VS_Output main( VS_Input input )  
@@ -22,6 +23,7 @@ VS_Output main( VS_Input input )
     output.viewNormal = mul(input.n, (float3x3)modelView);
     output.pos = mul(float4(input.pos, 1.0f),modelViewProj);
     output.tc = input.tc;
+    output.shadowHomoPos = ToShadowHomoSpace(input.pos, model);
     return output;
     
 }

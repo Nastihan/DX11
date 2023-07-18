@@ -414,7 +414,7 @@
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(ProjectDir)\ShaderBins\%(Filename).cso</ObjectFileOutput>
       <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(ProjectDir)\ShaderBins\%(Filename).cso</ObjectFileOutput>
     </FxCompile>
-    <FxCompile Include="Offset_VS.hlsl">
+    <FxCompile Include="Offset_VS_deprecated.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
@@ -625,8 +625,10 @@
     <None Include="DXTrace.inl" />
     <None Include="LightVectorData.hlsli" />
     <None Include="PointLight.hlsli" />
+    <None Include="PShadow.hlsli" />
     <None Include="ShaderOps.hlsli" />
     <None Include="Transform.hlsli" />
+    <None Include="VShadow.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
