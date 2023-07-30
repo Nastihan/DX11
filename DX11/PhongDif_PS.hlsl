@@ -31,7 +31,8 @@ float4 main(PS_input input) : SV_Target
     float3 specular;
     
     // shadow map test
-    if (ShadowUnoccluded(input.spos))
+    const float shadowLevel = Shadow(input.spos);
+    if (shadowLevel != 0.0f)
     {
         // renormalize interpolated normal
         input.viewNormal = normalize(input.viewNormal);
@@ -43,6 +44,9 @@ float4 main(PS_input input) : SV_Target
         diffuse = Diffuse(diffuseColor, diffuseIntensity, att, lv.dirToL, input.viewNormal);
 	    // specular
         specular = Speculate(diffuseColor * diffuseIntensity * specularColor, specularWeight, input.viewNormal, lv.vToL, input.viewFragPos, att, specularGloss);
+        // scale by shadow level
+        diffuse *= shadowLevel;
+        specular *= shadowLevel;
     }
     else
     {

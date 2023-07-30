@@ -50,7 +50,8 @@ float4 main(PS_Input input) : SV_Target
 #endif
     
     // shadow map test
-    if (ShadowUnoccluded(input.spos))
+    const float shadowLevel = Shadow(input.spos);
+    if (shadowLevel != 0.0f)
     {
         // normalize the mesh normal
         input.viewNormal = normalize(input.viewNormal);
@@ -87,6 +88,8 @@ float4 main(PS_Input input) : SV_Target
             diffuseColor * diffuseIntensity * specularReflectionColor, specularWeight, input.viewNormal,
             lv.vToL, input.viewFragPos, att, specularPower
         );
+        // scale by shadow level
+        diffuse *= shadowLevel;
     }
     else
     {
