@@ -30,10 +30,12 @@ namespace Rgph
 			pass->SetSinkLinkage("buffer", "$.masterDepth");
 			AppendPass(std::move(pass));
 		}
+
 		{
 			auto pass = std::make_unique<ShadowMappingPass>(gfx, "shadowMap");
 			AppendPass(std::move(pass));
 		}
+
 		{
 			auto pass = std::make_unique<LambertianPass>(gfx, "lambertian");
 			pass->SetSinkLinkage("shadowMap", "shadowMap.map");
@@ -134,7 +136,12 @@ namespace Rgph
 		blurKernel->SetBuffer(k);
 	}
 
-	void BlurOutlineRenderGraph::RenderWidgets(Graphics& gfx)
+	void BlurOutlineRenderGraph::RenderWindows(Graphics& gfx)
+	{
+		RenderKernelWindow(gfx);
+	}
+
+	void BlurOutlineRenderGraph::RenderKernelWindow(Graphics& gfx)
 	{
 		if (ImGui::Begin("Kernel"))
 		{

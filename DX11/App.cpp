@@ -157,7 +157,7 @@ void App::DoFrame(float dt)
 	cube.SpawnControlWindow(wnd.Gfx(), "Cube 1");
 	cube2.SpawnControlWindow(wnd.Gfx(), "Cube 2");
 	ShowFPSWindow();
-	rg.RenderWidgets(wnd.Gfx());
+	rg.RenderWindows(wnd.Gfx());
 
 	// present
 	wnd.Gfx().EndFrame();

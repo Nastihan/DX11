@@ -67,6 +67,7 @@ float4 main(PS_Input input) : SV_Target
         );
         // scale by shadow level
         diffuse *= shadowLevel;
+        specularReflected *= shadowLevel;
     }
     else
     {

@@ -2,7 +2,7 @@
 #include "LightVectorData.hlsli"
 
 #include "PointLight.hlsli"
-#include "PShadow.hlsli"
+#include "PShadow.hlsl"
 
 cbuffer ObjectCBuf : register(b1)
 {
